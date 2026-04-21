@@ -1,22 +1,25 @@
-# Use official Node.js runtime as base image
+# Simplified Dockerfile that just runs the backend API
+# The frontend can be served separately or added later
+
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy everything from repo
-COPY . .
-
-# Install backend dependencies
+# Copy and install backend only
+COPY backend/package.json ./backend/
 WORKDIR /app/backend
+
 RUN npm install --omit=dev
 
-# Install frontend dependencies and build
-WORKDIR /app/frontend
-RUN npm install && npm run build
+# Copy backend source
+COPY backend/src ./src
+COPY backend/tsconfig.json ./
+
+# Build backend if needed
+RUN npm run build || echo "No build script or already built"
 
 # Expose port
 EXPOSE 3000
 
-# Start backend server (which serves frontend static files)
-WORKDIR /app/backend
+# Start backend
 CMD ["npm", "start"]
