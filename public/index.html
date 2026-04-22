@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LiteracyMap — Reading Intervention Tracker</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<style>
+  .view { display: none; }
+  .view.active { display: block; }
+  .nav-item.active { background: rgba(255,255,255,0.18); color: white; }
+  .tier-1 { background: #dcfce7; color: #15803d; }
+  .tier-2 { background: #fef9c3; color: #92400e; }
+  .tier-3 { background: #fee2e2; color: #b91c1c; }
+  .tier-badge { display:inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 700; }
+  .chart-container { position: relative; height: 180px; }
+  #drop-zone.drag-over { border-color: #2563eb; background: #eff6ff; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex h-screen overflow-hidden">
+
+<!-- ══════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════ -->
+<aside class="w-56 bg-[#162d4a] flex flex-col h-screen flex-shrink-0 shadow-xl">
+  <div class="px-4 py-5 border-b border-white/10">
+    <div class="flex items-center gap-2">
+      <span class="text-xl">📚</span>
+      <div>
+        <div class="text-white font-bold text-sm leading-none">LiteracyMap</div>
+        <div class="text-blue-300 text-xs mt-0.5">Intervention Tracker</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="flex-1 p-2 space-y-0.5 overflow-y-auto">
+    <button onclick="navigate('dashboard')" data-nav="dashboard" class="nav-item active w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs text-white/75 hover:bg-white/10 hover:text-white transition text-left font-medium">
+      <span class="text-base">🏠</span> Dashboard
+    </button>
+    <button onclick="navigate('roster')" data-nav="roster" class="nav-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs text-white/75 hover:bg-white/10 hover:text-white transition text-left font-medium">
+      <span class="text-base">👥</span> Student Roster
+    </button>
+
+    <div class="pt-3 pb-1 px-3 text-xs font-semibold text-blue-400/60 uppercase tracking-wider">Workflow</div>
+    <button onclick="navigate('assessments')" data-nav="assessments" class="nav-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs text-white/75 hover:bg-white/10 hover:text-white transition text-left font-medium">
+      <span class="text-base">📊</span> Record Assessment
+    </button>
+    <button onclick="navigate('interventions')" data-nav="interventions" class="nav-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs text-white/75 hover:bg-white/10 hover:text-white transition text-left font-medium">
+      <span class="text-base">🎯</span> Interventions
+    </button>
+
+    <div class="pt-3 pb-1 px-3 text-xs font-semibold text-blue-400/60 uppercase tracking-wider">Data</div>
+    <button onclick="navigate('import')" data-nav="import" class="nav-item w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs text-white/75 hover:bg-white/10 hover:text-white transition text-left font-medium">
+      <span class="text-base">📥</span> Import Students
+    </button>
+  </nav>
+
+  <div class="p-3 border-t border-white/10">
+    <div id="api-status" class="flex items-center gap-1.5 text-xs text-blue-300">
+      <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"></span> Connecting…
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════════════════════════════════
+     MAIN
+══════════════════════════════════════ -->
+<div class="flex-1 flex flex-col overflow-hidden">
+
+  <!-- Top bar -->
+  <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between flex-shrink-0">
+    <div id="page-title" class="text-base font-semibold text-slate-700">Dashboard</div>
+    <div class="flex items-center gap-2">
+      <button onclick="navigate('assessments')" class="px-3 py-1.5 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700 transition font-medium">
+        + New Assessment
+      </button>
+      <button onclick="navigate('add-student')" class="px-3 py-1.5 border border-slate-300 text-slate-600 text-xs rounded-lg hover:bg-slate-50 transition font-medium">
+        + Add Student
+      </button>
+    </div>
+  </header>
+
+  <!-- Views -->
+  <div class="flex-1 overflow-y-auto">
+
+  <!-- ── DASHBOARD ─────────────────────────── -->
+  <div id="view-dashboard" class="view active p-5">
+
+    <!-- KPI row -->
+    <div class="grid grid-cols-4 gap-4 mb-5">
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
+        <div class="text-xs text-slate-400 mb-1 font-medium">Total Students</div>
+        <div id="kpi-total" class="text-3xl font-bold text-slate-800">—</div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
+        <div class="text-xs text-slate-400 mb-1 font-medium">Tier 3 · Intensive</div>
+        <div id="kpi-t3" class="text-3xl font-bold text-red-600">—</div>
+        <div class="text-xs text-slate-400 mt-0.5">High-risk readers</div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
+        <div class="text-xs text-slate-400 mb-1 font-medium">Tier 2 · Strategic</div>
+        <div id="kpi-t2" class="text-3xl font-bold text-amber-500">—</div>
+        <div class="text-xs text-slate-400 mt-0.5">Need extra support</div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
+        <div class="text-xs text-slate-400 mb-1 font-medium">Active Interventions</div>
+        <div id="kpi-int" class="text-3xl font-bold text-blue-600">—</div>
+      </div>
+    </div>
+
+    <!-- Lower grid -->
+    <div class="grid grid-cols-3 gap-4">
+
+      <!-- Priority students (2 cols) -->
+      <div class="col-span-2 bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="text-sm font-semibold text-slate-700">Priority Students</h3>
+            <p class="text-xs text-slate-400">Tier 2 & 3 students needing attention</p>
+          </div>
+          <button onclick="navigate('roster')" class="text-xs text-blue-600 hover:underline">View all →</button>
+        </div>
+        <div id="priority-list"></div>
+      </div>
+
+      <!-- Right column -->
+      <div class="space-y-4">
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+          <h3 class="text-sm font-semibold text-slate-700 mb-3">Quick Actions</h3>
+          <div class="space-y-1.5">
+            <button onclick="navigate('assessments')" class="w-full px-3 py-2 bg-blue-50 text-blue-700 text-xs rounded-lg hover:bg-blue-100 transition text-left flex items-center gap-2 font-medium">
+              📊 Record Assessment
+            </button>
+            <button onclick="navigate('add-student')" class="w-full px-3 py-2 bg-slate-50 text-slate-700 text-xs rounded-lg hover:bg-slate-100 transition text-left flex items-center gap-2 font-medium">
+              👤 Add Student
+            </button>
+            <button onclick="navigate('interventions')" class="w-full px-3 py-2 bg-slate-50 text-slate-700 text-xs rounded-lg hover:bg-slate-100 transition text-left flex items-center gap-2 font-medium">
+              🎯 Log Intervention
+            </button>
+            <button onclick="navigate('import')" class="w-full px-3 py-2 bg-slate-50 text-slate-700 text-xs rounded-lg hover:bg-slate-100 transition text-left flex items-center gap-2 font-medium">
+              📥 Import Class Data
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+          <h3 class="text-sm font-semibold text-slate-700 mb-3">Tier Distribution</h3>
+          <canvas id="tier-chart" height="130"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ROSTER ─────────────────────────────── -->
+  <div id="view-roster" class="view p-5">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100">
+      <div class="p-4 border-b border-slate-100 flex items-center gap-3 flex-wrap">
+        <input id="roster-search" type="text" placeholder="🔍 Search students…"
+          oninput="filterRoster()"
+          class="px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 w-44">
+        <select id="filter-grade" onchange="filterRoster()" class="px-3 py-2 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none">
+          <option value="">All Grades</option>
+          <option>K</option><option>1</option><option>2</option>
+          <option>3</option><option>4</option><option>5</option><option>6</option>
+        </select>
+        <select id="filter-tier" onchange="filterRoster()" class="px-3 py-2 border border-slate-200 rounded-lg text-xs text-slate-600 focus:outline-none">
+          <option value="">All Tiers</option>
+          <option value="1">Tier 1</option>
+          <option value="2">Tier 2</option>
+          <option value="3">Tier 3</option>
+        </select>
+        <div class="ml-auto flex items-center gap-3">
+          <span id="roster-count" class="text-xs text-slate-400"></span>
+          <button onclick="navigate('add-student')" class="px-3 py-1.5 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700 transition font-medium">+ Add Student</button>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs">
+          <thead class="bg-slate-50 text-slate-500 uppercase tracking-wide">
+            <tr>
+              <th class="text-left px-4 py-3 font-semibold">Student</th>
+              <th class="text-left px-4 py-3 font-semibold">Grade</th>
+              <th class="text-left px-4 py-3 font-semibold">Tier</th>
+              <th class="text-left px-4 py-3 font-semibold">Reading Level</th>
+              <th class="text-left px-4 py-3 font-semibold">Fluency</th>
+              <th class="text-left px-4 py-3 font-semibold">Comprehension</th>
+              <th class="text-left px-4 py-3 font-semibold">Last Assessment</th>
+              <th class="text-left px-4 py-3 font-semibold">Flags</th>
+              <th class="px-4 py-3"></th>
+            </tr>
+          </thead>
+          <tbody id="roster-tbody" class="divide-y divide-slate-50"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STUDENT PROFILE ───────────────────── -->
+  <div id="view-student" class="view p-5">
+    <button onclick="navigate('roster')" class="flex items-center gap-1 text-xs text-blue-600 hover:underline mb-4 font-medium">
+      ← Back to Roster
+    </button>
+    <div id="student-profile-content"></div>
+  </div>
+
+  <!-- ── ADD STUDENT ────────────────────────── -->
+  <div id="view-add-student" class="view p-5">
+    <div class="max-w-lg bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+      <h2 class="text-base font-semibold text-slate-700 mb-4">Add New Student</h2>
+      <form id="add-student-form" onsubmit="submitAddStudent(event)" class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">First Name *</label>
+            <input name="firstName" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Last Name *</label>
+            <input name="lastName" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Grade *</label>
+            <select name="grade" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Select…</option>
+              <option>K</option><option>1</option><option>2</option>
+              <option>3</option><option>4</option><option>5</option><option>6</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Intervention Tier *</label>
+            <select name="tier" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Select…</option>
+              <option value="1">Tier 1 — Core (On Level)</option>
+              <option value="2">Tier 2 — Strategic</option>
+              <option value="3">Tier 3 — Intensive</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Reading Level (DRA/GR)</label>
+            <input name="readingLevel" placeholder="e.g. J, Level 18, F" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Student ID</label>
+            <input name="studentId" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-2">Special Designations</label>
+          <div class="flex gap-5 flex-wrap">
+            <label class="flex items-center gap-1.5 text-sm cursor-pointer"><input type="checkbox" name="flag_EL" class="rounded border-slate-300"> EL</label>
+            <label class="flex items-center gap-1.5 text-sm cursor-pointer"><input type="checkbox" name="flag_IEP" class="rounded border-slate-300"> IEP</label>
+            <label class="flex items-center gap-1.5 text-sm cursor-pointer"><input type="checkbox" name="flag_504" class="rounded border-slate-300"> 504</label>
+            <label class="flex items-center gap-1.5 text-sm cursor-pointer"><input type="checkbox" name="flag_GATE" class="rounded border-slate-300"> GATE</label>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Background Notes</label>
+          <textarea name="notes" rows="2" placeholder="Special considerations, background info…" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+        </div>
+        <div class="flex gap-3 pt-1">
+          <button type="submit" class="px-5 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition font-medium">Add Student</button>
+          <button type="button" onclick="navigate('roster')" class="px-5 py-2 border border-slate-200 text-slate-600 text-sm rounded-lg hover:bg-slate-50 transition">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── ASSESSMENTS ────────────────────────── -->
+  <div id="view-assessments" class="view p-5">
+    <div class="grid grid-cols-5 gap-5">
+      <!-- Form -->
+      <div class="col-span-2 bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+        <h2 class="text-sm font-semibold text-slate-700 mb-4">Record Reading Assessment</h2>
+        <form id="assessment-form" onsubmit="submitAssessment(event)" class="space-y-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Student *</label>
+            <select name="studentId" id="asmnt-student" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Select student…</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Assessment Date *</label>
+            <input name="date" type="date" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div class="border-t border-slate-100 pt-3">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Assessment Scores</div>
+            <div class="space-y-2.5">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Reading Level (DRA / Guided Reading)</label>
+                <input name="readingLevel" placeholder="e.g. J, Level 18, F&P Level J" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Fluency (WPM)</label>
+                  <input name="fluencyWPM" type="number" min="0" max="400" placeholder="e.g. 62" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Comprehension %</label>
+                  <input name="comprehension" type="number" min="0" max="100" placeholder="e.g. 75" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Phonics / Decoding Score %</label>
+                <input name="phonicsScore" type="number" min="0" max="100" placeholder="e.g. 60" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              </div>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Observations / Notes</label>
+            <textarea name="notes" rows="2" placeholder="Strengths, challenges, behavioral notes…" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+          </div>
+          <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition font-medium">
+            Save Assessment
+          </button>
+        </form>
+      </div>
+
+      <!-- Recent list -->
+      <div class="col-span-3 bg-white rounded-xl shadow-sm border border-slate-100 flex flex-col">
+        <div class="p-4 border-b border-slate-100">
+          <h3 class="text-sm font-semibold text-slate-700">Recent Assessments</h3>
+        </div>
+        <div id="recent-assessments" class="flex-1 overflow-y-auto divide-y divide-slate-50"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── INTERVENTIONS ─────────────────────── -->
+  <div id="view-interventions" class="view p-5">
+    <div class="grid grid-cols-5 gap-5">
+      <!-- Form -->
+      <div class="col-span-2 bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+        <h2 class="text-sm font-semibold text-slate-700 mb-4">New Intervention Plan</h2>
+        <form id="intervention-form" onsubmit="submitIntervention(event)" class="space-y-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Student *</label>
+            <select name="studentId" id="intv-student" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Select student…</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Intervention Program *</label>
+            <select name="type" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Select…</option>
+              <optgroup label="Tier 2">
+                <option>Small Group Instruction</option>
+                <option>Heggerty Phonemic Awareness</option>
+                <option>F&P Leveled Literacy Intervention</option>
+                <option>Read Naturally</option>
+                <option>Differentiated Reading Instruction</option>
+              </optgroup>
+              <optgroup label="Tier 3">
+                <option>1:1 Tutoring</option>
+                <option>Wilson Reading System</option>
+                <option>SPIRE</option>
+                <option>Orton-Gillingham</option>
+                <option>Reading Recovery</option>
+                <option>RAVE-O</option>
+              </optgroup>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Intervention Goal</label>
+            <input name="goal" placeholder="e.g. Reach 90 WPM fluency by May" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Focus Area</label>
+            <div class="grid grid-cols-2 gap-1.5">
+              <label class="flex items-center gap-1.5 text-xs cursor-pointer border border-slate-200 rounded-lg px-2 py-1.5 hover:bg-slate-50"><input type="checkbox" name="focus_phonics" class="rounded border-slate-300"> Phonics</label>
+              <label class="flex items-center gap-1.5 text-xs cursor-pointer border border-slate-200 rounded-lg px-2 py-1.5 hover:bg-slate-50"><input type="checkbox" name="focus_fluency" class="rounded border-slate-300"> Fluency</label>
+              <label class="flex items-center gap-1.5 text-xs cursor-pointer border border-slate-200 rounded-lg px-2 py-1.5 hover:bg-slate-50"><input type="checkbox" name="focus_comprehension" class="rounded border-slate-300"> Comprehension</label>
+              <label class="flex items-center gap-1.5 text-xs cursor-pointer border border-slate-200 rounded-lg px-2 py-1.5 hover:bg-slate-50"><input type="checkbox" name="focus_vocab" class="rounded border-slate-300"> Vocabulary</label>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Frequency</label>
+              <select name="frequency" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option>Daily (5x/week)</option><option>4x/week</option>
+                <option>3x/week</option><option>2x/week</option><option>1x/week</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Duration</label>
+              <select name="duration" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option>15 min</option><option>20 min</option>
+                <option>30 min</option><option>45 min</option><option>60 min</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Start Date</label>
+            <input name="startDate" type="date" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Notes / Materials</label>
+            <textarea name="notes" rows="2" placeholder="Strategies, materials, accommodations…" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+          </div>
+          <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition font-medium">
+            Create Intervention Plan
+          </button>
+        </form>
+      </div>
+
+      <!-- Active interventions -->
+      <div class="col-span-3 bg-white rounded-xl shadow-sm border border-slate-100 flex flex-col">
+        <div class="p-4 border-b border-slate-100">
+          <h3 class="text-sm font-semibold text-slate-700">Active Intervention Plans</h3>
+        </div>
+        <div id="interventions-list" class="flex-1 overflow-y-auto divide-y divide-slate-50"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── IMPORT ─────────────────────────────── -->
+  <div id="view-import" class="view p-5">
+    <div class="max-w-2xl space-y-4">
+      <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+        <h2 class="text-sm font-semibold text-slate-700 mb-1">Import Student Data</h2>
+        <p class="text-xs text-slate-500 mb-5">Upload a CSV or Excel export from your LMS (Google Classroom, Canvas, PowerSchool, Skyward, etc.) or any spreadsheet.</p>
+
+        <div id="drop-zone"
+          class="border-2 border-dashed border-slate-200 rounded-xl p-10 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/40 transition"
+          onclick="document.getElementById('file-input').click()"
+          ondragover="event.preventDefault(); this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="handleDrop(event)">
+          <div class="text-4xl mb-2">📄</div>
+          <div class="text-sm font-semibold text-slate-600">Drag & drop your file here</div>
+          <div class="text-xs text-slate-400 mt-1">or click to browse — CSV, XLS, XLSX supported</div>
+        </div>
+        <input id="file-input" type="file" accept=".csv,.xls,.xlsx" class="hidden" onchange="handleFileSelect(event)">
+
+        <div id="column-mapping" class="hidden mt-5">
+          <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Map Your Columns</div>
+          <p class="text-xs text-slate-400 mb-3">We've auto-detected the likely mappings — adjust if needed.</p>
+          <div id="mapping-grid" class="grid grid-cols-2 gap-3"></div>
+          <div class="mt-4 flex gap-3">
+            <button onclick="runImport()" class="px-4 py-2 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700 transition font-medium">Import Students</button>
+            <button onclick="resetImport()" class="px-4 py-2 border border-slate-200 text-slate-600 text-xs rounded-lg hover:bg-slate-50 transition">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="import-preview" class="hidden bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+        <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Preview (first 5 rows)</div>
+        <div id="preview-table" class="overflow-x-auto text-xs"></div>
+      </div>
+
+      <div id="import-result" class="hidden bg-green-50 border border-green-200 rounded-xl p-4 text-sm font-medium text-green-700"></div>
+    </div>
+  </div>
+
+  </div><!-- /views -->
+</div><!-- /main -->
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 hidden z-50">
+  <div id="toast-inner" class="text-sm px-4 py-3 rounded-xl shadow-xl flex items-center gap-2 bg-slate-800 text-white"></div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+let students = [], assessments = [], interventions = [];
+let importRaw = { headers: [], rows: [] };
+let tierChart = null;
+let toastTimer = null;
+
+// ════════════════════════════════════════
+// API
+// ════════════════════════════════════════
+const api = {
+  async get(p) { const r = await fetch(p); if (!r.ok) throw new Error(); return r.json(); },
+  async post(p, b) {
+    const r = await fetch(p, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(b) });
+    if (!r.ok) throw new Error(await r.text());
+    return r.json();
+  },
+  async put(p, b) {
+    const r = await fetch(p, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(b) });
+    if (!r.ok) throw new Error();
+    return r.json();
+  }
+};
+
+// ════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════
+function navigate(view, opts = {}) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const el = document.getElementById('view-' + view);
+  if (el) el.classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const nav = document.querySelector(`[data-nav="${view}"]`);
+  if (nav) nav.classList.add('active');
+
+  const titles = { dashboard:'Dashboard', roster:'Student Roster', student: opts.name || 'Student Profile',
+    'add-student':'Add Student', assessments:'Record Assessment', interventions:'Interventions', import:'Import Data' };
+  document.getElementById('page-title').textContent = titles[view] || view;
+
+  switch(view) {
+    case 'dashboard':    renderDashboard(); break;
+    case 'roster':       renderRoster(); break;
+    case 'student':      renderProfile(opts.id); break;
+    case 'assessments':  renderAssessmentsView(); break;
+    case 'interventions':renderInterventionsView(); break;
+  }
+}
+
+// ════════════════════════════════════════
+// LOAD
+// ════════════════════════════════════════
+async function load() {
+  try {
+    [students, assessments, interventions] = await Promise.all([
+      api.get('/api/students'), api.get('/api/assessments'), api.get('/api/interventions')
+    ]);
+    setStatus('Connected', true);
+    renderDashboard();
+  } catch(e) {
+    setStatus('Offline', false);
+    toast('Could not reach server', 'err');
+  }
+}
+
+function setStatus(msg, ok) {
+  const el = document.getElementById('api-status');
+  el.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${ok?'bg-green-400':'bg-red-400'}"></span> ${msg}`;
+}
+
+// ════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════
+function renderDashboard() {
+  const t1 = students.filter(s=>s.tier==1).length;
+  const t2 = students.filter(s=>s.tier==2).length;
+  const t3 = students.filter(s=>s.tier==3).length;
+  const ai = interventions.filter(i=>i.active!==false).length;
+
+  setText('kpi-total', students.length);
+  setText('kpi-t3', t3);
+  setText('kpi-t2', t2);
+  setText('kpi-int', ai);
+
+  // Priority list
+  const priority = [...students].filter(s=>s.tier==3||s.tier==2)
+    .sort((a,b)=> (b.tier||0)-(a.tier||0)).slice(0,6);
+
+  const pl = document.getElementById('priority-list');
+  if (!priority.length) {
+    pl.innerHTML = `<div class="text-xs text-slate-400 text-center py-6">No students yet. <button onclick="navigate('add-student')" class="text-blue-600 hover:underline">Add your first student →</button></div>`;
+  } else {
+    pl.innerHTML = priority.map(s => {
+      const last = latestAssessment(s.id);
+      const age  = last ? daysSince(last.date) : null;
+      const badge = age === null ? '⚠️ No assessment' : age > 14 ? `⚠️ ${age}d since assessment` : `✓ Assessed ${age}d ago`;
+      return `<div class="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-slate-50 cursor-pointer transition" onclick="navigate('student',{id:'${s.id}',name:'${esc(s.firstName)} ${esc(s.lastName)}'})">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600">${ini(s)}</div>
+          <div>
+            <div class="text-sm font-medium text-slate-700">${s.firstName} ${s.lastName}</div>
+            <div class="text-xs text-slate-400">Gr. ${s.grade} · ${badge}</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          ${last?.readingLevel ? `<span class="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-semibold">Lvl ${last.readingLevel}</span>` : ''}
+          <span class="tier-badge tier-${s.tier}">T${s.tier}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  renderTierChart(t1, t2, t3);
+}
+
+function renderTierChart(t1, t2, t3) {
+  const ctx = document.getElementById('tier-chart');
+  if (!ctx) return;
+  if (tierChart) tierChart.destroy();
+  tierChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Tier 1', 'Tier 2', 'Tier 3'],
+      datasets: [{ data: [t1, t2, t3],
+        backgroundColor: ['#86efac','#fcd34d','#fca5a5'],
+        borderColor: ['#16a34a','#d97706','#dc2626'], borderWidth: 1.5 }]
+    },
+    options: { responsive:true, maintainAspectRatio:true, cutout:'65%',
+      plugins: { legend: { position:'bottom', labels: { font:{size:10}, padding:8 } } } }
+  });
+}
+
+// ════════════════════════════════════════
+// ROSTER
+// ════════════════════════════════════════
+function renderRoster() { filterRoster(); }
+
+function filterRoster() {
+  const search = val('roster-search').toLowerCase();
+  const grade  = val('filter-grade');
+  const tier   = val('filter-tier');
+
+  const filtered = students.filter(s => {
+    const name = `${s.firstName} ${s.lastName}`.toLowerCase();
+    if (search && !name.includes(search) && !(s.studentId||'').toLowerCase().includes(search)) return false;
+    if (grade && s.grade !== grade) return false;
+    if (tier  && String(s.tier) !== tier) return false;
+    return true;
+  });
+
+  setText('roster-count', `${filtered.length} student${filtered.length!==1?'s':''}`);
+
+  const tb = document.getElementById('roster-tbody');
+  if (!filtered.length) {
+    tb.innerHTML = `<tr><td colspan="9" class="text-center text-slate-400 text-xs py-10">${students.length ? 'No students match.' : 'No students yet. <a href="#" onclick="navigate(\'add-student\')" class="text-blue-600 hover:underline">Add your first student →</a>'}</td></tr>`;
+    return;
+  }
+
+  tb.innerHTML = filtered.map(s => {
+    const last  = latestAssessment(s.id);
+    const flags = buildFlags(s);
+    return `<tr class="hover:bg-slate-50 cursor-pointer" onclick="navigate('student',{id:'${s.id}',name:'${esc(s.firstName)} ${esc(s.lastName)}'})">
+      <td class="px-4 py-3">
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600 flex-shrink-0">${ini(s)}</div>
+          <span class="font-medium text-slate-700">${s.firstName} ${s.lastName}</span>
+        </div>
+      </td>
+      <td class="px-4 py-2 text-slate-500">${s.grade}</td>
+      <td class="px-4 py-2"><span class="tier-badge tier-${s.tier}">T${s.tier}</span></td>
+      <td class="px-4 py-2 text-slate-600 font-medium">${last?.readingLevel || s.readingLevel || '—'}</td>
+      <td class="px-4 py-2 text-slate-500">${last?.fluencyWPM ? last.fluencyWPM+' WPM' : '—'}</td>
+      <td class="px-4 py-2 text-slate-500">${last?.comprehension ? last.comprehension+'%' : '—'}</td>
+      <td class="px-4 py-2 text-slate-400 text-xs">${last ? fmtDate(last.date) : 'None'}</td>
+      <td class="px-4 py-2"><div class="flex gap-1">${flags.map(f=>`<span class="text-xs bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded font-medium">${f}</span>`).join('')}</div></td>
+      <td class="px-4 py-2 text-right"><span class="text-xs text-blue-600">View →</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════
+// STUDENT PROFILE
+// ════════════════════════════════════════
+function renderProfile(id) {
+  const s = students.find(x=>x.id===id);
+  if (!s) return;
+
+  const sa = assessments.filter(a=>a.studentId===id).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const si = interventions.filter(i=>i.studentId===id);
+  const last = sa[sa.length-1];
+  const flags = buildFlags(s);
+
+  document.getElementById('student-profile-content').innerHTML = `
+  <div class="grid grid-cols-3 gap-5">
+    <!-- Info card -->
+    <div class="space-y-4">
+      <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-11 h-11 rounded-full bg-blue-100 flex items-center justify-center text-base font-bold text-blue-600">${ini(s)}</div>
+          <div>
+            <div class="font-semibold text-slate-700">${s.firstName} ${s.lastName}</div>
+            <div class="text-xs text-slate-400">Grade ${s.grade}</div>
+          </div>
+        </div>
+        <div class="space-y-2 text-xs">
+          <div class="flex justify-between"><span class="text-slate-400">Tier</span><span class="tier-badge tier-${s.tier}">Tier ${s.tier}</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Reading Level</span><span class="font-semibold text-blue-600">${last?.readingLevel||s.readingLevel||'—'}</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Last Fluency</span><span class="font-medium">${last?.fluencyWPM ? last.fluencyWPM+' WPM' : '—'}</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">Assessments</span><span>${sa.length}</span></div>
+          ${flags.length?`<div class="flex justify-between"><span class="text-slate-400">Flags</span><div class="flex gap-1">${flags.map(f=>`<span class="bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded text-xs font-medium">${f}</span>`).join('')}</div></div>`:''}
+        </div>
+        ${s.notes?`<div class="mt-3 pt-3 border-t border-slate-100 text-xs text-slate-500 italic">${s.notes}</div>`:''}
+        <div class="mt-3 grid grid-cols-2 gap-1.5">
+          <button onclick="navigate('assessments')" class="text-xs px-2 py-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition font-medium text-center">+ Assessment</button>
+          <button onclick="navigate('interventions')" class="text-xs px-2 py-1.5 bg-slate-50 text-slate-600 rounded-lg hover:bg-slate-100 transition font-medium text-center">+ Intervention</button>
+        </div>
+      </div>
+
+      <!-- Interventions -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Interventions (${si.length})</h3>
+        ${si.length ? si.map(inv=>`
+          <div class="border border-slate-100 rounded-lg p-3 mb-2 last:mb-0">
+            <div class="text-xs font-semibold text-slate-700">${inv.type}</div>
+            <div class="text-xs text-slate-400 mt-0.5">${[inv.frequency, inv.duration].filter(Boolean).join(' · ')}</div>
+            ${inv.goal?`<div class="text-xs text-slate-400 mt-1 italic">Goal: ${inv.goal}</div>`:''}
+            <select onchange="updateProgress('${inv.id}',this.value)" class="mt-2 text-xs border border-slate-200 rounded px-2 py-1 text-slate-600 w-full focus:outline-none">
+              ${['Insufficient Progress','Some Progress','Good Progress','Goal Met'].map(p=>`<option ${inv.progress===p?'selected':''}>${p}</option>`).join('')}
+            </select>
+          </div>`).join('')
+          : '<p class="text-xs text-slate-400">No interventions recorded.</p>'}
+      </div>
+    </div>
+
+    <!-- Charts + History -->
+    <div class="col-span-2 space-y-4">
+      ${sa.length>1?`
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Fluency Trend (WPM)</div>
+          <div class="chart-container"><canvas id="ch-fluency"></canvas></div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Comprehension Trend (%)</div>
+          <div class="chart-container"><canvas id="ch-comp"></canvas></div>
+        </div>
+      </div>`:''}
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-100">
+        <div class="p-4 border-b border-slate-100">
+          <h3 class="text-sm font-semibold text-slate-700">Assessment History</h3>
+        </div>
+        ${sa.length ? `
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs">
+            <thead class="bg-slate-50 text-slate-400 uppercase tracking-wide">
+              <tr>
+                <th class="text-left px-4 py-2 font-semibold">Date</th>
+                <th class="text-left px-4 py-2 font-semibold">Reading Level</th>
+                <th class="text-left px-4 py-2 font-semibold">Fluency</th>
+                <th class="text-left px-4 py-2 font-semibold">Comprehension</th>
+                <th class="text-left px-4 py-2 font-semibold">Phonics</th>
+                <th class="text-left px-4 py-2 font-semibold">Notes</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+              ${[...sa].reverse().map(a=>`<tr class="hover:bg-slate-50">
+                <td class="px-4 py-2.5 text-slate-500">${fmtDate(a.date)}</td>
+                <td class="px-4 py-2.5 font-semibold text-blue-600">${a.readingLevel||'—'}</td>
+                <td class="px-4 py-2.5 text-slate-600">${a.fluencyWPM?a.fluencyWPM+' WPM':'—'}</td>
+                <td class="px-4 py-2.5 text-slate-600">${a.comprehension?a.comprehension+'%':'—'}</td>
+                <td class="px-4 py-2.5 text-slate-600">${a.phonicsScore?a.phonicsScore+'%':'—'}</td>
+                <td class="px-4 py-2.5 text-slate-400 italic">${a.notes||''}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>` : '<div class="p-6 text-xs text-slate-400 text-center">No assessments recorded yet.</div>'}
+      </div>
+    </div>
+  </div>`;
+
+  if (sa.length > 1) {
+    const labels = sa.map(a => fmtDateShort(a.date));
+    mkChart('ch-fluency', labels, sa.map(a=>a.fluencyWPM||null), '#2563eb', '#eff6ff');
+    mkChart('ch-comp',    labels, sa.map(a=>a.comprehension||null), '#16a34a', '#f0fdf4');
+  }
+}
+
+function mkChart(id, labels, data, border, bg) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets: [{ data, borderColor: border, backgroundColor: bg, fill: true, tension: 0.3, spanGaps: true, pointRadius: 4, pointHoverRadius: 6 }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales: { y:{beginAtZero:false,ticks:{font:{size:10}}}, x:{ticks:{font:{size:10}}} } }
+  });
+}
+
+// ════════════════════════════════════════
+// ASSESSMENTS VIEW
+// ════════════════════════════════════════
+function renderAssessmentsView() {
+  populateStudentSelect('asmnt-student');
+  const di = document.querySelector('#assessment-form [name="date"]');
+  if (di && !di.value) di.value = today();
+
+  const recent = [...assessments].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,30);
+  const c = document.getElementById('recent-assessments');
+  c.innerHTML = recent.length ? recent.map(a => {
+    const s = students.find(x=>x.id===a.studentId);
+    return `<div class="px-5 py-3.5 hover:bg-slate-50">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-sm font-medium text-slate-700">${s?`${s.firstName} ${s.lastName}`:'Unknown'}</div>
+          <div class="text-xs text-slate-400">${fmtDate(a.date)}</div>
+        </div>
+        <div class="flex gap-4 text-xs text-right">
+          ${a.readingLevel?`<div><div class="text-slate-400">Level</div><div class="font-bold text-blue-600">${a.readingLevel}</div></div>`:''}
+          ${a.fluencyWPM?`<div><div class="text-slate-400">Fluency</div><div class="font-semibold">${a.fluencyWPM} WPM</div></div>`:''}
+          ${a.comprehension?`<div><div class="text-slate-400">Comp.</div><div class="font-semibold">${a.comprehension}%</div></div>`:''}
+          ${a.phonicsScore?`<div><div class="text-slate-400">Phonics</div><div class="font-semibold">${a.phonicsScore}%</div></div>`:''}
+        </div>
+      </div>
+      ${a.notes?`<div class="mt-0.5 text-xs text-slate-400 italic">${a.notes}</div>`:''}
+    </div>`;
+  }).join('') : '<div class="p-8 text-xs text-slate-400 text-center">No assessments yet.</div>';
+}
+
+async function submitAssessment(e) {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const d = { studentId:fd.get('studentId'), date:fd.get('date'),
+    readingLevel:fd.get('readingLevel')||null, fluencyWPM:num(fd,'fluencyWPM'),
+    comprehension:num(fd,'comprehension'), phonicsScore:num(fd,'phonicsScore'), notes:fd.get('notes')||null };
+  if (!d.studentId) { toast('Select a student','err'); return; }
+  try {
+    const a = await api.post('/api/assessments', d);
+    assessments.push(a);
+    e.target.reset();
+    document.querySelector('#assessment-form [name="date"]').value = today();
+    renderAssessmentsView();
+    toast('Assessment saved ✓');
+  } catch { toast('Error saving assessment','err'); }
+}
+
+// ════════════════════════════════════════
+// INTERVENTIONS VIEW
+// ════════════════════════════════════════
+function renderInterventionsView() {
+  populateStudentSelect('intv-student', true);
+  const si = document.querySelector('#intervention-form [name="startDate"]');
+  if (si && !si.value) si.value = today();
+
+  const active = interventions.filter(i=>i.active!==false)
+    .sort((a,b)=> (students.find(s=>s.id===b.studentId)?.tier||0) - (students.find(s=>s.id===a.studentId)?.tier||0));
+  const c = document.getElementById('interventions-list');
+  const pc = {'Insufficient Progress':'text-red-600 bg-red-50','Some Progress':'text-amber-600 bg-amber-50','Good Progress':'text-green-600 bg-green-50','Goal Met':'text-blue-600 bg-blue-50'};
+
+  c.innerHTML = active.length ? active.map(inv => {
+    const s = students.find(x=>x.id===inv.studentId);
+    const col = pc[inv.progress]||'text-slate-600 bg-slate-50';
+    return `<div class="px-5 py-4 hover:bg-slate-50">
+      <div class="flex items-start justify-between">
+        <div>
+          <div class="flex items-center gap-2 mb-0.5">
+            <button onclick="navigate('student',{id:'${inv.studentId}',name:'${s?esc(s.firstName)+' '+esc(s.lastName):''}'})" class="text-sm font-semibold text-blue-700 hover:underline">${s?`${s.firstName} ${s.lastName}`:'Unknown'}</button>
+            ${s?`<span class="tier-badge tier-${s.tier}">T${s.tier}</span>`:''}
+          </div>
+          <div class="text-xs font-medium text-slate-600">${inv.type}</div>
+          ${inv.goal?`<div class="text-xs text-slate-400 italic mt-0.5">Goal: ${inv.goal}</div>`:''}
+          <div class="text-xs text-slate-400">${[inv.frequency,inv.duration].filter(Boolean).join(' · ')}</div>
+        </div>
+        <div class="flex flex-col items-end gap-2">
+          <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${col}">${inv.progress||'Not set'}</span>
+          <button onclick="endIntervention('${inv.id}')" class="text-xs text-slate-300 hover:text-red-400">End plan</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('') : '<div class="p-8 text-xs text-slate-400 text-center">No active interventions.</div>';
+}
+
+async function submitIntervention(e) {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const focus = ['phonics','fluency','comprehension','vocab'].filter(f=>fd.get('focus_'+f)==='on');
+  const d = { studentId:fd.get('studentId'), type:fd.get('type'), goal:fd.get('goal')||null,
+    focus: focus.join(', ') || null, frequency:fd.get('frequency'), duration:fd.get('duration'),
+    startDate:fd.get('startDate'), notes:fd.get('notes')||null, active:true, progress:'Insufficient Progress' };
+  if (!d.studentId||!d.type) { toast('Fill required fields','err'); return; }
+  try {
+    const inv = await api.post('/api/interventions', d);
+    interventions.push(inv);
+    e.target.reset();
+    document.querySelector('#intervention-form [name="startDate"]').value = today();
+    renderInterventionsView();
+    toast('Intervention plan created ✓');
+  } catch { toast('Error creating intervention','err'); }
+}
+
+async function updateProgress(id, progress) {
+  try {
+    const u = await api.put(`/api/interventions/${id}`, {progress});
+    const i = interventions.findIndex(x=>x.id===id);
+    if (i>=0) interventions[i]=u;
+    toast('Progress updated ✓');
+  } catch { toast('Error','err'); }
+}
+
+async function endIntervention(id) {
+  if (!confirm('Mark this intervention as ended?')) return;
+  try {
+    const u = await api.put(`/api/interventions/${id}`, {active:false});
+    const i = interventions.findIndex(x=>x.id===id);
+    if (i>=0) interventions[i]=u;
+    renderInterventionsView();
+    toast('Intervention ended');
+  } catch { toast('Error','err'); }
+}
+
+// ════════════════════════════════════════
+// ADD STUDENT
+// ════════════════════════════════════════
+async function submitAddStudent(e) {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const d = { firstName:fd.get('firstName'), lastName:fd.get('lastName'),
+    grade:fd.get('grade'), tier:Number(fd.get('tier')),
+    readingLevel:fd.get('readingLevel')||null, studentId:fd.get('studentId')||null,
+    notes:fd.get('notes')||null, flagEL:fd.get('flag_EL')==='on',
+    flagIEP:fd.get('flag_IEP')==='on', flag504:fd.get('flag_504')==='on', flagGATE:fd.get('flag_GATE')==='on' };
+  try {
+    const s = await api.post('/api/students', d);
+    students.push(s);
+    e.target.reset();
+    navigate('roster');
+    toast(`${s.firstName} ${s.lastName} added ✓`);
+  } catch { toast('Error adding student','err'); }
+}
+
+// ════════════════════════════════════════
+// IMPORT
+// ════════════════════════════════════════
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('drag-over');
+  const f = e.dataTransfer.files[0];
+  if (f) processFile(f);
+}
+function handleFileSelect(e) { const f = e.target.files[0]; if (f) processFile(f); }
+
+function processFile(file) {
+  const rd = new FileReader();
+  rd.onload = ev => {
+    const wb = XLSX.read(ev.target.result, {type:'binary'});
+    const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1});
+    if (rows.length < 2) { toast('File appears empty','err'); return; }
+    importRaw.headers = rows[0].map(String);
+    importRaw.rows    = rows.slice(1).filter(r=>r.some(c=>c));
+    showMapping(); showPreview(rows.slice(0,6));
+  };
+  rd.readAsBinaryString(file);
+}
+
+function showMapping() {
+  const fields = [
+    {k:'firstName', l:'First Name', req:true},
+    {k:'lastName',  l:'Last Name',  req:true},
+    {k:'grade',     l:'Grade',      req:false},
+    {k:'tier',      l:'Tier (1/2/3)',req:false},
+    {k:'readingLevel',l:'Reading Level',req:false},
+    {k:'studentId', l:'Student ID', req:false},
+  ];
+  document.getElementById('mapping-grid').innerHTML = fields.map(f => `
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">${f.l}${f.req?' *':''}</label>
+      <select data-field="${f.k}" class="w-full px-2 py-1.5 border border-slate-200 rounded-lg text-xs focus:outline-none">
+        <option value="">— skip —</option>
+        ${importRaw.headers.map((h,i)=>`<option value="${i}" ${autoMatch(h,f.k)?'selected':''}>${h}</option>`).join('')}
+      </select>
+    </div>`).join('');
+  document.getElementById('column-mapping').classList.remove('hidden');
+}
+
+function autoMatch(header, field) {
+  const h = header.toLowerCase();
+  if (field==='firstName')    return h.includes('first')||h.includes('given');
+  if (field==='lastName')     return h.includes('last')||h.includes('family')||h.includes('surname');
+  if (field==='grade')        return h==='grade'||h==='grade level';
+  if (field==='tier')         return h.includes('tier');
+  if (field==='readingLevel') return h.includes('level')||h.includes('dra')||h.includes('reading');
+  if (field==='studentId')    return h.includes('id')||h.includes('number')||h==='sis';
+  return false;
+}
+
+function showPreview(rows) {
+  const h = rows[0], body = rows.slice(1);
+  document.getElementById('preview-table').innerHTML = `<table class="border-collapse text-xs">
+    <thead><tr>${h.map(c=>`<th class="border border-slate-200 px-2 py-1 bg-slate-50 text-left font-semibold text-slate-500">${c}</th>`).join('')}</tr></thead>
+    <tbody>${body.map(r=>`<tr>${h.map((_,i)=>`<td class="border border-slate-200 px-2 py-1 text-slate-600">${r[i]||''}</td>`).join('')}</tr>`).join('')}</tbody>
+  </table>`;
+  document.getElementById('import-preview').classList.remove('hidden');
+}
+
+async function runImport() {
+  const mapping = {};
+  document.querySelectorAll('#mapping-grid select[data-field]').forEach(s => { if (s.value!=='') mapping[s.dataset.field]=Number(s.value); });
+  if (mapping.firstName===undefined||mapping.lastName===undefined) { toast('First & Last Name required','err'); return; }
+
+  const rows = importRaw.rows.map(r => {
+    const s = {};
+    Object.entries(mapping).forEach(([f,i])=>{ s[f]=String(r[i]||'').trim(); });
+    if (s.tier) s.tier = Number(s.tier)||2;
+    return s;
+  }).filter(s=>s.firstName&&s.lastName);
+
+  if (!rows.length) { toast('No valid students found','err'); return; }
+  try {
+    const res = await api.post('/api/import/students', {students:rows});
+    students.push(...res.students);
+    const el = document.getElementById('import-result');
+    el.textContent = `✓ Successfully imported ${res.imported} students!`;
+    el.classList.remove('hidden');
+    toast(`${res.imported} students imported ✓`);
+    setTimeout(()=>navigate('roster'), 2000);
+  } catch { toast('Import failed','err'); }
+}
+
+function resetImport() {
+  importRaw = {headers:[],rows:[]};
+  ['column-mapping','import-preview','import-result'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.getElementById('file-input').value='';
+}
+
+// ════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════
+function val(id)   { return document.getElementById(id)?.value||''; }
+function setText(id,v) { const el=document.getElementById(id); if(el) el.textContent=v; }
+function today()   { return new Date().toISOString().split('T')[0]; }
+function ini(s)    { return ((s.firstName||'?')[0]+(s.lastName||'')[0]||'').toUpperCase(); }
+function esc(s)    { return (s||'').replace(/'/g,"\\'"); }
+function num(fd,k) { const v=fd.get(k); return v?Number(v):null; }
+function buildFlags(s) { return [s.flagEL&&'EL',s.flagIEP&&'IEP',s.flag504&&'504',s.flagGATE&&'GATE'].filter(Boolean); }
+function fmtDate(d) { return d ? new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—'; }
+function fmtDateShort(d) { return d ? new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—'; }
+function daysSince(d) { return Math.floor((Date.now()-new Date(d+'T12:00:00'))/86400000); }
+function latestAssessment(sid) { return [...assessments].filter(a=>a.studentId===sid).sort((a,b)=>new Date(b.date)-new Date(a.date))[0]||null; }
+
+function populateStudentSelect(selectId, showTier=false) {
+  const sel = document.getElementById(selectId);
+  if (!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">Select student…</option>' +
+    [...students].sort((a,b)=>(a.lastName||'').localeCompare(b.lastName||''))
+      .map(s=>`<option value="${s.id}" ${cur===s.id?'selected':''}>${s.lastName}, ${s.firstName} (Gr.${s.grade}${showTier?' T'+s.tier:''})</option>`).join('');
+}
+
+function toast(msg, type='ok') {
+  const el=document.getElementById('toast'), inner=document.getElementById('toast-inner');
+  inner.className=`text-sm px-4 py-3 rounded-xl shadow-xl flex items-center gap-2 ${type==='err'?'bg-red-600':'bg-slate-800'} text-white`;
+  inner.textContent=msg;
+  el.classList.remove('hidden');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.add('hidden'),3000);
+}
+
+// ════════════════════════════════════════
+// BOOT
+// ════════════════════════════════════════
+load();
+</script>
+</body>
+</html>
