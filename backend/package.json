@@ -2,20 +2,17 @@
   "name": "literacy-map-backend",
   "version": "1.0.0",
   "description": "LiteracyMap backend API",
-  "main": "dist/index.js",
+  "main": "src/index.ts",
   "scripts": {
     "dev": "ts-node src/index.ts",
-    "start": "node dist/index.js",
+    "start": "ts-node src/index.ts",
     "build": "tsc",
     "test": "jest"
   },
   "dependencies": {
     "express": "^4.18.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "pg": "^8.8.0",
-    "jsonwebtoken": "^9.0.0",
-    "bcryptjs": "^2.4.3"
+    "dotenv": "^16.0.3"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
