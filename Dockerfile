@@ -2,18 +2,12 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy and install
-COPY backend/package*.json ./backend/
-WORKDIR /app/backend
-RUN npm install
+COPY backend/package.json ./
+RUN npm install --production
 
-# Copy source
-COPY backend/src ./src
-COPY backend/tsconfig.json ./
+COPY backend/index.js ./
 
-# Listen on PORT env variable or 3000
 ENV PORT=3000
 EXPOSE 3000
 
-# Run
-CMD ["npm", "start"]
+CMD ["node", "index.js"]
