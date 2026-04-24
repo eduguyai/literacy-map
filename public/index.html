@@ -192,6 +192,28 @@
 
     @media (max-width: 1200px) { .g4 { grid-template-columns: repeat(2, 1fr); } .g3 { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 900px) { .sidebar { position: fixed; left: 0; top: 0; height: 100vh; z-index: 999; transform: translateX(-100%); transition: transform 0.3s; } .sidebar.active { transform: translateX(0); } .hamburger { display: block; } .g2, .g-aside { grid-template-columns: 1fr; } .detail-panel { position: relative; } }
+
+    @media print {
+      body { background: #fff; color: #000; overflow: auto; }
+      .sidebar, .topbar, .sidebar-overlay { display: none !important; }
+      .main { display: block; }
+      .container { display: block; }
+      .content { overflow: visible; padding: 16px; }
+      .card { background: #fff; border: 1px solid #ccc; break-inside: avoid; }
+      .btn, button { display: none !important; }
+      .modal { display: none !important; }
+      .filter-group { display: none !important; }
+      .view { display: none !important; }
+      .view.active { display: block !important; }
+      .kpi-value { color: #000 !important; }
+      .tier-badge { border: 1px solid #999; color: #000 !important; background: #eee !important; }
+      table { border-collapse: collapse; }
+      th, td { border: 1px solid #ccc; padding: 6px 8px; color: #000; background: #fff; }
+      th { background: #f0f0f0; }
+      canvas { max-width: 100%; }
+      a { color: #000; text-decoration: none; }
+      .toast { display: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -202,7 +224,7 @@
         <div class="sidebar-section">
           <div class="sidebar-section-title">Analysis</div>
           <div class="sidebar-item active" data-view="overview" onclick="go('overview', this)">◈ Overview</div>
-          <div class="sidebar-item" data-view="roster" onclick="go('roster', this)">◫ Student Roster</div>
+          <div class="sidebar-item" data-view="roster" onclick="go('roster', this)" style="justify-content:space-between">◫ Student Roster <span id="roster-badge" style="display:none;background:var(--t3);color:#fff;font-size:9px;font-weight:700;border-radius:10px;padding:2px 6px;line-height:1.4;flex-shrink:0"></span></div>
           <div class="sidebar-item" data-view="domains" onclick="go('domains', this)">◎ Skill Domains</div>
           <div class="sidebar-item" data-view="growth" onclick="go('growth', this)">◷ Growth Trends</div>
           <div class="sidebar-item" data-view="qualdata" onclick="go('qualdata', this)">◑ Qualitative Data</div>
@@ -461,6 +483,7 @@ function renderOverview() {
   <div class="card card-kpi" style="border-top:2px solid var(--t1)"><div class="kpi-label">Tier 1 · Core</div><div class="kpi-value" style="color:var(--t1)">${kpiData.tier1}</div><div style="font-size:11px;color:var(--muted)">on track</div></div>
 `;
   document.getElementById('kpi-container').innerHTML = kpiHTML;
+  updateOverdueBadge();
   // Overdue assessment alert
   const overdue = S.students.filter(s => !s.lastAssessed || Math.floor((Date.now() - new Date(s.lastAssessed)) / 86400000) > 30);
   const alertEl = document.getElementById('overdue-alert');
@@ -772,10 +795,34 @@ function renderGroups() {
   if (S.groups.length === 0) { document.getElementById('groups-container').innerHTML = '<div style="grid-column: 1/-1; color: var(--muted); padding: 40px; text-align: center;">No groups yet. Click "Auto-Generate" to create groups.</div>'; return; }
   const groupCards = S.groups.map((g, idx) => {
     const tierColor = g.tier === 't3' ? 'var(--t3)' : g.tier === 't2' ? 'var(--t2)' : 'var(--t1)';
-    const studentChips = g.students.map(sid => { const s = S.students.find(x => x.id === sid); return s ? `<div class="student-chip">${s.firstName}</div>` : ''; }).join('');
-    return `<div class="group-card"><div class="group-color" style="background: ${tierColor};"></div><div class="group-name">${g.name}</div><div class="group-skill">${g.focus}</div><div class="student-chips">${studentChips}</div><button class="btn" onclick="removeGroup(${idx})" style="width: 100%; padding: 6px; font-size: 11px;">✕ Remove</button></div>`;
+    const studentChips = g.students.map(sid => {
+      const s = S.students.find(x => x.id === sid);
+      return s ? `<div class="student-chip" style="display:flex;align-items:center;gap:4px">${s.firstName} <button onclick="removeStudentFromGroup(${idx},${sid})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:10px;padding:0;line-height:1" title="Remove">✕</button></div>` : '';
+    }).join('');
+    const notInGroup = S.students.filter(s => !g.students.includes(s.id));
+    const addOptions = notInGroup.length ? `<select id="add-select-${idx}" style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:11px;padding:3px 6px;flex:1"><option value="">+ Add student...</option>${notInGroup.map(s => `<option value="${s.id}">${s.firstName} ${s.lastName}</option>`).join('')}</select><button class="btn" onclick="addStudentToGroup(${idx})" style="padding:4px 8px;font-size:11px">Add</button>` : '<span style="font-size:11px;color:var(--muted)">All students added</span>';
+    return `<div class="group-card"><div class="group-color" style="background: ${tierColor};"></div><div class="group-name">${g.name}</div><div class="group-skill">${g.focus}</div><div class="student-chips">${studentChips || '<span style="font-size:11px;color:var(--muted)">No students</span>'}</div><div style="display:flex;gap:6px;align-items:center;margin-top:8px">${addOptions}</div><button class="btn" onclick="removeGroup(${idx})" style="width: 100%; padding: 6px; font-size: 11px; margin-top:8px;">✕ Remove Group</button></div>`;
   }).join('');
   document.getElementById('groups-container').innerHTML = groupCards;
+}
+
+function addStudentToGroup(groupIdx) {
+  const sel = document.getElementById(`add-select-${groupIdx}`);
+  if (!sel || !sel.value) return;
+  const studentId = parseInt(sel.value);
+  if (!S.groups[groupIdx].students.includes(studentId)) {
+    S.groups[groupIdx].students.push(studentId);
+    localStorage.setItem('lm_groups', JSON.stringify(S.groups));
+    renderGroups();
+    toast('Student added to group', 'var(--t1)');
+  }
+}
+
+function removeStudentFromGroup(groupIdx, studentId) {
+  S.groups[groupIdx].students = S.groups[groupIdx].students.filter(id => id !== studentId);
+  localStorage.setItem('lm_groups', JSON.stringify(S.groups));
+  renderGroups();
+  toast('Student removed from group', 'var(--t2)');
 }
 
 function autoGenerateGroups() {
@@ -1078,24 +1125,88 @@ function showImportPreview() {
   previewCont.style.display = 'block';
   const headRow = `<tr>${S.importHeaders.map(h => `<th>${h}</th>`).join('')}</tr>`;
   document.getElementById('preview-head').innerHTML = headRow;
-  const bodyRows = S.importData.slice(0, 5).map(row => `<tr>${row.map(c => `<td>${c}</td>`).join('')}</tr>`).join('');
+  const bodyRows = S.importData.slice(0, 5).map(row => `<tr>${row.map(c => `<td>${c != null ? c : ''}</td>`).join('')}</tr>`).join('');
   document.getElementById('preview-body').innerHTML = bodyRows;
   document.getElementById('import-btn').style.display = 'block';
-  toast('File loaded', 'var(--t1)');
+  // Populate column mapper
+  const mapperFields = [
+    { value: 'skip', label: '— skip —' },
+    { value: 'firstName', label: 'First Name' },
+    { value: 'lastName', label: 'Last Name' },
+    { value: 'grade', label: 'Grade' },
+    { value: 'tier', label: 'Tier (t1/t2/t3)' },
+    { value: 'readingLevel', label: 'Reading Level' },
+    { value: 'fluencyWPM', label: 'Fluency WPM' },
+    { value: 'comprehension', label: 'Comprehension %' },
+    { value: 'phonics', label: 'Phonics %' },
+    { value: 'el', label: 'EL (true/false)' },
+    { value: 'iep', label: 'IEP (true/false)' },
+    { value: 'flag504', label: '504 (true/false)' },
+    { value: 'notes', label: 'Notes' }
+  ];
+  const autoMap = { firstname:'firstName', first:'firstName', fname:'firstName', lastname:'lastName', last:'lastName', lname:'lastName', grade:'grade', tier:'tier', level:'readingLevel', readinglevel:'readingLevel', wpm:'fluencyWPM', fluency:'fluencyWPM', fluencywpm:'fluencyWPM', comp:'comprehension', comprehension:'comprehension', phonics:'phonics', el:'el', iep:'iep', '504':'flag504', flag504:'flag504', notes:'notes' };
+  const mapperBody = document.getElementById('mapper-body');
+  const mapperTable = document.getElementById('mapper-table');
+  const noFile = document.getElementById('no-file');
+  if (mapperBody) {
+    const opts = mapperFields.map(f => `<option value="${f.value}">${f.label}</option>`).join('');
+    mapperBody.innerHTML = S.importHeaders.map((h, i) => {
+      const key = String(h).toLowerCase().trim().replace(/\s+/g,'');
+      const detected = autoMap[key] || 'skip';
+      const selectOpts = mapperFields.map(f => `<option value="${f.value}"${f.value===detected?' selected':''}>${f.label}</option>`).join('');
+      return `<tr><td style="padding:6px 8px;font-size:12px;color:var(--text)">${h}</td><td style="padding:4px 8px"><select id="map-col-${i}" style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:12px;padding:4px 6px;width:100%">${selectOpts}</select></td></tr>`;
+    }).join('');
+    if (mapperTable) mapperTable.style.display = 'table';
+    if (noFile) noFile.style.display = 'none';
+  }
+  toast('File loaded — review column mappings', 'var(--t1)');
 }
 
 function applyImport() {
   if (!S.importData) return;
+  // Build field mapping from mapper dropdowns (or fall back to positional)
+  const colMap = S.importHeaders.map((h, i) => {
+    const sel = document.getElementById(`map-col-${i}`);
+    return sel ? sel.value : 'skip';
+  });
+  const boolParse = v => String(v).toLowerCase() === 'true' || String(v) === '1' || String(v).toLowerCase() === 'yes';
+  let imported = 0;
   S.importData.forEach(row => {
-    const newId = Math.max(...S.students.map(s => s.id), 0) + 1;
-    const student = { id: newId, firstName: row[0] || '', lastName: row[1] || '', grade: parseInt(row[2]) || 0, tier: row[3] || 't1', readingLevel: row[4] || '', fluencyWPM: parseInt(row[5]) || 0, comprehension: parseInt(row[6]) || 0, phonics: parseInt(row[7]) || 0, fluency: 0, vocabulary: 0, el: row[8] === 'true' || row[8] === 'TRUE', iep: row[9] === 'true' || row[9] === 'TRUE', flag504: row[10] === 'true' || row[10] === 'TRUE', gate: row[11] === 'true' || row[11] === 'TRUE', notes: row[12] || '', lastAssessed: new Date().toISOString().split('T')[0] };
+    const obj = {};
+    colMap.forEach((field, i) => { if (field !== 'skip') obj[field] = row[i] != null ? row[i] : ''; });
+    if (!obj.firstName && !obj.lastName) return; // skip empty rows
+    const newId = Math.max(0, ...S.students.map(s => s.id)) + 1;
+    const student = {
+      id: newId,
+      firstName: String(obj.firstName || '').trim(),
+      lastName: String(obj.lastName || '').trim(),
+      grade: parseInt(obj.grade) || 0,
+      tier: (['t1','t2','t3'].includes(String(obj.tier).toLowerCase()) ? String(obj.tier).toLowerCase() : 't1'),
+      readingLevel: String(obj.readingLevel || '').trim(),
+      fluencyWPM: parseInt(obj.fluencyWPM) || 0,
+      comprehension: parseInt(obj.comprehension) || 0,
+      phonics: parseInt(obj.phonics) || 0,
+      fluency: 0, vocabulary: 0,
+      el: boolParse(obj.el),
+      iep: boolParse(obj.iep),
+      flag504: boolParse(obj.flag504),
+      gate: false,
+      notes: String(obj.notes || '').trim(),
+      lastAssessed: new Date().toISOString().split('T')[0]
+    };
     S.students.push(student);
+    imported++;
   });
   saveAll();
   S.importData = null;
   document.getElementById('preview-container').style.display = 'none';
   document.getElementById('import-btn').style.display = 'none';
-  toast(`Imported ${S.students.length} students`, 'var(--t1)');
+  const mapperTable = document.getElementById('mapper-table');
+  const noFile = document.getElementById('no-file');
+  if (mapperTable) mapperTable.style.display = 'none';
+  if (noFile) noFile.style.display = 'block';
+  toast(`Imported ${imported} students`, 'var(--t1)');
+  go('roster', document.querySelector('[data-view=roster]'));
 }
 
 function downloadTemplate() {
@@ -1274,6 +1385,7 @@ function openPlan(studentId) {
       <button class="btn" onclick="closeModal('planModal');editStudent(${studentId})" style="flex:1;padding:10px">✏ Edit</button>
       <button class="btn danger" onclick="closeModal('planModal');deleteStudent(${studentId})" style="flex:1;padding:10px">🗑 Remove</button>
     </div>
+    ${studentAssessments.length ? `<button class="btn" onclick="exportAssessmentCSV(${studentId})" style="width:100%;margin-top:8px;padding:10px">⬇ Export Assessment History (CSV)</button>` : ''}
     <button class="btn secondary" onclick="aiAnalyzeStudent(${studentId})" style="width:100%;margin-top:8px;padding:10px">🤖 AI Insights (Claude)</button>
     <div id="ai-analysis-result-${studentId}" style="display:none;margin-top:12px;padding:14px;background:var(--bg3);border-radius:8px;font-size:12px;color:var(--text);line-height:1.7;border-left:3px solid var(--accent2)"></div>
   `;
@@ -1479,6 +1591,19 @@ function saveBenchmarks() {
   toast('Benchmarks saved', 'var(--t1)');
 }
 
+function updateOverdueBadge() {
+  const badge = document.getElementById('roster-badge');
+  if (!badge) return;
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 30);
+  const overdue = S.students.filter(s => {
+    if (!s.lastAssessed) return true;
+    return new Date(s.lastAssessed) < cutoff;
+  }).length;
+  if (overdue > 0) { badge.textContent = overdue; badge.style.display = 'inline-block'; }
+  else { badge.style.display = 'none'; }
+}
+
 function getBenchmark(grade) {
   const bm = JSON.parse(localStorage.getItem('lm_benchmarks') || '{}');
   const defaults = { K:20, 1:60, 2:90, 3:115, 4:140, 5:160 };
@@ -1559,15 +1684,39 @@ function renderAssess() {
   if (dateEl && !dateEl.value) dateEl.value = today;
 }
 
+function exportAssessmentCSV(studentId) {
+  const student = S.students.find(s => s.id === studentId);
+  if (!student) return;
+  const rows = S.assessments
+    .filter(a => a.studentId === studentId)
+    .sort((a, b) => new Date(a.date || a.createdAt) - new Date(b.date || b.createdAt));
+  if (!rows.length) { toast('No assessments to export', 'var(--t2)'); return; }
+  const header = 'Date,Reading Level,Fluency WPM,Comprehension %,Phonics %,Notes\n';
+  const csv = header + rows.map(a => [
+    a.date || a.createdAt?.split('T')[0] || '',
+    a.readingLevel || '',
+    a.fluencyWPM != null ? a.fluencyWPM : '',
+    a.comprehension != null ? a.comprehension : '',
+    a.phonicsScore != null ? a.phonicsScore : '',
+    `"${(a.notes || '').replace(/"/g, '""')}"`
+  ].join(',')).join('\n');
+  const el = document.createElement('a');
+  el.href = 'data:text/csv,' + encodeURIComponent(csv);
+  el.download = `${student.firstName}-${student.lastName}-assessments.csv`;
+  el.click();
+  toast('Assessment history exported', 'var(--t1)');
+}
+
 function loadAssessHistory(studentId) {
   const student = S.students.find(s => s.id === studentId);
   if (!student) return;
   const studentAssessments = S.assessments.filter(a => a.studentId === studentId);
   const panel = document.getElementById('assess-history-panel');
+  const exportBtn = studentAssessments.length ? `<button class="btn" onclick="exportAssessmentCSV(${studentId})" style="margin-top:10px;width:100%;font-size:11px">⬇ Export History CSV</button>` : '';
   const rows = studentAssessments.length === 0
     ? '<p style="color:var(--muted);font-size:12px;margin-top:8px">No assessments recorded yet.</p>'
     : `<table style="margin-top:12px;font-size:12px"><thead><tr><th>Date</th><th>Level</th><th>WPM</th><th>Comp%</th><th>Phonics%</th></tr></thead><tbody>${studentAssessments.map(a => `<tr><td>${a.date||a.createdAt?.split('T')[0]||'—'}</td><td>${a.readingLevel||'—'}</td><td>${a.fluencyWPM||'—'}</td><td>${a.comprehension||'—'}%</td><td>${a.phonicsScore||'—'}%</td></tr>`).join('')}</tbody></table>`;
-  panel.innerHTML = `<h3>${student.firstName} ${student.lastName}</h3>${rows}`;
+  panel.innerHTML = `<h3>${student.firstName} ${student.lastName}</h3>${rows}${exportBtn}`;
   // Show benchmark hint next to WPM field
   const bm = getBenchmark(student.grade);
   const wpmField = document.getElementById('assessWPM');
