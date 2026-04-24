@@ -236,7 +236,7 @@
       </div>
 
       <div class="content" id="contentArea">
-        <div class="view active" id="view-overview"><h2 style="margin-bottom: 24px;">Overview</h2><div class="g4" id="kpi-container"></div><div class="g2"><div class="card"><h3>Reading Level Distribution</h3><div class="chart-container"><canvas id="c-dist"></canvas></div></div><div class="card"><h3>Skill Gaps by Domain</h3><div class="chart-container"><canvas id="c-gap"></canvas></div></div></div><div class="card"><h3>Tier Distribution</h3><div class="chart-container-wide"><canvas id="c-tier"></canvas></div></div></div>
+        <div class="view active" id="view-overview"><h2 style="margin-bottom: 24px;">Overview</h2><div class="g4" id="kpi-container"></div><div style="margin-bottom:16px;display:flex;justify-content:flex-end"><button class="btn secondary" onclick="aiCaseloadInsights()" style="padding:8px 16px">🤖 Analyze My Caseload (Claude)</button></div><div id="ai-caseload-result" style="display:none;margin-bottom:16px;padding:16px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:13px;line-height:1.8;border-left:3px solid var(--accent2)"></div><div class="g2"><div class="card"><h3>Reading Level Distribution</h3><div class="chart-container"><canvas id="c-dist"></canvas></div></div><div class="card"><h3>Skill Gaps by Domain</h3><div class="chart-container"><canvas id="c-gap"></canvas></div></div></div><div class="card"><h3>Tier Distribution</h3><div class="chart-container-wide"><canvas id="c-tier"></canvas></div></div></div>
 
         <div class="view" id="view-roster"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
   <h2>Student Roster</h2>
@@ -337,7 +337,7 @@
           <li>MTSS report generation</li>
         </ul>
         <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:8px;font-size:11px;font-family:var(--mono);color:var(--dim)">
-          Version 1.0 · Sprint 3 · Built for Ms. Rowe
+          Version 1.0 · Sprint 5 · Built for Ms. Rowe
         </div>
       </div>
       <div class="card" style="margin-bottom:16px">
@@ -495,9 +495,81 @@ function selStudent(id) {
   const bmPct = Math.min(Math.round(student.fluencyWPM/bm*100),100);
   const bmColor = bmPct>=85?'var(--t1)':bmPct>=60?'var(--t2)':'var(--t3)';
   const bmSection = `<div class="detail-section"><div class="detail-section-title">Fluency vs. Benchmark</div><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px"><span>${student.fluencyWPM} WPM</span><span style="color:var(--muted)">Target: ${bm} WPM</span></div><div class="score-bar"><div class="score-bar-fill" style="width:${bmPct}%;background:${bmColor}"></div></div><div style="font-size:11px;color:${bmColor};margin-top:4px;font-weight:600">${bmPct}% of grade ${student.grade} benchmark</div></div>`;
-  const panelHTML = `<div class="detail-header"><h2>${student.firstName} ${student.lastName}</h2><div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Grade ${student.grade}</div><div style="margin-top: 8px;"><span class="tier-badge tier-${student.tier}">Tier ${student.tier[1]}</span></div></div>${bmSection}${flagsHTML ? `<div class="detail-section"><div class="detail-section-title">Flags</div>${flagsHTML}</div>` : ''}<div class="detail-section"><div class="detail-section-title">Domain Scores</div>${domainsHTML}</div><div class="detail-section"><div class="detail-section-title">Reading Data</div><div style="font-size: 12px;"><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>Level:</span> <strong>${student.readingLevel}</strong></div><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>WPM:</span> <strong>${student.fluencyWPM}</strong></div></div></div><div class="detail-section"><button class="btn primary" onclick="openPlan(${student.id})" style="width: 100%; padding: 10px; margin-bottom: 8px;">📋 View Full Profile</button><button class="btn secondary" onclick="openPlan(${student.id})" style="width: 100%; padding: 10px;">✏ Plan</button></div>`;
+  const panelHTML = `<div class="detail-header"><h2>${student.firstName} ${student.lastName}</h2><div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Grade ${student.grade}</div><div style="margin-top: 8px;"><span class="tier-badge tier-${student.tier}">Tier ${student.tier[1]}</span></div></div>${bmSection}${flagsHTML ? `<div class="detail-section"><div class="detail-section-title">Flags</div>${flagsHTML}</div>` : ''}<div class="detail-section"><div class="detail-section-title">Domain Scores</div>${domainsHTML}</div><div class="detail-section"><div class="detail-section-title">Reading Data</div><div style="font-size: 12px;"><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>Level:</span> <strong>${student.readingLevel}</strong></div><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>WPM:</span> <strong>${student.fluencyWPM}</strong></div></div></div><div class="detail-section"><button class="btn primary" onclick="openPlan(${student.id})" style="width: 100%; padding: 10px; margin-bottom: 8px;">📋 View Full Profile</button><button class="btn" onclick="editStudent(${student.id})" style="width: 100%; padding: 10px; margin-bottom: 8px;">✏ Edit Student</button><button class="btn danger" onclick="deleteStudent(${student.id})" style="width: 100%; padding: 10px;">🗑 Remove from Caseload</button></div>`;
   panel.innerHTML = panelHTML;
   panel.style.display = 'block';
+}
+
+function editStudent(id) {
+  const student = S.students.find(s => s.id === id);
+  if (!student) return;
+  const panel = document.getElementById('detail-panel');
+  panel.innerHTML = `
+    <h3 style="margin-bottom:16px;font-family:var(--serif)">Edit: ${student.firstName} ${student.lastName}</h3>
+    <label>Grade</label>
+    <select id="editGrade">
+      ${['K','1','2','3','4','5'].map(g => `<option value="${g}" ${String(student.grade)===g?'selected':''}>${g === 'K' ? 'Kindergarten' : 'Grade ' + g}</option>`).join('')}
+    </select>
+    <label>Tier</label>
+    <select id="editTier">
+      <option value="t1" ${student.tier==='t1'?'selected':''}>Tier 1 — Core</option>
+      <option value="t2" ${student.tier==='t2'?'selected':''}>Tier 2 — Strategic</option>
+      <option value="t3" ${student.tier==='t3'?'selected':''}>Tier 3 — Intensive</option>
+    </select>
+    <label>Reading Level (DRA/F&P)</label>
+    <input type="text" id="editRL" value="${student.readingLevel||''}">
+    <label>Fluency WPM</label>
+    <input type="number" id="editWPM" value="${student.fluencyWPM||0}">
+    <label>Comprehension %</label>
+    <input type="number" id="editComp" value="${student.comprehension||0}">
+    <label>Phonics %</label>
+    <input type="number" id="editPhonics" value="${student.phonics||0}">
+    <div style="display:flex;gap:12px;margin:12px 0;flex-wrap:wrap">
+      <label style="display:flex;align-items:center;gap:6px;text-transform:none;font-size:13px"><input type="checkbox" id="editEL" style="width:auto;margin:0" ${student.el?'checked':''}> EL</label>
+      <label style="display:flex;align-items:center;gap:6px;text-transform:none;font-size:13px"><input type="checkbox" id="editIEP" style="width:auto;margin:0" ${student.iep?'checked':''}> IEP</label>
+      <label style="display:flex;align-items:center;gap:6px;text-transform:none;font-size:13px"><input type="checkbox" id="edit504" style="width:auto;margin:0" ${student.flag504?'checked':''}> 504</label>
+      <label style="display:flex;align-items:center;gap:6px;text-transform:none;font-size:13px"><input type="checkbox" id="editGATE" style="width:auto;margin:0" ${student.gate?'checked':''}> GATE</label>
+    </div>
+    <button class="btn primary" onclick="saveEditStudent(${id})" style="width:100%;margin-top:12px;padding:10px">✓ Save Changes</button>
+    <button class="btn" onclick="selStudent(${id})" style="width:100%;margin-top:8px">Cancel</button>
+  `;
+  panel.style.display = 'block';
+}
+
+async function saveEditStudent(id) {
+  const student = S.students.find(s => s.id === id);
+  if (!student) return;
+  student.grade = document.getElementById('editGrade').value;
+  student.tier = document.getElementById('editTier').value;
+  student.readingLevel = document.getElementById('editRL').value;
+  student.fluencyWPM = parseInt(document.getElementById('editWPM').value) || 0;
+  student.comprehension = parseInt(document.getElementById('editComp').value) || 0;
+  student.phonics = parseInt(document.getElementById('editPhonics').value) || 0;
+  student.fluency = student.fluencyWPM;
+  student.el = document.getElementById('editEL').checked;
+  student.iep = document.getElementById('editIEP').checked;
+  student.flag504 = document.getElementById('edit504').checked;
+  student.gate = document.getElementById('editGATE').checked;
+  try { await fetch('/api/students/' + id, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(student) }); } catch(e) {}
+  saveAll();
+  renderRoster('all');
+  selStudent(id);
+  toast('Student updated', 'var(--t1)');
+}
+
+async function deleteStudent(id) {
+  const student = S.students.find(s => s.id === id);
+  if (!student) return;
+  if (!confirm(`Remove ${student.firstName} ${student.lastName} from your caseload? This cannot be undone.`)) return;
+  try { await fetch('/api/students/' + id, { method: 'DELETE' }); } catch(e) {}
+  S.students = S.students.filter(s => s.id !== id);
+  S.assessments = S.assessments.filter(a => a.studentId !== id);
+  delete S.qualObs[id];
+  saveAll();
+  document.getElementById('detail-panel').style.display = 'none';
+  renderRoster('all');
+  renderOverview();
+  toast(`Removed ${student.firstName} ${student.lastName}`, 'var(--t2)');
 }
 
 function openAddStudent() {
@@ -768,7 +840,9 @@ function renderReports() {
     { id:'mtss', icon:'🏫', title:'Grade-Level MTSS Summary', desc:'Admin-ready overview — tier counts, populations, priorities' },
     { id:'atrisk', icon:'⚠️', title:'At-Risk Watchlist', desc:'Students below 60% of benchmark with concern flags' },
     { id:'moy', icon:'✅', title:'MOY Progress Tracking Sheet', desc:'Tabular view: WPM, benchmark %, status for all students' },
-    { id:'custom', icon:'✏️', title:'Custom Report', desc:'Blank report template with current session metadata' }
+    { id:'custom', icon:'✏️', title:'Custom Report', desc:'Blank report template with current session metadata' },
+    { id:'csv', icon:'📊', title:'Export Roster as CSV', desc:'Download all student data as an Excel-compatible spreadsheet' },
+    { id:'handoff', icon:'📤', title:'Intervention Handoff Doc', desc:'Tiered student list with scores — downloadable as .txt for co-teachers' }
   ];
   const html = reports.map(r => `
     <div class="card" style="display:flex;flex-direction:column;gap:12px">
@@ -897,6 +971,10 @@ function generateReport(type) {
       text += `${(s.firstName+' '+s.lastName).padEnd(22)}${String(s.grade).padEnd(4)}${s.tier.toUpperCase().padEnd(6)}${(s.readingLevel||'—').padEnd(9)}${String(s.fluencyWPM).padEnd(6)}${String(bm).padEnd(6)}${(pctBm+'%').padEnd(6)}${(s.comprehension+'%').padEnd(6)}${status}\n`;
     });
     text += `\n${'─'.repeat(75)}\nNote: Benchmark = end-of-year fluency target. ≥85% = On Track, 60–84% = Watch, <60% = At Risk\n`;
+  } else if (type === 'csv') {
+    exportRosterCSV(); return;
+  } else if (type === 'handoff') {
+    generateHandoff(); return;
   } else {
     text = `REPORT: ${type.toUpperCase()}\n${header}Total Students: ${S.students.length}\nGenerated from current session data.`;
   }
@@ -910,7 +988,14 @@ function copyReportText() {
   navigator.clipboard.writeText(text).then(() => { toast('Copied to clipboard', 'var(--t1)'); });
 }
 
-function renderImport() { }
+function renderImport() {
+  S.importData = null;
+  S.importHeaders = [];
+  const preview = document.getElementById('preview-container');
+  const importBtn = document.getElementById('import-btn');
+  if (preview) preview.style.display = 'none';
+  if (importBtn) importBtn.style.display = 'none';
+}
 
 function handleImportFile(file) {
   if (!file) return;
@@ -1093,6 +1178,10 @@ function openPlan(studentId) {
       <button class="btn primary" onclick="go('assess',document.querySelector('[data-view=assess]'));closeModal('planModal')" style="flex:1">📊 Record Assessment</button>
       <button class="btn" onclick="go('qualdata',document.querySelector('[data-view=qualdata]'));S.selectedStudent=S.students.find(s=>s.id==${studentId});renderQualdata();closeModal('planModal')" style="flex:1">◑ Add Observation</button>
     </div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn" onclick="closeModal('planModal');editStudent(${studentId})" style="flex:1;padding:10px">✏ Edit</button>
+      <button class="btn danger" onclick="closeModal('planModal');deleteStudent(${studentId})" style="flex:1;padding:10px">🗑 Remove</button>
+    </div>
     <button class="btn secondary" onclick="aiAnalyzeStudent(${studentId})" style="width:100%;margin-top:8px;padding:10px">🤖 AI Insights (Claude)</button>
     <div id="ai-analysis-result-${studentId}" style="display:none;margin-top:12px;padding:14px;background:var(--bg3);border-radius:8px;font-size:12px;color:var(--text);line-height:1.7;border-left:3px solid var(--accent2)"></div>
   `;
@@ -1204,6 +1293,36 @@ function initGrowthCharts() {
     const byTier = ['t3','t2','t1'].map(tier => ({ label: 'Tier '+tier[1], data: points.filter(p=>p.tier===tier).map(p=>({x:p.x,y:p.y})), backgroundColor: colorMap[tier], pointRadius: 7 }));
     S.charts['scatter'] = new Chart(scatterCtx, { type:'scatter', data:{ datasets: byTier }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'top', labels:{ color:'#7a8099' } }, tooltip:{ callbacks:{ label: ctx => `${ctx.raw.x}→${ctx.raw.y} WPM` } } }, scales:{ x:{ ticks:{ color:'#4a5068' }, grid:{ color:'rgba(255,255,255,0.05)' }, title:{ display:true, text:'Starting WPM', color:'#4a5068' } }, y:{ ticks:{ color:'#4a5068' }, grid:{ color:'rgba(255,255,255,0.05)' }, title:{ display:true, text:'Current WPM', color:'#4a5068' } } } } });
   }
+}
+
+async function aiCaseloadInsights() {
+  if (!S.apiKey) { toast('Add Anthropic API key in ⚙ Settings to use AI', 'var(--t3)'); return; }
+  const resultEl = document.getElementById('ai-caseload-result');
+  if (!resultEl) return;
+  resultEl.style.display = 'block';
+  resultEl.innerHTML = '<em style="color:var(--accent)">🤖 Claude is analyzing your full caseload...</em>';
+  const t3 = S.students.filter(s=>s.tier==='t3');
+  const t2 = S.students.filter(s=>s.tier==='t2');
+  const t1 = S.students.filter(s=>s.tier==='t1');
+  const avgPhonics = (S.students.reduce((a,s)=>a+(s.phonics||0),0)/Math.max(S.students.length,1)).toFixed(0);
+  const avgComp = (S.students.reduce((a,s)=>a+(s.comprehension||0),0)/Math.max(S.students.length,1)).toFixed(0);
+  const roster = S.students.map(s => {
+    const bm = getBenchmark(s.grade);
+    return `${s.firstName} ${s.lastName} (Gr${s.grade}, ${s.tier.toUpperCase()}): Level=${s.readingLevel||'—'}, WPM=${s.fluencyWPM}/${bm}bm, Comp=${s.comprehension}%, Phonics=${s.phonics}%${s.el?' [EL]':''}${s.iep?' [IEP]':''}`;
+  }).join('\n');
+  const prompt = `You are an expert reading coach analyzing a teacher's K-5 literacy caseload. Be specific, use student names, and write in a collegial, practical tone.\n\nCALLOAD SNAPSHOT:\nTier 3 Intensive: ${t3.length} | Tier 2 Strategic: ${t2.length} | Tier 1 Core: ${t1.length}\nEL: ${S.students.filter(s=>s.el).length} | IEP: ${S.students.filter(s=>s.iep).length}\nClass avg — Phonics: ${avgPhonics}% | Comprehension: ${avgComp}%\n\nROSTER:\n${roster}\n\nProvide:\n1. CASELOAD PATTERNS (2-3 observations about the overall picture)\n2. HIGHEST PRIORITY STUDENTS (2-3 students needing most urgent attention and why)\n3. GROUPING SUGGESTION (small groups based on skill profiles — name students)\n4. THIS WEEK'S INSTRUCTIONAL FOCUS (top 3 priorities across the caseload)\n5. QUICK WIN (one thing the teacher can do tomorrow to help multiple students)\n\nBe direct and specific.`;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 900, messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const analysis = data.content[0].text;
+    resultEl.innerHTML = '<div style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--accent2);margin-bottom:12px;font-family:var(--mono);font-weight:600">🤖 Claude Caseload Analysis</div>' + analysis.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'</p><p style="margin-top:10px">').replace(/\n/g,'<br>').replace(/^/,'<p>') + '</p>';
+    toast('Caseload analysis ready', 'var(--t1)');
+  } catch(e) { resultEl.innerHTML = '<span style="color:var(--t3)">AI analysis failed: ' + e.message + '</span>'; }
 }
 
 function renderSettings() {
@@ -1393,6 +1512,22 @@ async function aiAnalyzeStudent(studentId) {
     const analysis = data.content[0].text;
     resultEl.innerHTML = '<div style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--accent2);margin-bottom:10px;font-family:var(--mono);font-weight:600">🤖 Claude AI Analysis</div>' + analysis.replace(/\n\n/g,'</p><p style="margin-top:8px">').replace(/\n/g,'<br>').replace(/^/,'<p>') + '</p>';
   } catch(e) { resultEl.innerHTML = '<span style="color:var(--t3)">AI analysis failed. Check your API key in ⚙ Settings. Error: ' + e.message + '</span>'; }
+}
+
+function exportRosterCSV() {
+  const headers = ['First Name','Last Name','Grade','Tier','Reading Level','Fluency WPM','Comprehension %','Phonics %','EL','IEP','504','GATE','Last Assessed'];
+  const rows = S.students.map(s => [
+    s.firstName, s.lastName, s.grade, s.tier.toUpperCase(), s.readingLevel||'',
+    s.fluencyWPM||0, s.comprehension||0, s.phonics||0,
+    s.el?'Yes':'No', s.iep?'Yes':'No', s.flag504?'Yes':'No', s.gate?'Yes':'No',
+    s.lastAssessed||'—'
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const el = document.createElement('a');
+  el.href = 'data:text/csv,' + encodeURIComponent(csv);
+  el.download = `LiteracyMap-Roster-${new Date().toISOString().split('T')[0]}.csv`;
+  el.click();
+  toast('Roster exported as CSV', 'var(--t1)');
 }
 
 function generateHandoff() {
