@@ -196,6 +196,7 @@
 </head>
 <body>
   <div class="container">
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeNav()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:998"></div>
     <div class="sidebar" id="sidebar">
       <div style="flex: 1; overflow-y: auto;">
         <div class="sidebar-section">
@@ -236,7 +237,7 @@
       </div>
 
       <div class="content" id="contentArea">
-        <div class="view active" id="view-overview"><h2 style="margin-bottom: 24px;">Overview</h2><div class="g4" id="kpi-container"></div><div style="margin-bottom:16px;display:flex;justify-content:flex-end"><button class="btn secondary" onclick="aiCaseloadInsights()" style="padding:8px 16px">🤖 Analyze My Caseload (Claude)</button></div><div id="ai-caseload-result" style="display:none;margin-bottom:16px;padding:16px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:13px;line-height:1.8;border-left:3px solid var(--accent2)"></div><div class="g2"><div class="card"><h3>Reading Level Distribution</h3><div class="chart-container"><canvas id="c-dist"></canvas></div></div><div class="card"><h3>Skill Gaps by Domain</h3><div class="chart-container"><canvas id="c-gap"></canvas></div></div></div><div class="card"><h3>Tier Distribution</h3><div class="chart-container-wide"><canvas id="c-tier"></canvas></div></div></div>
+        <div class="view active" id="view-overview"><h2 style="margin-bottom: 24px;">Overview</h2><div id="demo-banner" style="display:none;margin-bottom:16px;padding:12px 16px;background:rgba(91,141,238,0.1);border:1px solid rgba(91,141,238,0.3);border-radius:8px;font-size:13px;color:var(--text)">📚 <strong>You're viewing demo data.</strong> Add your own students via the Roster or <a href="#" onclick="go('import',document.querySelector('[data-view=import]'));event.preventDefault()" style="color:var(--accent);text-decoration:underline">import a class list</a> to get started. <button onclick="this.parentElement.style.display='none'" style="float:right;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">✕</button></div><div id="overdue-alert" style="display:none;margin-bottom:16px;padding:12px 16px;background:var(--t3b);border:1px solid var(--t3d);border-radius:8px;font-size:13px;color:var(--t3)"></div><div class="g4" id="kpi-container"></div><div style="margin-bottom:16px;display:flex;justify-content:flex-end"><button class="btn secondary" onclick="aiCaseloadInsights()" style="padding:8px 16px">🤖 Analyze My Caseload (Claude)</button></div><div id="ai-caseload-result" style="display:none;margin-bottom:16px;padding:16px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:13px;line-height:1.8;border-left:3px solid var(--accent2)"></div><div class="g2"><div class="card"><h3>Reading Level Distribution</h3><div class="chart-container"><canvas id="c-dist"></canvas></div></div><div class="card"><h3>Skill Gaps by Domain</h3><div class="chart-container"><canvas id="c-gap"></canvas></div></div></div><div class="card"><h3>Tier Distribution</h3><div class="chart-container-wide"><canvas id="c-tier"></canvas></div></div></div>
 
         <div class="view" id="view-roster"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
   <h2>Student Roster</h2>
@@ -439,8 +440,16 @@ function go(view, btn) {
   if (renders[view]) renders[view]();
 }
 
-function toggleNav() { document.getElementById('sidebar').classList.toggle('active'); }
-function closeNav() { document.getElementById('sidebar').classList.remove('active'); }
+function toggleNav() {
+  const active = document.getElementById('sidebar').classList.toggle('active');
+  const overlay = document.getElementById('sidebarOverlay');
+  if (overlay) overlay.style.display = active ? 'block' : 'none';
+}
+function closeNav() {
+  document.getElementById('sidebar').classList.remove('active');
+  const overlay = document.getElementById('sidebarOverlay');
+  if (overlay) overlay.style.display = 'none';
+}
 
 function renderOverview() {
   const kpiData = { totalStudents: S.students.length, tier3: S.students.filter(s => s.tier === 't3').length, tier2: S.students.filter(s => s.tier === 't2').length, tier1: S.students.filter(s => s.tier === 't1').length };
@@ -451,6 +460,21 @@ function renderOverview() {
   <div class="card card-kpi" style="border-top:2px solid var(--t1)"><div class="kpi-label">Tier 1 · Core</div><div class="kpi-value" style="color:var(--t1)">${kpiData.tier1}</div><div style="font-size:11px;color:var(--muted)">on track</div></div>
 `;
   document.getElementById('kpi-container').innerHTML = kpiHTML;
+  // Overdue assessment alert
+  const overdue = S.students.filter(s => !s.lastAssessed || Math.floor((Date.now() - new Date(s.lastAssessed)) / 86400000) > 30);
+  const alertEl = document.getElementById('overdue-alert');
+  if (alertEl) {
+    if (overdue.length > 0) {
+      alertEl.style.display = 'block';
+      alertEl.innerHTML = `⚠ <strong>${overdue.length} student${overdue.length > 1 ? 's' : ''}</strong> not assessed in 30+ days: ${overdue.map(s => s.firstName).join(', ')} — <a href="#" onclick="go('assess', document.querySelector('[data-view=assess]'));event.preventDefault()" style="color:var(--t3);text-decoration:underline">Record now →</a>`;
+    } else { alertEl.style.display = 'none'; }
+  }
+  // Demo data banner
+  const demoEl = document.getElementById('demo-banner');
+  if (demoEl) {
+    const isDemoData = S.students.some(s => s.firstName === 'Amara' && s.lastName === 'Johnson');
+    demoEl.style.display = isDemoData ? 'block' : 'none';
+  }
   setTimeout(() => { initCharts(); }, 100);
 }
 
@@ -465,7 +489,7 @@ function renderRoster(filter) {
   else if (filter === 't2') filtered = S.students.filter(s => s.tier === 't2');
   else if (filter === 't1') filtered = S.students.filter(s => s.tier === 't1');
   if (S.searchQ) { filtered = filtered.filter(s => `${s.firstName} ${s.lastName}`.toLowerCase().includes(S.searchQ.toLowerCase())); }
-  const rows = filtered.map(s => `<tr onclick="selStudent(${s.id})"><td><strong>${s.firstName} ${s.lastName}</strong></td><td><span class="tier-badge tier-${s.tier}">Tier ${s.tier[1]}</span></td><td>${s.readingLevel}</td><td>${s.fluencyWPM} WPM</td><td>${s.comprehension}%</td><td><div class="flags">${getFlagBadges(s)}</div></td><td style="font-size: 11px; color: var(--muted);">${s.lastAssessed || '—'}</td></tr>`).join('');
+  const rows = filtered.map(s => `<tr onclick="selStudent(${s.id})"><td><strong>${s.firstName} ${s.lastName}</strong></td><td><span class="tier-badge tier-${s.tier}">Tier ${s.tier[1]}</span></td><td>${s.readingLevel}</td><td>${s.fluencyWPM} WPM</td><td>${s.comprehension}%</td><td><div class="flags">${getFlagBadges(s)}</div></td><td style="font-size: 11px; color: var(--muted);">${(() => { if (!s.lastAssessed) return '<span style="color:var(--t3)">Never</span>'; const days = Math.floor((Date.now() - new Date(s.lastAssessed)) / 86400000); return days > 30 ? `<span style="color:var(--t3)" title="${days} days ago">⚠ ${s.lastAssessed}</span>` : s.lastAssessed; })()}</td></tr>`).join('');
   document.getElementById('roster-tbody').innerHTML = rows;
 }
 
@@ -1125,7 +1149,40 @@ function showAdaptTab(btn, tab) {
   document.getElementById('adapt-tab-' + tab).style.display = 'block';
 }
 
-function assignStrategy(id) { toast('Strategy assigned (demo)', 'var(--t1)'); }
+function assignStrategy(stratId) {
+  const strat = strategies.find(s => s.id === stratId);
+  if (!strat) return;
+  const studentOptions = S.students.map(s =>
+    `<div style="padding:8px 12px;cursor:pointer;border-radius:6px;border:1px solid var(--border);margin-bottom:6px;font-size:13px;background:var(--bg3)" onclick="confirmAssignStrategy('${stratId}', ${s.id}, this)">
+      <div style="font-weight:600">${s.firstName} ${s.lastName}</div>
+      <div style="font-size:11px;color:var(--muted)">Grade ${s.grade} · ${s.tier.toUpperCase()} · ${s.readingLevel}</div>
+    </div>`
+  ).join('');
+  const html = `
+    <h3 style="margin-bottom:4px;font-family:var(--serif)">Assign Strategy</h3>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:16px">${strat.title}</p>
+    <div style="max-height:300px;overflow-y:auto">${studentOptions || '<p style="color:var(--muted);font-size:12px">No students in caseload.</p>'}</div>
+  `;
+  document.getElementById('plan-content').innerHTML = html;
+  document.getElementById('planModal').classList.add('active');
+}
+
+function confirmAssignStrategy(stratId, studentId, el) {
+  const strat = strategies.find(s => s.id === stratId);
+  const student = S.students.find(s => s.id === studentId);
+  if (!strat || !student) return;
+  if (!S.qualObs[studentId]) S.qualObs[studentId] = [];
+  S.qualObs[studentId].push({
+    date: new Date().toISOString().split('T')[0],
+    text: `Strategy assigned: ${strat.title}. Objective: ${strat.objective}`,
+    tags: ['Strategy assigned', strat.domain]
+  });
+  localStorage.setItem('lm_qualobs', JSON.stringify(S.qualObs));
+  el.style.background = 'var(--t1b)';
+  el.style.borderColor = 'var(--t1)';
+  el.innerHTML += '<div style="color:var(--t1);font-size:11px;margin-top:4px">✓ Assigned and logged to observations</div>';
+  toast(`"${strat.title}" assigned to ${student.firstName}`, 'var(--t1)');
+}
 
 function openPlan(studentId) {
   const student = S.students.find(s => s.id === studentId);
@@ -1221,7 +1278,17 @@ function initCharts() {
   const distCtx = document.getElementById('c-dist');
   if (distCtx) {
     if (S.charts['dist']) { S.charts['dist'].destroy(); S.charts['dist'] = null; }
-    S.charts['dist'] = new Chart(distCtx, { type: 'bar', data: { labels: ['DRA 4-6', 'DRA 10-14', 'DRA 20-24', 'DRA 30+'], datasets: [{ label: 'Students', data: [2, 2, 1, 1], backgroundColor: '#5b8dee', borderColor: 'rgba(91, 141, 238, 0.5)', borderWidth: 1 }] }, options: { indexAxis: 'x', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+    // Build real reading level distribution from student data
+    const levelBands = [
+      { label: 'Pre-K–K (DRA 1-3)', test: s => { const n = parseInt((s.readingLevel||'').replace(/\D/g,'')); return n <= 3; } },
+      { label: 'Grade 1 (DRA 4-16)', test: s => { const n = parseInt((s.readingLevel||'').replace(/\D/g,'')); return n >= 4 && n <= 16; } },
+      { label: 'Grade 2 (DRA 18-24)', test: s => { const n = parseInt((s.readingLevel||'').replace(/\D/g,'')); return n >= 18 && n <= 24; } },
+      { label: 'Grade 3 (DRA 28-34)', test: s => { const n = parseInt((s.readingLevel||'').replace(/\D/g,'')); return n >= 28 && n <= 34; } },
+      { label: 'Grade 4+ (DRA 38+)', test: s => { const n = parseInt((s.readingLevel||'').replace(/\D/g,'')); return n >= 38; } }
+    ];
+    const distData = levelBands.map(b => S.students.filter(b.test).length);
+    const distColors = distData.map((_, i) => ['#f87171','#fb923c','#facc15','#34d399','#5b8dee'][i]);
+    S.charts['dist'] = new Chart(distCtx, { type: 'bar', data: { labels: levelBands.map(b => b.label), datasets: [{ label: 'Students', data: distData, backgroundColor: distColors, borderRadius: 4 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#4a5068', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { ticks: { color: '#7a8099', font: { size: 10 } }, grid: { display: false } } } } });
   }
   const gapCtx = document.getElementById('c-gap');
   if (gapCtx) {
@@ -1451,6 +1518,14 @@ function loadAssessHistory(studentId) {
     ? '<p style="color:var(--muted);font-size:12px;margin-top:8px">No assessments recorded yet.</p>'
     : `<table style="margin-top:12px;font-size:12px"><thead><tr><th>Date</th><th>Level</th><th>WPM</th><th>Comp%</th><th>Phonics%</th></tr></thead><tbody>${studentAssessments.map(a => `<tr><td>${a.date||a.createdAt?.split('T')[0]||'—'}</td><td>${a.readingLevel||'—'}</td><td>${a.fluencyWPM||'—'}</td><td>${a.comprehension||'—'}%</td><td>${a.phonicsScore||'—'}%</td></tr>`).join('')}</tbody></table>`;
   panel.innerHTML = `<h3>${student.firstName} ${student.lastName}</h3>${rows}`;
+  // Show benchmark hint next to WPM field
+  const bm = getBenchmark(student.grade);
+  const wpmField = document.getElementById('assessWPM');
+  if (wpmField) {
+    let hint = document.getElementById('wpm-hint');
+    if (!hint) { hint = document.createElement('div'); hint.id = 'wpm-hint'; hint.style.cssText = 'font-size:11px;color:var(--muted);margin-top:-4px;margin-bottom:8px'; wpmField.parentNode.insertBefore(hint, wpmField.nextSibling); }
+    hint.innerHTML = `Grade ${student.grade} benchmark: <strong style="color:var(--accent)">${bm} WPM</strong> · ${student.fluencyWPM} WPM current (${Math.round(student.fluencyWPM/bm*100)}% of target)`;
+  }
 }
 
 async function submitAssessment() {
