@@ -340,6 +340,14 @@
           Version 1.0 · Sprint 3 · Built for Ms. Rowe
         </div>
       </div>
+      <div class="card" style="margin-bottom:16px">
+        <h3 style="margin-bottom:12px">🤖 AI Features (Claude API)</h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Enter your Anthropic API key to enable AI-powered student analysis and observation tagging.</p>
+        <label>Anthropic API Key</label>
+        <input type="password" id="set-apikey" placeholder="sk-ant-api03-...">
+        <button class="btn primary" onclick="saveAPIKey()" style="width:100%;margin-top:8px">🔑 Save API Key</button>
+        <div id="apikey-status" style="font-size:11px;margin-top:8px;color:var(--muted)"></div>
+      </div>
       <div class="card">
         <h3 style="margin-bottom:12px">Data Management</h3>
         <p style="font-size:12px;color:var(--muted);margin-bottom:12px">All data is stored on your Railway server. Export regularly as backup.</p>
@@ -357,7 +365,7 @@
 
   <div class="modal" id="planModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('planModal')">✕</button><h2>Student Plan</h2><div id="plan-content"></div></div></div>
   <div class="modal" id="adaptModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('adaptModal')">✕</button><h2>Adapt Strategy</h2><div id="adapt-content"></div></div></div>
-  <div class="modal" id="reportModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('reportModal')">✕</button><h2>Report</h2><div id="report-content" style="max-height: 600px; overflow-y: auto; white-space: pre-wrap; font-family: var(--mono); font-size: 12px;"></div><button class="btn primary" onclick="copyReportText()" style="width: 100%; margin-top: 16px;">📋 Copy</button></div></div>
+  <div class="modal" id="reportModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('reportModal')">✕</button><h2>Report</h2><div id="report-content" style="max-height: 600px; overflow-y: auto; white-space: pre-wrap; font-family: var(--mono); font-size: 12px;"></div><div style="display:flex;gap:8px;margin-top:16px"><button class="btn primary" onclick="copyReportText()" style="flex:1">📋 Copy</button><button class="btn" onclick="printReport()" style="flex:1">🖨 Print</button></div></div></div>
 
   <script>
 const S = { students: [], assessments: [], interventions: [], observations: {}, groups: [], qualObs: {}, selectedStudent: null, period: 'all', searchQ: '', charts: {}, importData: null, importHeaders: [], currentView: 'overview', apiKey: localStorage.getItem('lm_apikey') || null };
@@ -384,6 +392,10 @@ async function boot() {
     S.students = Array.isArray(stu) ? stu : [];
     S.assessments = Array.isArray(ass) ? ass : [];
     S.interventions = Array.isArray(inv) ? inv : [];
+    // If API returned empty, restore from localStorage (survives Railway restarts)
+    if (!S.students.length) { try { const ls = localStorage.getItem('lm_students'); if (ls) S.students = JSON.parse(ls); } catch(e) {} }
+    if (!S.assessments.length) { try { const ls = localStorage.getItem('lm_assessments'); if (ls) S.assessments = JSON.parse(ls); } catch(e) {} }
+    if (!S.interventions.length) { try { const ls = localStorage.getItem('lm_interventions'); if (ls) S.interventions = JSON.parse(ls); } catch(e) {} }
     if (S.students.length === 0) {
       S.students = [
         { id: 1, firstName: 'Amara', lastName: 'Johnson', grade: 3, tier: 't3', readingLevel: 'DRA 4', fluencyWPM: 52, comprehension: 45, phonics: 38, fluency: 48, vocabulary: 42, el: false, iep: true, flag504: false, gate: false, notes: '', lastAssessed: '2026-04-10' },
@@ -527,6 +539,7 @@ async function saveNewStudent() {
     const res = await fetch('/api/students', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
     const saved = await res.json();
     S.students.push(saved);
+    saveAll();
     document.getElementById('detail-panel').style.display = 'none';
     renderRoster('all');
     toast(`Added ${first} ${last}`, 'var(--t1)');
@@ -589,13 +602,27 @@ function selectQualStudent(id) {
 
 function toggleObsTag(btn) { btn.classList.toggle('selected'); }
 
-function analyzeWithAI() {
+async function analyzeWithAI() {
   const text = document.getElementById('obs-text').value;
   if (!text) { toast('Write an observation first', 'var(--t3)'); return; }
-  if (!S.apiKey) { toast('Set your Anthropic API key first (use 🔑 API Key button)', 'var(--t3)'); return; }
-  const tags = ['Needs phonics review', 'Strong fluency', 'Comprehension gap'];
-  document.querySelectorAll('.obs-tag-btn').forEach(btn => { if (tags.includes(btn.getAttribute('data-context'))) { btn.classList.add('selected'); } });
-  toast('Tags suggested (demo)', 'var(--t1)');
+  if (!S.apiKey) { toast('Add Anthropic API key in ⚙ Settings to use AI tagging', 'var(--t3)'); return; }
+  toast('Analyzing with Claude...', 'var(--accent)');
+  try {
+    const allTags = Array.from(document.querySelectorAll('.obs-tag-btn')).map(b => b.getAttribute('data-context')).filter(Boolean);
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 150,
+        messages: [{ role: 'user', content: `Analyze this teacher observation of a K-5 reading student. Return ONLY a JSON array (no markdown) containing 1-3 matching tags from this list: ${JSON.stringify(allTags)}.\n\nObservation: "${text}"\n\nReturn only a valid JSON array.` }]
+      })
+    });
+    const data = await res.json();
+    const suggested = JSON.parse(data.content[0].text);
+    document.querySelectorAll('.obs-tag-btn').forEach(btn => {
+      if (suggested.includes(btn.getAttribute('data-context'))) btn.classList.add('selected');
+    });
+    toast(`${suggested.length} AI tags suggested`, 'var(--t1)');
+  } catch(e) { toast('AI tagging failed — check API key in Settings', 'var(--t3)'); }
 }
 
 function submitObservation() {
@@ -719,6 +746,7 @@ async function saveNewIntervention() {
     const res = await fetch('/api/interventions', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
     const saved = await res.json();
     S.interventions.push(saved);
+    saveAll();
     closeModal('planModal');
     renderInterventions();
     toast('Intervention added', 'var(--t1)');
@@ -1065,6 +1093,8 @@ function openPlan(studentId) {
       <button class="btn primary" onclick="go('assess',document.querySelector('[data-view=assess]'));closeModal('planModal')" style="flex:1">📊 Record Assessment</button>
       <button class="btn" onclick="go('qualdata',document.querySelector('[data-view=qualdata]'));S.selectedStudent=S.students.find(s=>s.id==${studentId});renderQualdata();closeModal('planModal')" style="flex:1">◑ Add Observation</button>
     </div>
+    <button class="btn secondary" onclick="aiAnalyzeStudent(${studentId})" style="width:100%;margin-top:8px;padding:10px">🤖 AI Insights (Claude)</button>
+    <div id="ai-analysis-result-${studentId}" style="display:none;margin-top:12px;padding:14px;background:var(--bg3);border-radius:8px;font-size:12px;color:var(--text);line-height:1.7;border-left:3px solid var(--accent2)"></div>
   `;
   document.getElementById('plan-content').innerHTML = html;
   document.getElementById('planModal').classList.add('active');
@@ -1187,6 +1217,10 @@ function renderSettings() {
     const el = document.getElementById('bm-' + g);
     if (el && bm[g]) el.value = bm[g];
   });
+  const apikeyEl = document.getElementById('set-apikey');
+  if (apikeyEl && S.apiKey) apikeyEl.value = S.apiKey;
+  const statusEl = document.getElementById('apikey-status');
+  if (statusEl) { statusEl.textContent = S.apiKey ? '✓ API key set — AI features active' : 'No API key — AI features disabled'; statusEl.style.color = S.apiKey ? 'var(--t1)' : 'var(--muted)'; }
 }
 
 function saveSettings() {
@@ -1261,13 +1295,22 @@ function setAPIKey() {
   const key = prompt('Enter Anthropic API key (stored locally):');
   if (key) { S.apiKey = key; localStorage.setItem('lm_apikey', key); toast('API key saved', 'var(--t1)'); }
 }
+function saveAPIKey() {
+  const key = document.getElementById('set-apikey')?.value?.trim();
+  if (!key) { toast('Enter an API key', 'var(--t3)'); return; }
+  S.apiKey = key; localStorage.setItem('lm_apikey', key);
+  const statusEl = document.getElementById('apikey-status');
+  if (statusEl) { statusEl.textContent = '✓ API key saved — AI features active'; statusEl.style.color = 'var(--t1)'; }
+  toast('API key saved — AI features enabled', 'var(--t1)');
+}
+function printReport() {
+  const text = document.getElementById('report-content').textContent;
+  const win = window.open('', '_blank');
+  win.document.write('<html><head><title>LiteracyMap Report</title><style>body{font-family:monospace;font-size:12px;line-height:1.6;padding:24px;color:#000;background:#fff}pre{white-space:pre-wrap;word-wrap:break-word}</style></head><body><pre>' + text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</pre></body></html>');
+  win.document.close(); win.print();
+}
 
-window.addEventListener('load', () => {
-  const saved = localStorage.getItem('lm_students');
-  if (saved) { S.students = JSON.parse(saved); }
-  const savedInt = localStorage.getItem('lm_interventions');
-  if (savedInt) { S.interventions = JSON.parse(savedInt); }
-});
+// localStorage restore handled in boot()
   
 function renderAssess() {
   const sel = document.getElementById('assessStudent');
@@ -1316,12 +1359,41 @@ async function submitAssessment() {
       student.lastAssessed = payload.date;
       await fetch('/api/students/' + studentId, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(student) });
     }
+    saveAll();
     ['assessRL','assessWPM','assessComp','assessPhonics','assessNotes'].forEach(id => { document.getElementById(id).value = ''; });
     loadAssessHistory(studentId);
     toast(`Assessment saved for ${student?.firstName}`, 'var(--t1)');
   } catch(e) { toast('Failed to save assessment', 'var(--t3)'); }
 }
 
+async function aiAnalyzeStudent(studentId) {
+  if (!S.apiKey) { toast('Add Anthropic API key in ⚙ Settings to use AI', 'var(--t3)'); return; }
+  const student = S.students.find(s => s.id === studentId);
+  if (!student) return;
+  const resultEl = document.getElementById('ai-analysis-result-' + studentId);
+  if (!resultEl) return;
+  resultEl.style.display = 'block';
+  resultEl.innerHTML = '<em style="color:var(--accent)">🤖 Claude is analyzing this student\'s reading profile...</em>';
+  const bm = getBenchmark(student.grade);
+  const wpmPct = Math.round(student.fluencyWPM / bm * 100);
+  const stuAssess = S.assessments.filter(a => a.studentId === studentId).sort((a,b) => new Date(a.date||a.createdAt) - new Date(b.date||b.createdAt));
+  const assessSummary = stuAssess.length
+    ? stuAssess.map(a => `${a.date||'?'}: Level=${a.readingLevel||'—'}, WPM=${a.fluencyWPM||'—'}, Comp=${a.comprehension||'—'}%, Phonics=${a.phonicsScore||'—'}%`).join('\n')
+    : 'No assessments recorded yet';
+  const qualObs = (S.qualObs[studentId] || []).map(o => `[${o.date}] ${o.text}`).join('\n') || 'No observations recorded';
+  const prompt = `You are an expert reading specialist and MTSS coordinator. Analyze this student's literacy data.\n\nSTUDENT: ${student.firstName} ${student.lastName} | Grade ${student.grade} | ${student.tier.toUpperCase()} | Level: ${student.readingLevel}\nScores: WPM=${student.fluencyWPM} (${wpmPct}% of ${bm} WPM benchmark), Comp=${student.comprehension}%, Phonics=${student.phonics}%\nFlags: ${[student.el&&'EL',student.iep&&'IEP',student.flag504&&'504',student.gate&&'GATE'].filter(Boolean).join(', ')||'None'}\n\nASSESSMENT HISTORY:\n${assessSummary}\n\nTEACHER OBSERVATIONS:\n${qualObs}\n\nProvide a concise analysis with:\n1. PROFILE SUMMARY (2 sentences on reading strengths/gaps)\n2. TOP PRIORITIES (2-3 bullet points of what to target first)\n3. RECOMMENDED STRATEGIES (specific programs or approaches)\n4. MONITORING PLAN (frequency and what to track)\n\nBe specific, practical, and use educator language.`;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 600, messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const analysis = data.content[0].text;
+    resultEl.innerHTML = '<div style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--accent2);margin-bottom:10px;font-family:var(--mono);font-weight:600">🤖 Claude AI Analysis</div>' + analysis.replace(/\n\n/g,'</p><p style="margin-top:8px">').replace(/\n/g,'<br>').replace(/^/,'<p>') + '</p>';
+  } catch(e) { resultEl.innerHTML = '<span style="color:var(--t3)">AI analysis failed. Check your API key in ⚙ Settings. Error: ' + e.message + '</span>'; }
+}
 
 function generateHandoff() {
   let text = `LITERACY INTERVENTION HANDOFF DOCUMENT\nGenerated: ${new Date().toLocaleDateString()}\nTeacher: Ms. Rowe — Reading Specialist\n\n${'='.repeat(60)}\n\n`;
