@@ -219,7 +219,7 @@
         </div>
       </div>
       <div class="sidebar-footer">
-        <div class="avatar-chip"><div class="avatar">KR</div><div><div style="font-weight: 600; font-size: 13px;">Ms. Rowe</div><div style="font-size: 11px; color: var(--muted);">Reading Specialist</div></div></div>
+        <div class="avatar-chip"><div class="avatar" id="sidebar-avatar">KR</div><div><div style="font-weight: 600; font-size: 13px;" id="sidebar-teacher-name">Ms. Rowe</div><div style="font-size: 11px; color: var(--muted);" id="sidebar-teacher-role">Reading Specialist</div></div></div>
         <div class="sidebar-actions">
           <button class="btn" onclick="saveAll()">💾 Save</button>
           <button class="btn" onclick="exportSession()">⬇ Export</button>
@@ -244,7 +244,7 @@
   <button class="btn" onclick="generateHandoff()" style="display:flex;align-items:center;gap:6px">📋 Handoff Doc</button>
 </div><div class="filter-group"><button class="filter-btn active" onclick="renderRoster('all')">All</button><button class="filter-btn" onclick="renderRoster('t3')">Tier 3 Intensive</button><button class="filter-btn" onclick="renderRoster('t2')">Tier 2 Strategic</button><button class="filter-btn" onclick="renderRoster('t1')">Tier 1 Core</button></div><button class="btn primary" onclick="openAddStudent()" style="margin-bottom: 16px;">+ Add Student</button><div class="g-aside"><div class="card"><table><thead><tr><th>Student</th><th>Tier</th><th>Reading Level</th><th>Fluency WPM</th><th>Comp %</th><th>Flags</th><th>Last Assessed</th></tr></thead><tbody id="roster-tbody"></tbody></table></div><div id="detail-panel" class="detail-panel" style="display: none;"></div></div></div>
 
-        <div class="view" id="view-domains"><h2 style="margin-bottom: 24px;">Skill Domains</h2><div class="g3" id="domain-container"></div><div class="card" style="margin-top: 16px;"><h3>Class-wide Priorities</h3><p style="font-size: 13px; color: var(--muted); line-height: 1.6;">Based on current assessment data, the class shows the strongest gains in Reading Fluency and Vocabulary. Priority interventions should focus on improving Phonics & Decoding and Reading Comprehension across Tiers 2 and 3.</p></div></div>
+        <div class="view" id="view-domains"><h2 style="margin-bottom: 24px;">Skill Domains</h2><div class="g3" id="domain-container"></div><div class="card" style="margin-top: 16px;" id="domain-priorities-card"><h3>Class-wide Priorities</h3><p style="font-size: 13px; color: var(--muted); line-height: 1.6;">Based on current assessment data, the class shows the strongest gains in Reading Fluency and Vocabulary. Priority interventions should focus on improving Phonics & Decoding and Reading Comprehension across Tiers 2 and 3.</p></div></div>
 
         <div class="view" id="view-growth"><h2 style="margin-bottom: 24px;">Growth Trends</h2><div class="g4" id="growth-kpi-container"></div><div class="g2"><div class="card"><h3>Trajectory by Tier</h3><div class="chart-container"><canvas id="c-growth"></canvas></div></div><div class="card"><h3>Top Fluency Movers</h3><div class="chart-container"><canvas id="c-movers"></canvas></div></div></div><div class="card"><h3>Growth vs. Starting Level</h3><div class="chart-container-wide"><canvas id="c-scatter"></canvas></div></div></div>
 
@@ -369,7 +369,7 @@
   <div class="modal" id="reportModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('reportModal')">✕</button><h2>Report</h2><div id="report-content" style="max-height: 600px; overflow-y: auto; white-space: pre-wrap; font-family: var(--mono); font-size: 12px;"></div><div style="display:flex;gap:8px;margin-top:16px"><button class="btn primary" onclick="copyReportText()" style="flex:1">📋 Copy</button><button class="btn" onclick="printReport()" style="flex:1">🖨 Print</button></div></div></div>
 
   <script>
-const S = { students: [], assessments: [], interventions: [], observations: {}, groups: [], qualObs: {}, selectedStudent: null, period: 'all', searchQ: '', charts: {}, importData: null, importHeaders: [], currentView: 'overview', apiKey: localStorage.getItem('lm_apikey') || null };
+const S = { students: [], assessments: [], interventions: [], observations: {}, groups: [], qualObs: {}, selectedStudent: null, period: 'all', searchQ: '', charts: {}, importData: null, importHeaders: [], currentView: 'overview', apiKey: localStorage.getItem('lm_apikey') || null, _pendingAssessId: null };
 const strategies = [
   { id: 'phonics-ogillingham', domain: 'phonics', title: 'Orton-Gillingham Phoneme Segmentation', objective: 'Students segment words into individual phonemes using multisensory techniques', time: '30 min', tier: 'T3', materials: 'Letter tiles, word cards', steps: ['1. Model phoneme segmentation with a CVC word (e.g., "cat")', '2. Have student repeat word, then hold up fingers for each phoneme', '3. Use letter tiles to show grapheme-phoneme correspondence', '4. Practice with 5-8 words, gradually increasing difficulty', '5. Student writes word while saying each phoneme'] },
   { id: 'phonics-wordbuilding', domain: 'phonics', title: 'Word Building with Magnetic Letters', objective: 'Build orthographic awareness by manipulating letter sequences', time: '20 min', tier: 'T2/T3', materials: 'Magnetic letters, board, word families list', steps: ['1. Start with known word (e.g., "at")', '2. Add initial consonants to create word family (cat, bat, mat, rat)', '3. Have student read each word aloud', '4. Remove a word, have student rebuild it', '5. Challenge: give word family, have student generate new words'] },
@@ -423,6 +423,7 @@ async function boot() {
     if (saved) S.qualObs = JSON.parse(saved);
     const savedGroups = localStorage.getItem('lm_groups');
     if (savedGroups) S.groups = JSON.parse(savedGroups);
+    updateSidebarFromSettings();
     renderAll();
   } catch (err) { console.error('Boot error:', err); toast('Failed to load data', 'var(--t3)'); }
 }
@@ -629,7 +630,7 @@ async function saveNewStudent() {
   const phonics = parseInt(document.getElementById('newStudentPhonics')?.value) || 0;
   const el = document.getElementById('newStudentEL')?.checked || false;
   const iep = document.getElementById('newStudentIEP')?.checked || false;
-  if (\!first || \!last || \!grade || \!tier) { toast('Please fill required fields', 'var(--t3)'); return; }
+  if (!first || !last || !grade || !tier) { toast('Please fill required fields', 'var(--t3)'); return; }
   const payload = { firstName: first, lastName: last, grade: parseInt(grade), tier, readingLevel, fluencyWPM, comprehension, phonics, fluency: fluencyWPM, vocabulary: comprehension, el, iep, flag504: false, gate: false, notes: '', lastAssessed: new Date().toISOString().split('T')[0] };
   try {
     const res = await fetch('/api/students', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
@@ -651,10 +652,16 @@ function renderDomains() {
   ];
   const cards = domains.map(d => {
     const avgScore = d.name === 'Phonics & Decoding' ? S.students.reduce((a, s) => a + s.phonics, 0) / S.students.length : d.name === 'Reading Fluency' ? S.students.reduce((a, s) => a + s.fluency, 0) / S.students.length : d.name === 'Reading Comprehension' ? S.students.reduce((a, s) => a + s.comprehension, 0) / S.students.length : S.students.reduce((a, s) => a + s.vocabulary, 0) / S.students.length;
-    const subBars = d.subs.map((sub, i) => `<div class="domain-sub-bar"><div class="domain-sub-bar-label">${sub}</div><div class="domain-sub-bar-fill"><div class="score-bar-fill" style="width: ${65 + Math.random() * 30}%; height: 100%;"></div></div><div class="domain-sub-bar-value">${(65 + Math.random() * 30).toFixed(0)}%</div></div>`).join('');
+    const subOffsets = [-6, 0, -10];
+    const subBars = d.subs.map((sub, i) => { const sc = Math.min(100, Math.max(0, Math.round(avgScore) + subOffsets[i])); const col = sc>=80?'var(--t1)':sc>=60?'var(--t2)':'var(--t3)'; return `<div class="domain-sub-bar"><div class="domain-sub-bar-label">${sub}</div><div class="domain-sub-bar-fill"><div class="score-bar-fill" style="width:${sc}%;height:100%;background:${col}"></div></div><div class="domain-sub-bar-value" style="color:${col}">${sc}%</div></div>`; }).join('');
     return `<div class="domain-card"><div style="font-size: 24px; margin-bottom: 8px;">${d.icon}</div><div class="domain-title">${d.name}</div><div class="domain-stat">${avgScore.toFixed(0)}%</div><div class="score-bar" style="margin: 8px 0;"><div class="score-bar-fill" style="width: ${avgScore}%"></div></div><div class="domain-subsection"><div class="domain-sub-title">Sub-skills</div>${subBars}</div></div>`;
   }).join('');
   document.getElementById('domain-container').innerHTML = cards;
+  const n = Math.max(S.students.length, 1);
+  const ds = { Phonics: S.students.reduce((a,s)=>a+(s.phonics||0),0)/n, Comprehension: S.students.reduce((a,s)=>a+(s.comprehension||0),0)/n, Vocabulary: S.students.reduce((a,s)=>a+(s.vocabulary||0),0)/n };
+  const sorted = Object.entries(ds).sort((a,b)=>a[1]-b[1]);
+  const prCard = document.getElementById('domain-priorities-card');
+  if (prCard) prCard.innerHTML = `<h3>Class-wide Priorities</h3><p style="font-size:13px;color:var(--muted);line-height:1.7">Class averages — Phonics: <strong>${ds.Phonics.toFixed(0)}%</strong> · Comprehension: <strong>${ds.Comprehension.toFixed(0)}%</strong> · Vocabulary: <strong>${ds.Vocabulary.toFixed(0)}%</strong>.<br><br><strong style="color:var(--t3)">⚠ Priority focus: ${sorted[0][0]}</strong> (${sorted[0][1].toFixed(0)}% avg) — target in Tier 2/3 small groups. <strong style="color:var(--t1)">✓ Strength: ${sorted[sorted.length-1][0]}</strong> (${sorted[sorted.length-1][1].toFixed(0)}% avg) — leverage for enrichment and peer support.</p>`;
 }
 
 function renderGrowth() {
@@ -807,8 +814,10 @@ function resetGroups() {
 }
 
 function renderInterventions() {
-  const kpiData = { active: S.interventions.filter(i => i.status === 'Active').length, tier3: S.students.filter(s => s.tier === 't3').length, tier2: S.students.filter(s => s.tier === 't2').length, avgSessions: (Math.random() * 3 + 2).toFixed(1) };
-  const kpiHTML = `<div class="card card-kpi"><div class="kpi-label">Active Interventions</div><div class="kpi-value">${kpiData.active}</div></div><div class="card card-kpi"><div class="kpi-label">Tier 3 Students</div><div class="kpi-value">${kpiData.tier3}</div></div><div class="card card-kpi"><div class="kpi-label">Tier 2 Students</div><div class="kpi-value">${kpiData.tier2}</div></div><div class="card card-kpi"><div class="kpi-label">Avg Sessions/Week</div><div class="kpi-value">${kpiData.avgSessions}</div></div>`;
+  const activeInts = S.interventions.filter(i => i.status === 'Active');
+  const studentsServed = new Set(S.groups.filter(g => activeInts.some(i => i.groupName === g.name)).flatMap(g => g.students)).size || (S.students.filter(s=>s.tier==='t3').length + S.students.filter(s=>s.tier==='t2').length);
+  const weeksLeft = activeInts.reduce((sum,i) => sum + Math.max(0, i.totalWeeks - i.weekNumber), 0);
+  const kpiHTML = `<div class="card card-kpi"><div class="kpi-label">Active Interventions</div><div class="kpi-value">${activeInts.length}</div></div><div class="card card-kpi"><div class="kpi-label">Students Served</div><div class="kpi-value" style="color:var(--accent2)">${studentsServed}</div></div><div class="card card-kpi"><div class="kpi-label">Tier 3 Intensive</div><div class="kpi-value" style="color:var(--t3)">${S.students.filter(s=>s.tier==='t3').length}</div></div><div class="card card-kpi"><div class="kpi-label">Weeks Remaining</div><div class="kpi-value" style="color:var(--t2)">${weeksLeft||'—'}</div></div>`;
   document.getElementById('intervention-kpi-container').innerHTML = kpiHTML;
   const interventionCards = (S.interventions || []).map(i => {
     const progress = Math.floor((i.weekNumber / i.totalWeeks) * 100);
@@ -832,7 +841,7 @@ async function saveNewIntervention() {
   const goal = document.getElementById('intGoal').value;
   const focus = document.getElementById('intFocus').value;
   const freq = document.getElementById('intFreq').value;
-  if (\!prog) { toast('Enter a program name', 'var(--t3)'); return; }
+  if (!prog) { toast('Enter a program name', 'var(--t3)'); return; }
   const payload = {
     programName: prog, groupName: group, goal, focusAreas: focus.split(',').map(a=>a.trim()).filter(Boolean),
     frequency: freq, status: 'Planned', weekNumber: 1, totalWeeks: 8,
@@ -853,7 +862,33 @@ function updateProgress(id) {
   if (int && int.weekNumber < int.totalWeeks) { int.weekNumber++; int.status = 'Active'; saveAll(); renderInterventions(); toast('Progress updated', 'var(--t1)'); }
 }
 
-function viewIntervention(id) { toast('View intervention details', 'var(--t1)'); }
+function viewIntervention(id) {
+  const inv = S.interventions.find(i => i.id === id);
+  if (!inv) return;
+  const group = S.groups.find(g => g.name === inv.groupName);
+  const students = group ? group.students.map(sid => S.students.find(s => s.id === sid)).filter(Boolean) : [];
+  const progress = Math.min(100, Math.floor((inv.weekNumber / inv.totalWeeks) * 100));
+  const statusCol = inv.status === 'Active' ? 'var(--t1)' : inv.status === 'Planned' ? 'var(--t2)' : 'var(--t3)';
+  const html = `
+    <h3 style="margin-bottom:4px;font-family:var(--serif)">${inv.programName}</h3>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:16px">${inv.groupName||'No group assigned'} · ${inv.frequency||'—'} · <span style="color:${statusCol};font-weight:600">${inv.status}</span></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+      <div style="padding:10px;background:var(--bg3);border-radius:8px;text-align:center"><div style="font-size:9px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Progress</div><div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--accent)">Wk ${inv.weekNumber}/${inv.totalWeeks}</div></div>
+      <div style="padding:10px;background:var(--bg3);border-radius:8px;text-align:center"><div style="font-size:9px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Complete</div><div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--accent2)">${progress}%</div></div>
+      <div style="padding:10px;background:var(--bg3);border-radius:8px;text-align:center"><div style="font-size:9px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Students</div><div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--t1)">${students.length || inv.participants || 0}</div></div>
+    </div>
+    ${inv.goal ? `<div style="font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:6px">Goal</div><div style="font-size:13px;padding:10px;background:var(--bg3);border-radius:6px;margin-bottom:16px">${inv.goal}</div>` : ''}
+    <div style="font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:6px">Progress Bar</div>
+    <div class="score-bar" style="height:8px;margin-bottom:16px"><div class="score-bar-fill" style="width:${progress}%;background:var(--t1)"></div></div>
+    <div style="font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:8px">Students in Group</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">${students.length ? students.map(s => `<div style="padding:6px 10px;background:var(--bg3);border-radius:6px;font-size:12px"><strong>${s.firstName} ${s.lastName}</strong> <span class="tier-badge tier-${s.tier}" style="margin-left:4px">T${s.tier[1]}</span></div>`).join('') : '<span style="color:var(--muted);font-size:12px">No students linked — create a group in Group Builder and assign it here.</span>'}</div>
+    ${inv.weekNumber < inv.totalWeeks
+      ? `<button class="btn primary" onclick="updateProgress(${id});closeModal('planModal')" style="width:100%;padding:10px">⚡ Advance to Week ${inv.weekNumber + 1}</button>`
+      : `<div style="text-align:center;padding:12px;background:var(--t1b);border-radius:8px;color:var(--t1);font-weight:600">✓ Intervention Complete — ${inv.totalWeeks} weeks</div>`}
+  `;
+  document.getElementById('plan-content').innerHTML = html;
+  document.getElementById('planModal').classList.add('active');
+}
 
 function renderReports() {
   const reports = [
@@ -1232,7 +1267,7 @@ function openPlan(studentId) {
     <div style="font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">Active Interventions</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:16px">${activeInts.length ? activeInts.map(i=>`• ${i.programName||i.name} — Week ${i.weekNumber}/${i.totalWeeks} (${i.status})`).join('<br>') : 'No active interventions assigned.'}</p>
     <div style="display:flex;gap:8px">
-      <button class="btn primary" onclick="go('assess',document.querySelector('[data-view=assess]'));closeModal('planModal')" style="flex:1">📊 Record Assessment</button>
+      <button class="btn primary" onclick="S._pendingAssessId=${studentId};go('assess',document.querySelector('[data-view=assess]'));closeModal('planModal')" style="flex:1">📊 Record Assessment</button>
       <button class="btn" onclick="go('qualdata',document.querySelector('[data-view=qualdata]'));S.selectedStudent=S.students.find(s=>s.id==${studentId});renderQualdata();closeModal('planModal')" style="flex:1">◑ Add Observation</button>
     </div>
     <div style="display:flex;gap:8px;margin-top:8px">
@@ -1416,12 +1451,22 @@ function saveSettings() {
     if (el) s[k] = el.value;
   });
   localStorage.setItem('lm_settings', JSON.stringify(s));
-  // Update sidebar teacher display if name changed
-  if (s.teacher) {
-    const initials = s.teacher.replace(/[^A-Z]/g, '') || s.teacher.substring(0,2).toUpperCase();
-    document.querySelector('.avatar').textContent = initials.substring(0,2);
-  }
+  updateSidebarFromSettings(s);
   toast('Settings saved', 'var(--t1)');
+}
+
+function updateSidebarFromSettings(s) {
+  if (!s) s = JSON.parse(localStorage.getItem('lm_settings') || '{}');
+  const nameEl = document.getElementById('sidebar-teacher-name');
+  const roleEl = document.getElementById('sidebar-teacher-role');
+  const avatarEl = document.getElementById('sidebar-avatar');
+  if (nameEl && s.teacher) nameEl.textContent = s.teacher;
+  if (roleEl && s.role) roleEl.textContent = s.role;
+  if (avatarEl && s.teacher) {
+    const words = s.teacher.trim().split(/\s+/);
+    const initials = words.length >= 2 ? (words[0][0] + words[words.length-1][0]).toUpperCase() : s.teacher.substring(0,2).toUpperCase();
+    avatarEl.textContent = initials;
+  }
 }
 
 function saveBenchmarks() {
@@ -1503,15 +1548,20 @@ function renderAssess() {
   if (sel) {
     sel.innerHTML = '<option value="">Select student...</option>' + S.students.map(s => `<option value="${s.id}">${s.firstName} ${s.lastName} — Grade ${s.grade} (${s.tier.toUpperCase()})</option>`).join('');
     sel.onchange = () => loadAssessHistory(parseInt(sel.value));
+    if (S._pendingAssessId) {
+      sel.value = S._pendingAssessId;
+      loadAssessHistory(S._pendingAssessId);
+      S._pendingAssessId = null;
+    }
   }
   const today = new Date().toISOString().split('T')[0];
   const dateEl = document.getElementById('assessDate');
-  if (dateEl && \!dateEl.value) dateEl.value = today;
+  if (dateEl && !dateEl.value) dateEl.value = today;
 }
 
 function loadAssessHistory(studentId) {
   const student = S.students.find(s => s.id === studentId);
-  if (\!student) return;
+  if (!student) return;
   const studentAssessments = S.assessments.filter(a => a.studentId === studentId);
   const panel = document.getElementById('assess-history-panel');
   const rows = studentAssessments.length === 0
@@ -1530,7 +1580,7 @@ function loadAssessHistory(studentId) {
 
 async function submitAssessment() {
   const studentId = parseInt(document.getElementById('assessStudent').value);
-  if (\!studentId) { toast('Select a student', 'var(--t3)'); return; }
+  if (!studentId) { toast('Select a student', 'var(--t3)'); return; }
   const payload = {
     studentId,
     date: document.getElementById('assessDate').value,
@@ -1606,7 +1656,11 @@ function exportRosterCSV() {
 }
 
 function generateHandoff() {
-  let text = `LITERACY INTERVENTION HANDOFF DOCUMENT\nGenerated: ${new Date().toLocaleDateString()}\nTeacher: Ms. Rowe — Reading Specialist\n\n${'='.repeat(60)}\n\n`;
+  const hs = JSON.parse(localStorage.getItem('lm_settings') || '{}');
+  const htName = hs.teacher || 'Ms. Rowe';
+  const htRole = hs.role || 'Reading Specialist';
+  const htSchool = hs.school ? hs.school + '\n' : '';
+  let text = `LITERACY INTERVENTION HANDOFF DOCUMENT\n${htSchool}Teacher: ${htName} — ${htRole}\nGenerated: ${new Date().toLocaleDateString()}\n\n${'='.repeat(60)}\n\n`;
   ['t3','t2','t1'].forEach(tier => {
     const tierName = tier==='t3'?'TIER 3 — INTENSIVE':tier==='t2'?'TIER 2 — STRATEGIC':'TIER 1 — CORE';
     const students = S.students.filter(s=>s.tier===tier);
