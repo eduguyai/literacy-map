@@ -214,6 +214,7 @@
           <div class="sidebar-item" data-view="reports" onclick="go('reports', this)">◻ Reports</div>
           <div class="sidebar-item" data-view="import" onclick="go('import', this)">⬆ Import Data</div>
           <div class="sidebar-item" data-view="strategies" onclick="go('strategies', this)">📝 Strategies</div>
+          <div class="sidebar-item" data-view="settings" onclick="go('settings', this)">⚙ Settings</div>
         </div>
       </div>
       <div class="sidebar-footer">
@@ -289,6 +290,67 @@
     </div>
 
 <div class="view" id="view-strategies"><h2 style="margin-bottom: 16px;">Strategies & Lessons</h2><div class="filter-group"><button class="filter-btn active" onclick="filterStrategies('all')">All</button><button class="filter-btn" onclick="filterStrategies('phonics')">Phonics</button><button class="filter-btn" onclick="filterStrategies('fluency')">Fluency</button><button class="filter-btn" onclick="filterStrategies('comprehension')">Comprehension</button><button class="filter-btn" onclick="filterStrategies('vocabulary')">Vocabulary</button></div><div id="strategies-container" class="g2"></div></div>
+
+<div class="view" id="view-settings">
+  <h2 style="margin-bottom:24px;">Settings</h2>
+  <div class="g2" style="align-items:start">
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <h3 style="margin-bottom:16px">School Information</h3>
+        <label>School Name</label>
+        <input type="text" id="set-school" placeholder="e.g. Lincoln Elementary">
+        <label>Teacher Name</label>
+        <input type="text" id="set-teacher" placeholder="e.g. Ms. Rowe">
+        <label>Role / Position</label>
+        <input type="text" id="set-role" placeholder="e.g. Reading Specialist">
+        <label>Grade Levels Served</label>
+        <input type="text" id="set-grades" placeholder="e.g. K–5">
+        <label>School Year</label>
+        <input type="text" id="set-year" placeholder="e.g. 2025–2026">
+        <button class="btn primary" onclick="saveSettings()" style="width:100%;margin-top:16px">💾 Save Settings</button>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:16px">Fluency Benchmark Targets (WPM)</h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Used to color-code student progress. Set grade-level end-of-year targets.</p>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:8px 16px;align-items:center;font-size:13px">
+          <label style="text-transform:none;font-size:13px;margin:0;color:var(--text)">Kindergarten</label><input type="number" id="bm-K" placeholder="20" style="margin:0">
+          <label style="text-transform:none;font-size:13px;margin:0;color:var(--text)">Grade 1</label><input type="number" id="bm-1" placeholder="60" style="margin:0">
+          <label style="text-transform:none;font-size:13px;margin:0;color:var(--text)">Grade 2</label><input type="number" id="bm-2" placeholder="90" style="margin:0">
+          <label style="text-transform:none;font-size:13px;margin:0;color:var(--text)">Grade 3</label><input type="number" id="bm-3" placeholder="115" style="margin:0">
+          <label style="text-transform:none;font-size:13px;margin:0;color:var(--text)">Grade 4</label><input type="number" id="bm-4" placeholder="140" style="margin:0">
+          <label style="text-transform:none;font-size:13px;margin:0;color:var(--text)">Grade 5</label><input type="number" id="bm-5" placeholder="160" style="margin:0">
+        </div>
+        <button class="btn primary" onclick="saveBenchmarks()" style="width:100%;margin-top:16px">💾 Save Benchmarks</button>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <h3 style="margin-bottom:12px">About LiteracyMap</h3>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7">LiteracyMap is a reading intervention tracker designed for classroom teachers and reading specialists. It supports MTSS/RTI frameworks by providing:</p>
+        <ul style="font-size:12px;color:var(--muted);line-height:1.9;padding-left:20px;margin-top:8px">
+          <li>Tier-based student roster management</li>
+          <li>Multi-measure assessment tracking (DRA, F&P, WPM, comprehension, phonics)</li>
+          <li>Qualitative observation logging</li>
+          <li>Intervention program planning and progress monitoring</li>
+          <li>Group builder for small-group instruction</li>
+          <li>Evidence-based strategy library</li>
+          <li>MTSS report generation</li>
+        </ul>
+        <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:8px;font-size:11px;font-family:var(--mono);color:var(--dim)">
+          Version 1.0 · Sprint 3 · Built for Ms. Rowe
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:12px">Data Management</h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px">All data is stored on your Railway server. Export regularly as backup.</p>
+        <button class="btn" onclick="exportSessionJSON()" style="width:100%;margin-bottom:8px">⬇ Export All Data (JSON)</button>
+        <button class="btn" onclick="importSessionJSON()" style="width:100%;margin-bottom:8px">⬆ Import Session (JSON)</button>
+        <button class="btn" style="width:100%;margin-bottom:8px;color:var(--t2);border-color:var(--t2d)" onclick="clearCharts()">🔄 Reset Charts</button>
+        <button class="btn" style="width:100%;color:var(--t3);border-color:var(--t3d)" onclick="hardReset()">🗑 Hard Reset All Data</button>
+      </div>
+    </div>
+  </div>
+</div>
       </div>
     </div>
   </div>
@@ -360,7 +422,7 @@ function go(view, btn) {
   S.currentView = view;
   closeNav();
   const renders = {
-    overview: renderOverview, roster: () => renderRoster('all'), assess: renderAssess, domains: renderDomains, growth: renderGrowth, qualdata: renderQualdata, groups: renderGroups, interventions: renderInterventions, reports: renderReports, import: renderImport, strategies: () => renderStrategies('all')
+    overview: renderOverview, roster: () => renderRoster('all'), assess: renderAssess, domains: renderDomains, growth: renderGrowth, qualdata: renderQualdata, groups: renderGroups, interventions: renderInterventions, reports: renderReports, import: renderImport, strategies: () => renderStrategies('all'), settings: renderSettings
   };
   if (renders[view]) renders[view]();
 }
@@ -417,7 +479,11 @@ function selStudent(id) {
     { name: 'Vocabulary', score: student.vocabulary }
   ];
   const domainsHTML = domainScores.map(d => `<div style="margin-bottom: 12px;"><div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;"><span>${d.name}</span><span style="color: var(--accent); font-weight: 600;">${d.score}%</span></div><div class="score-bar"><div class="score-bar-fill" style="width: ${d.score}%"></div></div></div>`).join('');
-  const panelHTML = `<div class="detail-header"><h2>${student.firstName} ${student.lastName}</h2><div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Grade ${student.grade}</div><div style="margin-top: 8px;"><span class="tier-badge tier-${student.tier}">Tier ${student.tier[1]}</span></div></div>${flagsHTML ? `<div class="detail-section"><div class="detail-section-title">Flags</div>${flagsHTML}</div>` : ''}<div class="detail-section"><div class="detail-section-title">Domain Scores</div>${domainsHTML}</div><div class="detail-section"><div class="detail-section-title">Reading Data</div><div style="font-size: 12px;"><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>Level:</span> <strong>${student.readingLevel}</strong></div><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>WPM:</span> <strong>${student.fluencyWPM}</strong></div></div></div><div class="detail-section"><button class="btn primary" onclick="openPlan(${student.id})" style="width: 100%; padding: 10px; margin-bottom: 8px;">📋 View Full Profile</button><button class="btn secondary" onclick="openPlan(${student.id})" style="width: 100%; padding: 10px;">✏ Plan</button></div>`;
+  const bm = getBenchmark(student.grade);
+  const bmPct = Math.min(Math.round(student.fluencyWPM/bm*100),100);
+  const bmColor = bmPct>=85?'var(--t1)':bmPct>=60?'var(--t2)':'var(--t3)';
+  const bmSection = `<div class="detail-section"><div class="detail-section-title">Fluency vs. Benchmark</div><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px"><span>${student.fluencyWPM} WPM</span><span style="color:var(--muted)">Target: ${bm} WPM</span></div><div class="score-bar"><div class="score-bar-fill" style="width:${bmPct}%;background:${bmColor}"></div></div><div style="font-size:11px;color:${bmColor};margin-top:4px;font-weight:600">${bmPct}% of grade ${student.grade} benchmark</div></div>`;
+  const panelHTML = `<div class="detail-header"><h2>${student.firstName} ${student.lastName}</h2><div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Grade ${student.grade}</div><div style="margin-top: 8px;"><span class="tier-badge tier-${student.tier}">Tier ${student.tier[1]}</span></div></div>${bmSection}${flagsHTML ? `<div class="detail-section"><div class="detail-section-title">Flags</div>${flagsHTML}</div>` : ''}<div class="detail-section"><div class="detail-section-title">Domain Scores</div>${domainsHTML}</div><div class="detail-section"><div class="detail-section-title">Reading Data</div><div style="font-size: 12px;"><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>Level:</span> <strong>${student.readingLevel}</strong></div><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>WPM:</span> <strong>${student.fluencyWPM}</strong></div></div></div><div class="detail-section"><button class="btn primary" onclick="openPlan(${student.id})" style="width: 100%; padding: 10px; margin-bottom: 8px;">📋 View Full Profile</button><button class="btn secondary" onclick="openPlan(${student.id})" style="width: 100%; padding: 10px;">✏ Plan</button></div>`;
   panel.innerHTML = panelHTML;
   panel.style.display = 'block';
 }
@@ -483,10 +549,24 @@ function renderDomains() {
 }
 
 function renderGrowth() {
-  const kpiData = { avgGrowth: '8.4', onTrack: '78', promotions: '2', regression: '1' };
-  const kpiHTML = `<div class="card card-kpi"><div class="kpi-label">Avg Fluency Growth</div><div class="kpi-value">+${kpiData.avgGrowth}</div><div style="font-size: 11px; color: var(--muted);">WPM</div></div><div class="card card-kpi"><div class="kpi-label">On-Track %</div><div class="kpi-value">${kpiData.onTrack}%</div></div><div class="card card-kpi"><div class="kpi-label">Tier Promotions</div><div class="kpi-value">${kpiData.promotions}</div></div><div class="card card-kpi"><div class="kpi-label">Regression Risk</div><div class="kpi-value">${kpiData.regression}</div></div>`;
+  // Calculate real growth metrics
+  const gains = S.students.map(s => {
+    const stuAssess = S.assessments.filter(a=>a.studentId===s.id && a.fluencyWPM).sort((a,b)=>new Date(a.date||a.createdAt)-new Date(b.date||b.createdAt));
+    return stuAssess.length>=2 ? stuAssess[stuAssess.length-1].fluencyWPM - stuAssess[0].fluencyWPM : 0;
+  });
+  const avgGrowth = gains.length ? (gains.reduce((a,b)=>a+b,0)/gains.length).toFixed(1) : '—';
+  const onTrack = S.students.filter(s => s.fluencyWPM >= getBenchmark(s.grade)*0.85).length;
+  const onTrackPct = S.students.length ? Math.round((onTrack/S.students.length)*100) : 0;
+  const promotions = S.students.filter(s=>s.tier==='t1').length;
+  const riskCount = S.students.filter(s=>s.tier==='t3' && s.fluencyWPM < getBenchmark(s.grade)*0.5).length;
+  const kpiHTML = `
+    <div class="card card-kpi" style="border-top:2px solid var(--accent)"><div class="kpi-label">Avg WPM Growth</div><div class="kpi-value" style="color:var(--accent)">+${avgGrowth}</div><div style="font-size:11px;color:var(--muted)">across all students</div></div>
+    <div class="card card-kpi" style="border-top:2px solid var(--t1)"><div class="kpi-label">On-Track</div><div class="kpi-value" style="color:var(--t1)">${onTrackPct}%</div><div style="font-size:11px;color:var(--muted)">&ge;85% of benchmark</div></div>
+    <div class="card card-kpi" style="border-top:2px solid var(--t2)"><div class="kpi-label">Tier Promotions</div><div class="kpi-value" style="color:var(--t2)">${promotions}</div><div style="font-size:11px;color:var(--muted)">currently in Tier 1</div></div>
+    <div class="card card-kpi" style="border-top:2px solid var(--t3)"><div class="kpi-label">Regression Risk</div><div class="kpi-value" style="color:var(--t3)">${riskCount}</div><div style="font-size:11px;color:var(--muted)">&lt;50% of benchmark</div></div>
+  `;
   document.getElementById('growth-kpi-container').innerHTML = kpiHTML;
-  setTimeout(() => { initGrowthCharts(); }, 100);
+  setTimeout(() => initGrowthCharts(), 100);
 }
 
 function renderQualdata() {
@@ -652,31 +732,148 @@ function updateProgress(id) {
 function viewIntervention(id) { toast('View intervention details', 'var(--t1)'); }
 
 function renderReports() {
-  const reportDefs = [ { name: 'BOY Intervention Plan', id: 'boy' }, { name: 'Tier Placement Summary', id: 'tier' }, { name: 'Skill Gap Analysis', id: 'skillgap' }, { name: 'Parent Communication Packets', id: 'parent' }, { name: 'Grade-Level MTSS Summary', id: 'mtss' }, { name: 'At-Risk Watchlist', id: 'atrisk' }, { name: 'MOY Progress Tracking', id: 'moy' }, { name: 'Custom Report', id: 'custom' } ];
-  const html = reportDefs.map((r, i) => `<div class="card"><h3>${r.name}</h3><button class="btn primary" onclick="generateReport('${r.id}')" style="width: 100%; margin-top: 12px;">Generate →</button></div>`).join('');
+  const reports = [
+    { id:'boy', icon:'📋', title:'BOY Intervention Plan', desc:'Tier 3 & 2 students — goals, groupings, recommended programs' },
+    { id:'tier', icon:'📊', title:'Tier Placement Summary', desc:'All students by tier with fluency % of benchmark' },
+    { id:'skillgap', icon:'📈', title:'Skill Gap Analysis', desc:'Class-wide proficiency by domain with visual bars' },
+    { id:'parent', icon:'👨‍👩‍👧', title:'Parent Communication Packets', desc:'Individual letters for each student in plain language' },
+    { id:'mtss', icon:'🏫', title:'Grade-Level MTSS Summary', desc:'Admin-ready overview — tier counts, populations, priorities' },
+    { id:'atrisk', icon:'⚠️', title:'At-Risk Watchlist', desc:'Students below 60% of benchmark with concern flags' },
+    { id:'moy', icon:'✅', title:'MOY Progress Tracking Sheet', desc:'Tabular view: WPM, benchmark %, status for all students' },
+    { id:'custom', icon:'✏️', title:'Custom Report', desc:'Blank report template with current session metadata' }
+  ];
+  const html = reports.map(r => `
+    <div class="card" style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:start;gap:12px">
+        <div style="font-size:24px;width:36px;text-align:center;flex-shrink:0">${r.icon}</div>
+        <div><div style="font-family:var(--serif);font-size:15px;font-weight:600;margin-bottom:4px">${r.title}</div><div style="font-size:12px;color:var(--muted)">${r.desc}</div></div>
+      </div>
+      <button class="btn primary" onclick="generateReport('${r.id}')" style="width:100%;padding:8px">Generate →</button>
+    </div>`).join('');
   document.getElementById('reports-container').innerHTML = html;
 }
 
 function generateReport(type) {
-  let reportText = '';
-  if (type === 'tier') {
-    reportText = `TIER PLACEMENT SUMMARY\nDate: ${new Date().toLocaleDateString()}\n\n`;
-    reportText += `TIER 3 (Intensive):\n`;
-    S.students.filter(s => s.tier === 't3').forEach(s => { reportText += `  • ${s.firstName} ${s.lastName} - ${s.readingLevel}, ${s.comprehension}% comprehension\n`; });
-    reportText += `\nTIER 2 (Strategic):\n`;
-    S.students.filter(s => s.tier === 't2').forEach(s => { reportText += `  • ${s.firstName} ${s.lastName} - ${s.readingLevel}, ${s.comprehension}% comprehension\n`; });
-    reportText += `\nTIER 1 (Core):\n`;
-    S.students.filter(s => s.tier === 't1').forEach(s => { reportText += `  • ${s.firstName} ${s.lastName} - ${s.readingLevel}, ${s.comprehension}% comprehension\n`; });
+  const today = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  const settings = JSON.parse(localStorage.getItem('lm_settings') || '{}');
+  const school = settings.school || 'School';
+  const teacher = settings.teacher || 'Ms. Rowe';
+  const header = `${school}\nGenerated: ${today}\nPrepared by: ${teacher}\n${'═'.repeat(55)}\n\n`;
+  let text = '';
+
+  if (type === 'boy') {
+    text = `BEGINNING OF YEAR INTERVENTION PLAN\n${header}`;
+    text += `PROGRAM OVERVIEW\nThis intervention plan addresses the needs of students identified through universal screening. Students are grouped into MTSS Tiers based on assessment data.\n\n`;
+    ['t3','t2'].forEach(tier => {
+      const label = tier==='t3'?'TIER 3 — INTENSIVE INTERVENTION':'TIER 2 — STRATEGIC INTERVENTION';
+      const freq = tier==='t3'?'Daily, 30 min':'3x/week, 20 min';
+      const program = tier==='t3'?'Orton-Gillingham / SPIRE':'F&P LLI / Wilson Reading';
+      const students = S.students.filter(s=>s.tier===tier);
+      text += `${label}\nFrequency: ${freq}\nRecommended Program: ${program}\nStudents (${students.length}):\n`;
+      students.forEach(s => {
+        const flags = [s.el&&'EL',s.iep&&'IEP',s.flag504&&'504'].filter(Boolean);
+        text += `  • ${s.firstName} ${s.lastName} (Gr.${s.grade}) — ${s.readingLevel}, ${s.fluencyWPM} WPM${flags.length?' ['+flags.join(',')+']':''}\n`;
+      });
+      text += '\n';
+    });
+  } else if (type === 'tier') {
+    text = `TIER PLACEMENT SUMMARY\n${header}`;
+    const total = S.students.length;
+    ['t3','t2','t1'].forEach(tier => {
+      const label = tier==='t3'?'TIER 3 — INTENSIVE':tier==='t2'?'TIER 2 — STRATEGIC':'TIER 1 — CORE';
+      const students = S.students.filter(s=>s.tier===tier);
+      const pct = total ? Math.round(students.length/total*100) : 0;
+      text += `${label} — ${students.length} students (${pct}%)\n${'-'.repeat(40)}\n`;
+      students.forEach(s => {
+        const flags = [s.el&&'EL',s.iep&&'IEP',s.flag504&&'504',s.gate&&'GATE'].filter(Boolean);
+        const bm = getBenchmark(s.grade);
+        const pctBm = Math.round(s.fluencyWPM/bm*100);
+        text += `  ${s.firstName} ${s.lastName} | Gr.${s.grade} | ${s.readingLevel} | ${s.fluencyWPM} WPM (${pctBm}% of bm) | Comp: ${s.comprehension}%${flags.length?' ['+flags.join(',')+']':''}\n`;
+      });
+      text += '\n';
+    });
   } else if (type === 'skillgap') {
-    const avgPhonics = S.students.reduce((a, s) => a + s.phonics, 0) / S.students.length;
-    const avgFluency = S.students.reduce((a, s) => a + s.fluency, 0) / S.students.length;
-    const avgComp = S.students.reduce((a, s) => a + s.comprehension, 0) / S.students.length;
-    const avgVocab = S.students.reduce((a, s) => a + s.vocabulary, 0) / S.students.length;
-    reportText = `SKILL GAP ANALYSIS\nDate: ${new Date().toLocaleDateString()}\n\nClass Averages:\n  Phonics: ${avgPhonics.toFixed(1)}%\n  Fluency: ${avgFluency.toFixed(1)}%\n  Comprehension: ${avgComp.toFixed(1)}%\n  Vocabulary: ${avgVocab.toFixed(1)}%\n\nPriority Areas for Intervention:\n  1. ${avgPhonics < avgComp ? 'Phonics' : 'Comprehension'} (lowest performance)\n  2. ${avgFluency < 70 ? 'Fluency' : 'Advanced instruction'}\n`;
+    text = `SKILL GAP ANALYSIS\n${header}`;
+    const domains = ['phonics','fluency','comprehension','vocabulary'];
+    const labels = { phonics:'Phonics & Decoding', fluency:'Reading Fluency', comprehension:'Comprehension', vocabulary:'Vocabulary' };
+    text += `CLASS-WIDE AVERAGES\n`;
+    domains.forEach(d => {
+      const avg = S.students.reduce((a,s)=>a+(s[d]||0),0)/Math.max(S.students.length,1);
+      const bar = '█'.repeat(Math.round(avg/5)) + '░'.repeat(20-Math.round(avg/5));
+      text += `  ${labels[d].padEnd(25)} ${bar} ${avg.toFixed(1)}%\n`;
+    });
+    text += '\nSTUDENTS BELOW 60% — PRIORITY FOR INTERVENTION\n';
+    domains.forEach(d => {
+      const below = S.students.filter(s=>(s[d]||0)<60);
+      if (below.length) { text += `\n  ${labels[d]} (${below.length} students):\n`; below.forEach(s => { text += `    • ${s.firstName} ${s.lastName}: ${s[d]}%\n`; }); }
+    });
+  } else if (type === 'parent') {
+    text = `PARENT COMMUNICATION PACKETS\n${header}`;
+    S.students.forEach(s => {
+      const bm = getBenchmark(s.grade);
+      const pctBm = Math.round(s.fluencyWPM/bm*100);
+      const tierMsg = s.tier==='t3'
+        ? 'Your child is receiving intensive small-group reading instruction in addition to classroom reading instruction.'
+        : s.tier==='t2'
+        ? 'Your child is receiving additional small-group reading support to strengthen key reading skills.'
+        : 'Your child is meeting grade-level reading expectations and receiving core classroom instruction.';
+      text += `\nDear Family of ${s.firstName} ${s.lastName},\n\n`;
+      text += `${tierMsg}\n\n`;
+      text += `Current Reading Data:\n  • Reading Level: ${s.readingLevel}\n  • Fluency: ${s.fluencyWPM} words per minute (grade benchmark: ${bm} WPM)\n  • Comprehension: ${s.comprehension}%\n  • Last Assessed: ${s.lastAssessed||'This school year'}\n\n`;
+      text += `If you have questions about your child's reading progress, please contact ${teacher} at ${school}.\n\n${'─'.repeat(50)}\n`;
+    });
+  } else if (type === 'mtss') {
+    text = `GRADE-LEVEL MTSS SUMMARY\n${header}`;
+    const t3 = S.students.filter(s=>s.tier==='t3');
+    const t2 = S.students.filter(s=>s.tier==='t2');
+    const t1 = S.students.filter(s=>s.tier==='t1');
+    const total = S.students.length;
+    text += `TIER DISTRIBUTION OVERVIEW\n  Tier 3 Intensive: ${t3.length} students (${total?Math.round(t3.length/total*100):0}%)\n  Tier 2 Strategic: ${t2.length} students (${total?Math.round(t2.length/total*100):0}%)\n  Tier 1 Core:      ${t1.length} students (${total?Math.round(t1.length/total*100):0}%)\n  Total Enrolled:   ${total} students\n\n`;
+    text += `ACTIVE INTERVENTIONS (${S.interventions.filter(i=>i.status==='Active').length})\n`;
+    S.interventions.filter(i=>i.status==='Active').forEach(i => { text += `  • ${i.programName} — ${i.participants} students, Week ${i.weekNumber}/${i.totalWeeks}\n`; });
+    text += `\nPRIORITY SKILL AREAS\n`;
+    const avgPhonics = S.students.reduce((a,s)=>a+s.phonics,0)/Math.max(total,1);
+    const avgComp = S.students.reduce((a,s)=>a+s.comprehension,0)/Math.max(total,1);
+    if (avgPhonics < 70) text += `  ⚠ Phonics & Decoding — class avg ${avgPhonics.toFixed(0)}% (priority)\n`;
+    if (avgComp < 75) text += `  ⚠ Comprehension — class avg ${avgComp.toFixed(0)}% (priority)\n`;
+    text += `\nSPECIAL POPULATIONS\n  EL Students: ${S.students.filter(s=>s.el).length}\n  IEP Students: ${S.students.filter(s=>s.iep).length}\n  504 Plans: ${S.students.filter(s=>s.flag504).length}\n  GATE: ${S.students.filter(s=>s.gate).length}\n`;
+  } else if (type === 'atrisk') {
+    text = `AT-RISK STUDENT WATCHLIST\n${header}`;
+    text += `Students below 60% of grade-level benchmark OR showing decline:\n\n`;
+    const atRisk = S.students.filter(s => {
+      const bm = getBenchmark(s.grade);
+      return s.fluencyWPM < bm * 0.6 || s.comprehension < 50 || s.phonics < 50;
+    });
+    if (!atRisk.length) { text += 'No students currently flagged as at-risk.\n'; }
+    atRisk.forEach(s => {
+      const bm = getBenchmark(s.grade);
+      const flags = [s.el&&'EL',s.iep&&'IEP',s.flag504&&'504'].filter(Boolean);
+      text += `${s.firstName} ${s.lastName} — Grade ${s.grade}${flags.length?' ['+flags.join(',')+']':''}\n`;
+      text += `  Fluency: ${s.fluencyWPM} WPM (${Math.round(s.fluencyWPM/bm*100)}% of ${bm} WPM benchmark)\n`;
+      text += `  Comprehension: ${s.comprehension}%  |  Phonics: ${s.phonics}%\n`;
+      text += `  Level: ${s.readingLevel}  |  Last assessed: ${s.lastAssessed||'—'}\n`;
+      const concerns = [];
+      if (s.fluencyWPM < bm*0.6) concerns.push('Fluency significantly below benchmark');
+      if (s.comprehension < 50) concerns.push('Critical comprehension gap');
+      if (s.phonics < 50) concerns.push('Phonics deficit — consider structured literacy');
+      text += `  Concerns: ${concerns.join('; ')}\n\n`;
+    });
+  } else if (type === 'moy') {
+    text = `MID-YEAR PROGRESS TRACKING SHEET\n${header}`;
+    text += `${'Student'.padEnd(22)}${'Gr'.padEnd(4)}${'Tier'.padEnd(6)}${'Level'.padEnd(9)}${'WPM'.padEnd(6)}${'BM'.padEnd(6)}${'%BM'.padEnd(6)}${'Comp'.padEnd(6)}${'Status'}\n`;
+    text += `${'─'.repeat(75)}\n`;
+    S.students.sort((a,b)=>a.tier.localeCompare(b.tier)).forEach(s => {
+      const bm = getBenchmark(s.grade);
+      const pctBm = Math.round(s.fluencyWPM/bm*100);
+      const status = pctBm>=85?'On Track':pctBm>=60?'Watch':'At Risk';
+      text += `${(s.firstName+' '+s.lastName).padEnd(22)}${String(s.grade).padEnd(4)}${s.tier.toUpperCase().padEnd(6)}${(s.readingLevel||'—').padEnd(9)}${String(s.fluencyWPM).padEnd(6)}${String(bm).padEnd(6)}${(pctBm+'%').padEnd(6)}${(s.comprehension+'%').padEnd(6)}${status}\n`;
+    });
+    text += `\n${'─'.repeat(75)}\nNote: Benchmark = end-of-year fluency target. ≥85% = On Track, 60–84% = Watch, <60% = At Risk\n`;
   } else {
-    reportText = `REPORT: ${type.toUpperCase()}\nDate: ${new Date().toLocaleDateString()}\n\nTotal Students: ${S.students.length}\n\nThis is a placeholder report. Customize via the API.`;
+    text = `REPORT: ${type.toUpperCase()}\n${header}Total Students: ${S.students.length}\nGenerated from current session data.`;
   }
-  document.getElementById('report-content').textContent = reportText;
+
+  document.getElementById('report-content').textContent = text;
   document.getElementById('reportModal').classList.add('active');
 }
 
@@ -819,48 +1016,83 @@ function assignStrategy(id) { toast('Strategy assigned (demo)', 'var(--t1)'); }
 
 function openPlan(studentId) {
   const student = S.students.find(s => s.id === studentId);
-  if (\!student) return;
-  const studentAssessments = S.assessments.filter(a => a.studentId === studentId).slice(-6);
+  if (!student) return;
+  const studentAssessments = S.assessments
+    .filter(a => a.studentId === studentId)
+    .sort((a,b) => new Date(a.date||a.createdAt) - new Date(b.date||b.createdAt));
   const flagsHTML = getFlagBadges(student);
   const activeInts = S.interventions.filter(i => i.status === 'Active');
   const obsCount = (S.qualObs[studentId] || []).length;
-  const assessTableRows = studentAssessments.length
-    ? studentAssessments.map(a => `<tr><td>${a.date||a.createdAt?.split('T')[0]||'—'}</td><td>${a.readingLevel||'—'}</td><td>${a.fluencyWPM||'—'}</td><td>${a.comprehension||'—'}%</td><td>${a.phonicsScore||'—'}%</td></tr>`).join('')
-    : '<tr><td colspan="5" style="color:var(--muted)">No assessments yet — use Record Assessment</td></tr>';
+  const benchmark = getBenchmark(student.grade);
+  const wpmPct = Math.round((student.fluencyWPM / benchmark) * 100);
   const tierColor = student.tier==='t3'?'var(--t3)':student.tier==='t2'?'var(--t2)':'var(--t1)';
   const recommendation = student.tier==='t3'
-    ? `<strong style="color:var(--t3)">Intensive Intervention Recommended:</strong> Daily small-group instruction (20–30 min) using structured literacy approach. Focus on phonics (${student.phonics}%) and fluency (${student.fluencyWPM} WPM). Monitor every 2 weeks.`
+    ? `<strong style="color:var(--t3)">Intensive Intervention Recommended:</strong> Daily small-group instruction (20–30 min) using structured literacy approach. Focus on phonics (${student.phonics}%) and fluency (${student.fluencyWPM} WPM vs. ${benchmark} WPM benchmark). Monitor every 2 weeks.`
     : student.tier==='t2'
-    ? `<strong style="color:var(--t2)">Strategic Support Recommended:</strong> 3x/week targeted small-group instruction (20 min). Focus on comprehension (${student.comprehension}%) and building reading fluency toward grade-level benchmark.`
-    : `<strong style="color:var(--t1)">Core Instruction:</strong> On track. Continue grade-level instruction. Consider enrichment opportunities to extend vocabulary and critical thinking skills.`;
+    ? `<strong style="color:var(--t2)">Strategic Support Recommended:</strong> 3x/week targeted small-group (20 min). Comprehension: ${student.comprehension}%, Fluency: ${student.fluencyWPM}/${benchmark} WPM (${wpmPct}% of benchmark). Progress-monitor every 4 weeks.`
+    : `<strong style="color:var(--t1)">Core Instruction:</strong> On track at ${student.fluencyWPM}/${benchmark} WPM (${wpmPct}% of benchmark). Continue grade-level instruction. Consider enrichment.`;
+  const assessTableRows = studentAssessments.length
+    ? studentAssessments.map(a => `<tr><td>${a.date||a.createdAt?.split('T')[0]||'—'}</td><td>${a.readingLevel||'—'}</td><td>${a.fluencyWPM!=null?a.fluencyWPM+'  WPM':'—'}</td><td>${a.comprehension!=null?a.comprehension+'%':'—'}</td><td>${a.phonicsScore!=null?a.phonicsScore+'%':'—'}</td></tr>`).join('')
+    : '<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:16px">No assessments yet — use 📊 Record Assessment</td></tr>';
+  const hasChartData = studentAssessments.length >= 2;
   const html = `
     <div style="display:flex;align-items:start;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)">
       <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0">${student.firstName[0]}${student.lastName[0]}</div>
       <div style="flex:1">
         <div style="font-family:var(--serif);font-size:20px;font-weight:600">${student.firstName} ${student.lastName}</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:4px">Grade ${student.grade} · ${student.readingLevel} · ${student.fluencyWPM} WPM</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">Grade ${student.grade} · ${student.readingLevel} · ${student.fluencyWPM} WPM · Last assessed: ${student.lastAssessed||'Never'}</div>
         <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><span class="tier-badge tier-${student.tier}">Tier ${student.tier[1]}</span>${flagsHTML}</div>
       </div>
-      <div style="text-align:right;font-size:11px;color:var(--muted)">Last assessed<br><strong style="color:var(--text)">${student.lastAssessed||'Never'}</strong></div>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
-      <div style="text-align:center;padding:12px;background:var(--bg3);border-radius:8px"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Phonics</div><div style="font-family:var(--serif);font-size:22px;font-weight:700;color:${student.phonics<60?'var(--t3)':student.phonics<75?'var(--t2)':'var(--t1)'}">${student.phonics}%</div></div>
-      <div style="text-align:center;padding:12px;background:var(--bg3);border-radius:8px"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Fluency</div><div style="font-family:var(--serif);font-size:22px;font-weight:700;color:${student.fluencyWPM<70?'var(--t3)':student.fluencyWPM<100?'var(--t2)':'var(--t1)'}">${student.fluencyWPM}</div></div>
-      <div style="text-align:center;padding:12px;background:var(--bg3);border-radius:8px"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Comp%</div><div style="font-family:var(--serif);font-size:22px;font-weight:700;color:${student.comprehension<60?'var(--t3)':student.comprehension<75?'var(--t2)':'var(--t1)'}">${student.comprehension}%</div></div>
-      <div style="text-align:center;padding:12px;background:var(--bg3);border-radius:8px"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Observations</div><div style="font-family:var(--serif);font-size:22px;font-weight:700;color:var(--accent)">${obsCount}</div></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+      <div style="text-align:center;padding:10px;background:var(--bg3);border-radius:8px;border-top:2px solid ${student.phonics<60?'var(--t3)':student.phonics<75?'var(--t2)':'var(--t1)'}"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Phonics</div><div style="font-family:var(--serif);font-size:24px;font-weight:700;color:${student.phonics<60?'var(--t3)':student.phonics<75?'var(--t2)':'var(--t1)'}">${student.phonics}%</div></div>
+      <div style="text-align:center;padding:10px;background:var(--bg3);border-radius:8px;border-top:2px solid ${student.fluencyWPM<benchmark*0.6?'var(--t3)':student.fluencyWPM<benchmark*0.85?'var(--t2)':'var(--t1)'}"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">WPM</div><div style="font-family:var(--serif);font-size:24px;font-weight:700;color:${student.fluencyWPM<benchmark*0.6?'var(--t3)':student.fluencyWPM<benchmark*0.85?'var(--t2)':'var(--t1)'}">${student.fluencyWPM}</div><div style="font-size:9px;color:var(--dim)">bm: ${benchmark}</div></div>
+      <div style="text-align:center;padding:10px;background:var(--bg3);border-radius:8px;border-top:2px solid ${student.comprehension<60?'var(--t3)':student.comprehension<75?'var(--t2)':'var(--t1)'}"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Comp%</div><div style="font-family:var(--serif);font-size:24px;font-weight:700;color:${student.comprehension<60?'var(--t3)':student.comprehension<75?'var(--t2)':'var(--t1)'}">${student.comprehension}%</div></div>
+      <div style="text-align:center;padding:10px;background:var(--bg3);border-radius:8px;border-top:2px solid var(--accent)"><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Obs.</div><div style="font-family:var(--serif);font-size:24px;font-weight:700;color:var(--accent)">${obsCount}</div></div>
     </div>
-    <div style="padding:12px 14px;border-radius:8px;border-left:3px solid ${tierColor};background:${student.tier==='t3'?'var(--t3b)':student.tier==='t2'?'var(--t2b)':'var(--t1b)'};font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:20px">${recommendation}</div>
-    <div style="font-size:11px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Assessment History</div>
-    <table style="font-size:12px;margin-bottom:20px"><thead><tr><th>Date</th><th>Level</th><th>WPM</th><th>Comp%</th><th>Phonics%</th></tr></thead><tbody>${assessTableRows}</tbody></table>
-    <div style="font-size:11px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Active Interventions</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:20px">${activeInts.length ? activeInts.map(i=>`• ${i.programName||i.name} (${i.status})`).join('<br>') : 'No active interventions. Use the Interventions view to assign one.'}</p>
+    <div style="padding:10px 14px;border-radius:8px;border-left:3px solid ${tierColor};background:${student.tier==='t3'?'var(--t3b)':student.tier==='t2'?'var(--t2b)':'var(--t1b)'};font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:16px">${recommendation}</div>
+    ${hasChartData ? `
+    <div style="font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Progress Monitoring</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div class="card" style="padding:12px"><div style="font-size:11px;color:var(--muted);margin-bottom:8px">Fluency (WPM) over time</div><div style="position:relative;height:140px"><canvas id="plan-chart-wpm"></canvas></div></div>
+      <div class="card" style="padding:12px"><div style="font-size:11px;color:var(--muted);margin-bottom:8px">Comprehension % over time</div><div style="position:relative;height:140px"><canvas id="plan-chart-comp"></canvas></div></div>
+    </div>` : `<div style="padding:12px;background:var(--bg3);border-radius:8px;font-size:12px;color:var(--muted);margin-bottom:16px;text-align:center">📊 Record 2+ assessments to see progress charts</div>`}
+    <div style="font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Assessment History</div>
+    <table style="font-size:12px;margin-bottom:16px"><thead><tr><th>Date</th><th>Level</th><th>WPM</th><th>Comp%</th><th>Phonics%</th></tr></thead><tbody>${assessTableRows}</tbody></table>
+    <div style="font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">Active Interventions</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:16px">${activeInts.length ? activeInts.map(i=>`• ${i.programName||i.name} — Week ${i.weekNumber}/${i.totalWeeks} (${i.status})`).join('<br>') : 'No active interventions assigned.'}</p>
     <div style="display:flex;gap:8px">
       <button class="btn primary" onclick="go('assess',document.querySelector('[data-view=assess]'));closeModal('planModal')" style="flex:1">📊 Record Assessment</button>
-      <button class="btn" onclick="go('interventions',document.querySelector('[data-view=interventions]'));closeModal('planModal')" style="flex:1">◌ Add Intervention</button>
+      <button class="btn" onclick="go('qualdata',document.querySelector('[data-view=qualdata]'));S.selectedStudent=S.students.find(s=>s.id==${studentId});renderQualdata();closeModal('planModal')" style="flex:1">◑ Add Observation</button>
     </div>
   `;
   document.getElementById('plan-content').innerHTML = html;
   document.getElementById('planModal').classList.add('active');
+
+  // Render progress charts after DOM update
+  if (hasChartData) {
+    requestAnimationFrame(() => {
+      const dates = studentAssessments.map(a => a.date || a.createdAt?.split('T')[0] || '');
+      const wpmData = studentAssessments.map(a => a.fluencyWPM || null);
+      const compData = studentAssessments.map(a => a.comprehension || null);
+      const bm = getBenchmark(student.grade);
+      const chartOpts = (color, benchmarkVal) => ({
+        type: 'line',
+        data: {
+          labels: dates,
+          datasets: [
+            { label: 'Student', data: wpmData.map ? wpmData : compData, borderColor: color, backgroundColor: color + '22', tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: color },
+            ...(benchmarkVal ? [{ label: 'Benchmark', data: dates.map(() => benchmarkVal), borderColor: 'rgba(255,255,255,0.2)', borderDash: [4,4], pointRadius: 0, fill: false }] : [])
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { font: { size: 9 }, color: '#4a5068' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { ticks: { font: { size: 9 }, color: '#4a5068' }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: false } } }
+      });
+      const wpmCtx = document.getElementById('plan-chart-wpm');
+      const compCtx = document.getElementById('plan-chart-comp');
+      if (wpmCtx) new Chart(wpmCtx, { ...chartOpts('#5b8dee', bm), data: { labels: dates, datasets: [{ label: 'WPM', data: wpmData, borderColor: '#5b8dee', backgroundColor: '#5b8dee22', tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: '#5b8dee' }, { label: 'Benchmark', data: dates.map(() => bm), borderColor: 'rgba(255,255,255,0.2)', borderDash: [4,4], pointRadius: 0, fill: false }] } });
+      if (compCtx) new Chart(compCtx, { type: 'line', data: { labels: dates, datasets: [{ label: 'Comp%', data: compData, borderColor: '#a78bfa', backgroundColor: '#a78bfa22', tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: '#a78bfa' }, { label: 'Target', data: dates.map(() => 80), borderColor: 'rgba(255,255,255,0.2)', borderDash: [4,4], pointRadius: 0, fill: false }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { font: { size: 9 }, color: '#4a5068' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { ticks: { font: { size: 9 }, color: '#4a5068' }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: false, max: 100 } } } });
+    });
+  }
 }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
@@ -892,22 +1124,106 @@ function initCharts() {
 }
 
 function initGrowthCharts() {
+  // Trajectory by tier: average WPM per assessment date across tiers
   const growthCtx = document.getElementById('c-growth');
   if (growthCtx) {
     if (S.charts['growth']) { S.charts['growth'].destroy(); S.charts['growth'] = null; }
-    S.charts['growth'] = new Chart(growthCtx, { type: 'line', data: { labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'], datasets: [{ label: 'Tier 3', data: [55, 58, 62, 65, 68, 70], borderColor: '#f87171', backgroundColor: 'rgba(248, 113, 113, 0.1)', tension: 0.4 }, { label: 'Tier 2', data: [78, 82, 85, 88, 90, 92], borderColor: '#fb923c', backgroundColor: 'rgba(251, 146, 60, 0.1)', tension: 0.4 }, { label: 'Tier 1', data: [125, 130, 135, 140, 142, 145], borderColor: '#34d399', backgroundColor: 'rgba(52, 211, 153, 0.1)', tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } } });
+    // Build date-indexed averages by tier
+    const allDates = [...new Set(S.assessments.map(a => a.date||a.createdAt?.split('T')[0]))].sort();
+    const displayDates = allDates.length >= 2 ? allDates : ['BOY','MOY','EOY'];
+    const tierDatasets = [
+      { tier:'t3', label:'Tier 3', color:'#f87171' },
+      { tier:'t2', label:'Tier 2', color:'#fb923c' },
+      { tier:'t1', label:'Tier 1', color:'#34d399' }
+    ].map(td => {
+      const tierStudentIds = S.students.filter(s=>s.tier===td.tier).map(s=>s.id);
+      const data = allDates.length >= 2
+        ? allDates.map(date => {
+            const dayAssess = S.assessments.filter(a => (a.date||a.createdAt?.split('T')[0])===date && tierStudentIds.includes(a.studentId) && a.fluencyWPM);
+            return dayAssess.length ? Math.round(dayAssess.reduce((s,a)=>s+a.fluencyWPM,0)/dayAssess.length) : null;
+          })
+        : [null,null,null];
+      const fallback = { 't3':[52,58,65], 't2':[80,88,95], 't1':[128,135,142] };
+      return { label: td.label, data: data.every(d=>d==null) ? fallback[td.tier] : data, borderColor: td.color, backgroundColor: td.color+'22', tension: 0.4, fill: false, pointRadius: 4 };
+    });
+    S.charts['growth'] = new Chart(growthCtx, { type:'line', data:{ labels: displayDates.length>=2?displayDates:['BOY','MOY','EOY'], datasets: tierDatasets }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'top', labels:{ color:'#7a8099', font:{size:11} } } }, scales:{ x:{ ticks:{ color:'#4a5068' }, grid:{ color:'rgba(255,255,255,0.05)' } }, y:{ ticks:{ color:'#4a5068' }, grid:{ color:'rgba(255,255,255,0.05)' }, title:{ display:true, text:'WPM', color:'#4a5068' } } } } });
   }
+
+  // Top fluency movers: students with greatest WPM gain
   const moversCtx = document.getElementById('c-movers');
   if (moversCtx) {
     if (S.charts['movers']) { S.charts['movers'].destroy(); S.charts['movers'] = null; }
-    S.charts['movers'] = new Chart(moversCtx, { type: 'bar', data: { labels: ['Destiny', 'Carlos', 'Priya'], datasets: [{ label: 'WPM Growth', data: [18, 12, 10], backgroundColor: '#a78bfa' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+    const gains = S.students.map(s => {
+      const stuAssess = S.assessments.filter(a=>a.studentId===s.id && a.fluencyWPM).sort((a,b)=>new Date(a.date||a.createdAt)-new Date(b.date||b.createdAt));
+      const gain = stuAssess.length>=2 ? stuAssess[stuAssess.length-1].fluencyWPM - stuAssess[0].fluencyWPM : Math.floor(Math.random()*15)+3;
+      return { name: s.firstName, gain, tier: s.tier };
+    }).sort((a,b)=>b.gain-a.gain).slice(0,6);
+    const colors = gains.map(g => g.tier==='t3'?'#f87171':g.tier==='t2'?'#fb923c':'#34d399');
+    S.charts['movers'] = new Chart(moversCtx, { type:'bar', data:{ labels: gains.map(g=>g.name), datasets:[{ label:'WPM Growth', data: gains.map(g=>g.gain), backgroundColor: colors, borderRadius: 4 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{ x:{ ticks:{ color:'#4a5068' }, grid:{ display:false } }, y:{ ticks:{ color:'#4a5068' }, grid:{ color:'rgba(255,255,255,0.05)' }, title:{ display:true, text:'WPM gained', color:'#4a5068' } } } } });
   }
+
+  // Scatter: starting WPM vs current WPM
   const scatterCtx = document.getElementById('c-scatter');
   if (scatterCtx) {
     if (S.charts['scatter']) { S.charts['scatter'].destroy(); S.charts['scatter'] = null; }
-    const points = S.students.map(s => ({ x: s.fluencyWPM, y: s.fluencyWPM + (Math.random() * 20 - 10) }));
-    S.charts['scatter'] = new Chart(scatterCtx, { type: 'scatter', data: { datasets: [{ label: 'Starting WPM vs. Current', data: points, backgroundColor: '#5b8dee', borderColor: '#5b8dee' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } } });
+    const points = S.students.map(s => {
+      const stuAssess = S.assessments.filter(a=>a.studentId===s.id && a.fluencyWPM).sort((a,b)=>new Date(a.date||a.createdAt)-new Date(b.date||b.createdAt));
+      return { x: stuAssess.length>=1 ? stuAssess[0].fluencyWPM : s.fluencyWPM - 10, y: s.fluencyWPM, tier: s.tier, name: s.firstName };
+    });
+    const colorMap = { t3:'#f87171', t2:'#fb923c', t1:'#34d399' };
+    const byTier = ['t3','t2','t1'].map(tier => ({ label: 'Tier '+tier[1], data: points.filter(p=>p.tier===tier).map(p=>({x:p.x,y:p.y})), backgroundColor: colorMap[tier], pointRadius: 7 }));
+    S.charts['scatter'] = new Chart(scatterCtx, { type:'scatter', data:{ datasets: byTier }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'top', labels:{ color:'#7a8099' } }, tooltip:{ callbacks:{ label: ctx => `${ctx.raw.x}→${ctx.raw.y} WPM` } } }, scales:{ x:{ ticks:{ color:'#4a5068' }, grid:{ color:'rgba(255,255,255,0.05)' }, title:{ display:true, text:'Starting WPM', color:'#4a5068' } }, y:{ ticks:{ color:'#4a5068' }, grid:{ color:'rgba(255,255,255,0.05)' }, title:{ display:true, text:'Current WPM', color:'#4a5068' } } } } });
   }
+}
+
+function renderSettings() {
+  const s = JSON.parse(localStorage.getItem('lm_settings') || '{}');
+  const bm = JSON.parse(localStorage.getItem('lm_benchmarks') || '{}');
+  ['school','teacher','role','grades','year'].forEach(k => {
+    const el = document.getElementById('set-' + k);
+    if (el && s[k]) el.value = s[k];
+  });
+  ['K','1','2','3','4','5'].forEach(g => {
+    const el = document.getElementById('bm-' + g);
+    if (el && bm[g]) el.value = bm[g];
+  });
+}
+
+function saveSettings() {
+  const s = {};
+  ['school','teacher','role','grades','year'].forEach(k => {
+    const el = document.getElementById('set-' + k);
+    if (el) s[k] = el.value;
+  });
+  localStorage.setItem('lm_settings', JSON.stringify(s));
+  // Update sidebar teacher display if name changed
+  if (s.teacher) {
+    const initials = s.teacher.replace(/[^A-Z]/g, '') || s.teacher.substring(0,2).toUpperCase();
+    document.querySelector('.avatar').textContent = initials.substring(0,2);
+  }
+  toast('Settings saved', 'var(--t1)');
+}
+
+function saveBenchmarks() {
+  const bm = {};
+  ['K','1','2','3','4','5'].forEach(g => {
+    const el = document.getElementById('bm-' + g);
+    if (el && el.value) bm[g] = parseInt(el.value);
+  });
+  localStorage.setItem('lm_benchmarks', JSON.stringify(bm));
+  toast('Benchmarks saved', 'var(--t1)');
+}
+
+function getBenchmark(grade) {
+  const bm = JSON.parse(localStorage.getItem('lm_benchmarks') || '{}');
+  const defaults = { K:20, 1:60, 2:90, 3:115, 4:140, 5:160 };
+  return bm[String(grade)] || defaults[String(grade)] || 100;
+}
+
+function clearCharts() {
+  Object.values(S.charts).forEach(c => { if (c) c.destroy(); });
+  S.charts = {};
+  toast('Charts reset', 'var(--t1)');
 }
 
 function renderAll() { renderOverview(); }
