@@ -210,6 +210,7 @@
           <div class="sidebar-section-title">Planning</div>
           <div class="sidebar-item" data-view="groups" onclick="go('groups', this)">⊞ Group Builder</div>
           <div class="sidebar-item" data-view="interventions" onclick="go('interventions', this)">◌ Interventions</div>
+          <div class="sidebar-item" data-view="assess" onclick="go('assess', this)">📊 Record Assessment</div>
           <div class="sidebar-item" data-view="reports" onclick="go('reports', this)">◻ Reports</div>
           <div class="sidebar-item" data-view="import" onclick="go('import', this)">⬆ Import Data</div>
           <div class="sidebar-item" data-view="strategies" onclick="go('strategies', this)">📝 Strategies</div>
@@ -236,7 +237,10 @@
       <div class="content" id="contentArea">
         <div class="view active" id="view-overview"><h2 style="margin-bottom: 24px;">Overview</h2><div class="g4" id="kpi-container"></div><div class="g2"><div class="card"><h3>Reading Level Distribution</h3><div class="chart-container"><canvas id="c-dist"></canvas></div></div><div class="card"><h3>Skill Gaps by Domain</h3><div class="chart-container"><canvas id="c-gap"></canvas></div></div></div><div class="card"><h3>Tier Distribution</h3><div class="chart-container-wide"><canvas id="c-tier"></canvas></div></div></div>
 
-        <div class="view" id="view-roster"><h2 style="margin-bottom: 16px;">Student Roster</h2><div class="filter-group"><button class="filter-btn active" onclick="renderRoster('all')">All</button><button class="filter-btn" onclick="renderRoster('t3')">Tier 3 Intensive</button><button class="filter-btn" onclick="renderRoster('t2')">Tier 2 Strategic</button><button class="filter-btn" onclick="renderRoster('t1')">Tier 1 Core</button></div><button class="btn primary" onclick="openAddStudent()" style="margin-bottom: 16px;">+ Add Student</button><div class="g-aside"><div class="card"><table><thead><tr><th>Student</th><th>Tier</th><th>Reading Level</th><th>Fluency WPM</th><th>Comp %</th><th>Flags</th><th>Last Assessed</th></tr></thead><tbody id="roster-tbody"></tbody></table></div><div id="detail-panel" class="detail-panel" style="display: none;"></div></div></div>
+        <div class="view" id="view-roster"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+  <h2>Student Roster</h2>
+  <button class="btn" onclick="generateHandoff()" style="display:flex;align-items:center;gap:6px">📋 Handoff Doc</button>
+</div><div class="filter-group"><button class="filter-btn active" onclick="renderRoster('all')">All</button><button class="filter-btn" onclick="renderRoster('t3')">Tier 3 Intensive</button><button class="filter-btn" onclick="renderRoster('t2')">Tier 2 Strategic</button><button class="filter-btn" onclick="renderRoster('t1')">Tier 1 Core</button></div><button class="btn primary" onclick="openAddStudent()" style="margin-bottom: 16px;">+ Add Student</button><div class="g-aside"><div class="card"><table><thead><tr><th>Student</th><th>Tier</th><th>Reading Level</th><th>Fluency WPM</th><th>Comp %</th><th>Flags</th><th>Last Assessed</th></tr></thead><tbody id="roster-tbody"></tbody></table></div><div id="detail-panel" class="detail-panel" style="display: none;"></div></div></div>
 
         <div class="view" id="view-domains"><h2 style="margin-bottom: 24px;">Skill Domains</h2><div class="g3" id="domain-container"></div><div class="card" style="margin-top: 16px;"><h3>Class-wide Priorities</h3><p style="font-size: 13px; color: var(--muted); line-height: 1.6;">Based on current assessment data, the class shows the strongest gains in Reading Fluency and Vocabulary. Priority interventions should focus on improving Phonics & Decoding and Reading Comprehension across Tiers 2 and 3.</p></div></div>
 
@@ -252,7 +256,39 @@
 
         <div class="view" id="view-import"><h2 style="margin-bottom: 24px;">Import Data</h2><div class="g2"><div><div class="card"><h3>Import Students</h3><div class="import-zone" id="import-zone" onclick="document.getElementById('file-input').click()"><div class="import-zone-text">📁 Drop CSV or Excel file here</div><div class="import-zone-hint">or click to browse</div></div><input type="file" id="file-input" accept=".csv,.xlsx,.xls" onchange="handleImportFile(this.files[0])" style="display: none;"><div id="preview-container" style="display: none; margin-top: 16px;"><label>Preview (first 5 rows)</label><table style="font-size: 11px;"><thead id="preview-head"></thead><tbody id="preview-body"></tbody></table></div><button class="btn primary" id="import-btn" onclick="applyImport()" style="width: 100%; margin-top: 16px; display: none;">✓ Import Students</button></div></div><div><div class="card"><h3>Column Mapper</h3><table id="mapper-table" style="display: none;"><thead><tr><th>File Column</th><th>Maps To</th></tr></thead><tbody id="mapper-body"></tbody></table><p id="no-file" style="color: var(--muted); font-size: 12px;">Load a file to configure column mappings</p><h3 style="margin-top: 24px;">Session Management</h3><button class="btn" onclick="downloadTemplate()" style="width: 100%; margin-bottom: 8px;">📄 Download Template</button><button class="btn" onclick="exportSessionJSON()" style="width: 100%; margin-bottom: 8px;">💾 Export JSON</button><button class="btn" onclick="importSessionJSON()" style="width: 100%; margin-bottom: 8px;">📂 Load JSON</button><button class="btn danger" onclick="hardReset()" style="width: 100%;">🗑 Hard Reset</button></div></div></div></div>
 
-        <div class="view" id="view-strategies"><h2 style="margin-bottom: 16px;">Strategies & Lessons</h2><div class="filter-group"><button class="filter-btn active" onclick="filterStrategies('all')">All</button><button class="filter-btn" onclick="filterStrategies('phonics')">Phonics</button><button class="filter-btn" onclick="filterStrategies('fluency')">Fluency</button><button class="filter-btn" onclick="filterStrategies('comprehension')">Comprehension</button><button class="filter-btn" onclick="filterStrategies('vocabulary')">Vocabulary</button></div><div id="strategies-container" class="g2"></div></div>
+            <div class="view" id="view-assess">
+      <h2 style="margin-bottom:24px;">Record Assessment</h2>
+      <div class="g2" style="align-items:start">
+        <div class="card">
+          <h3 style="margin-bottom:16px;">New Assessment Entry</h3>
+          <label>Student *</label>
+          <select id="assessStudent" style="margin-bottom:8px">
+            <option value="">Select student...</option>
+          </select>
+          <label>Assessment Date</label>
+          <input type="date" id="assessDate">
+          <label>Reading Level (DRA/F&P/Lexile)</label>
+          <input type="text" id="assessRL" placeholder="e.g. DRA 16, F&P Level J, 650L">
+          <label>Fluency WPM</label>
+          <input type="number" id="assessWPM" placeholder="Words per minute (e.g. 92)">
+          <label>Comprehension %</label>
+          <input type="number" id="assessComp" placeholder="0–100">
+          <label>Phonics / Decoding %</label>
+          <input type="number" id="assessPhonics" placeholder="0–100">
+          <label>Notes</label>
+          <textarea id="assessNotes" style="min-height:80px" placeholder="Observation notes, conditions, strengths..."></textarea>
+          <button class="btn primary" onclick="submitAssessment()" style="width:100%;margin-top:16px;padding:10px">✓ Save Assessment</button>
+        </div>
+        <div>
+          <div class="card" id="assess-history-panel">
+            <h3>Recent Assessments</h3>
+            <p style="color:var(--muted);font-size:12px;margin-top:8px">Select a student to view their assessment history.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<div class="view" id="view-strategies"><h2 style="margin-bottom: 16px;">Strategies & Lessons</h2><div class="filter-group"><button class="filter-btn active" onclick="filterStrategies('all')">All</button><button class="filter-btn" onclick="filterStrategies('phonics')">Phonics</button><button class="filter-btn" onclick="filterStrategies('fluency')">Fluency</button><button class="filter-btn" onclick="filterStrategies('comprehension')">Comprehension</button><button class="filter-btn" onclick="filterStrategies('vocabulary')">Vocabulary</button></div><div id="strategies-container" class="g2"></div></div>
       </div>
     </div>
   </div>
@@ -296,6 +332,18 @@ async function boot() {
         { id: 6, firstName: 'Marcus', lastName: 'Thompson', grade: 4, tier: 't1', readingLevel: 'DRA 34', fluencyWPM: 142, comprehension: 94, phonics: 95, fluency: 96, vocabulary: 93, el: false, iep: false, flag504: false, gate: true, notes: '', lastAssessed: '2026-04-19' }
       ];
     }
+    if (S.assessments.length === 0 && S.students.length > 0) {
+      S.assessments = [
+        { id:1, studentId:1, date:'2026-02-10', readingLevel:'DRA 4', fluencyWPM:44, comprehension:38, phonicsScore:32, notes:'Struggling with CVC words' },
+        { id:2, studentId:1, date:'2026-03-12', readingLevel:'DRA 4', fluencyWPM:48, comprehension:41, phonicsScore:36, notes:'Small gains with Heggerty' },
+        { id:3, studentId:1, date:'2026-04-10', readingLevel:'DRA 6', fluencyWPM:52, comprehension:45, phonicsScore:38, notes:'Progressing slowly' },
+        { id:4, studentId:2, date:'2026-02-10', readingLevel:'DRA 10', fluencyWPM:68, comprehension:55, phonicsScore:58, notes:'EL — needs vocab support' },
+        { id:5, studentId:2, date:'2026-04-15', readingLevel:'DRA 14', fluencyWPM:78, comprehension:62, phonicsScore:65, notes:'Good growth this quarter' },
+        { id:6, studentId:3, date:'2026-02-10', readingLevel:'DRA 16', fluencyWPM:82, comprehension:64, phonicsScore:68, notes:'' },
+        { id:7, studentId:3, date:'2026-04-12', readingLevel:'DRA 20', fluencyWPM:95, comprehension:71, phonicsScore:72, notes:'Strong growth' },
+        { id:8, studentId:6, date:'2026-04-19', readingLevel:'DRA 34', fluencyWPM:142, comprehension:94, phonicsScore:95, notes:'GATE candidate' }
+      ];
+    }
     const saved = localStorage.getItem('lm_qualobs');
     if (saved) S.qualObs = JSON.parse(saved);
     const savedGroups = localStorage.getItem('lm_groups');
@@ -312,7 +360,7 @@ function go(view, btn) {
   S.currentView = view;
   closeNav();
   const renders = {
-    overview: renderOverview, roster: () => renderRoster('all'), domains: renderDomains, growth: renderGrowth, qualdata: renderQualdata, groups: renderGroups, interventions: renderInterventions, reports: renderReports, import: renderImport, strategies: () => renderStrategies('all')
+    overview: renderOverview, roster: () => renderRoster('all'), assess: renderAssess, domains: renderDomains, growth: renderGrowth, qualdata: renderQualdata, groups: renderGroups, interventions: renderInterventions, reports: renderReports, import: renderImport, strategies: () => renderStrategies('all')
   };
   if (renders[view]) renders[view]();
 }
@@ -322,7 +370,12 @@ function closeNav() { document.getElementById('sidebar').classList.remove('activ
 
 function renderOverview() {
   const kpiData = { totalStudents: S.students.length, tier3: S.students.filter(s => s.tier === 't3').length, tier2: S.students.filter(s => s.tier === 't2').length, tier1: S.students.filter(s => s.tier === 't1').length };
-  const kpiHTML = `<div class="card card-kpi"><div class="kpi-label">Total Students</div><div class="kpi-value">${kpiData.totalStudents}</div></div><div class="card card-kpi"><div class="kpi-label">Tier 3 Intensive</div><div class="kpi-value">${kpiData.tier3}</div></div><div class="card card-kpi"><div class="kpi-label">Tier 2 Strategic</div><div class="kpi-value">${kpiData.tier2}</div></div><div class="card card-kpi"><div class="kpi-label">Tier 1 Core</div><div class="kpi-value">${kpiData.tier1}</div></div>`;
+  const kpiHTML = `
+  <div class="card card-kpi" style="border-top:2px solid var(--accent)"><div class="kpi-label">Total Students</div><div class="kpi-value" style="color:var(--text)">${kpiData.totalStudents}</div><div style="font-size:11px;color:var(--muted)">enrolled</div></div>
+  <div class="card card-kpi" style="border-top:2px solid var(--t3)"><div class="kpi-label">Tier 3 · Intensive</div><div class="kpi-value" style="color:var(--t3)">${kpiData.tier3}</div><div style="font-size:11px;color:var(--muted)">significant gaps</div></div>
+  <div class="card card-kpi" style="border-top:2px solid var(--t2)"><div class="kpi-label">Tier 2 · Strategic</div><div class="kpi-value" style="color:var(--t2)">${kpiData.tier2}</div><div style="font-size:11px;color:var(--muted)">targeted support</div></div>
+  <div class="card card-kpi" style="border-top:2px solid var(--t1)"><div class="kpi-label">Tier 1 · Core</div><div class="kpi-value" style="color:var(--t1)">${kpiData.tier1}</div><div style="font-size:11px;color:var(--muted)">on track</div></div>
+`;
   document.getElementById('kpi-container').innerHTML = kpiHTML;
   setTimeout(() => { initCharts(); }, 100);
 }
@@ -370,26 +423,49 @@ function selStudent(id) {
 }
 
 function openAddStudent() {
-  const form = `<label>First Name</label><input type="text" id="newStudentFirst" placeholder="First name"><label>Last Name</label><input type="text" id="newStudentLast" placeholder="Last name"><label>Grade</label><select id="newStudentGrade"><option value="">Select grade</option><option value="K">K</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select><label>Tier</label><select id="newStudentTier"><option value="">Select tier</option><option value="t1">Tier 1 Core</option><option value="t2">Tier 2 Strategic</option><option value="t3">Tier 3 Intensive</option></select><button class="btn primary" onclick="saveNewStudent()" style="width: 100%; margin-top: 12px;">✓ Add</button>`;
+  const form = `
+    <h3 style="margin-bottom:16px;font-family:var(--serif)">Add Student</h3>
+    <label>First Name *</label><input type="text" id="newStudentFirst" placeholder="First name">
+    <label>Last Name *</label><input type="text" id="newStudentLast" placeholder="Last name">
+    <label>Grade *</label><select id="newStudentGrade"><option value="">Select</option><option>K</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    <label>Tier *</label><select id="newStudentTier"><option value="">Select</option><option value="t1">Tier 1 Core</option><option value="t2">Tier 2 Strategic</option><option value="t3">Tier 3 Intensive</option></select>
+    <label>Reading Level (DRA/F&P)</label><input type="text" id="newStudentRL" placeholder="e.g. DRA 14">
+    <label>Fluency WPM</label><input type="number" id="newStudentWPM" placeholder="e.g. 85">
+    <label>Comprehension %</label><input type="number" id="newStudentComp" placeholder="e.g. 72">
+    <label>Phonics %</label><input type="number" id="newStudentPhonics" placeholder="e.g. 68">
+    <div style="display:flex;gap:16px;margin:12px 0;flex-wrap:wrap">
+      <label style="display:flex;align-items:center;gap:6px;text-transform:none;font-size:13px"><input type="checkbox" id="newStudentEL" style="width:auto;margin:0"> EL</label>
+      <label style="display:flex;align-items:center;gap:6px;text-transform:none;font-size:13px"><input type="checkbox" id="newStudentIEP" style="width:auto;margin:0"> IEP</label>
+    </div>
+    <button class="btn primary" onclick="saveNewStudent()" style="width:100%;margin-top:12px;padding:10px">✓ Add Student</button>
+    <button class="btn" onclick="document.getElementById('detail-panel').style.display='none'" style="width:100%;margin-top:8px">Cancel</button>
+  `;
   const panel = document.getElementById('detail-panel');
   panel.innerHTML = form;
   panel.style.display = 'block';
 }
-
-function saveNewStudent() {
+async function saveNewStudent() {
   const first = document.getElementById('newStudentFirst').value;
   const last = document.getElementById('newStudentLast').value;
   const grade = document.getElementById('newStudentGrade').value;
   const tier = document.getElementById('newStudentTier').value;
-  if (!first || !last || !grade || !tier) { toast('Please fill all fields', 'var(--t3)'); return; }
-  const newId = Math.max(...S.students.map(s => s.id), 0) + 1;
-  const newStudent = { id: newId, firstName: first, lastName: last, grade: parseInt(grade), tier, readingLevel: 'TBD', fluencyWPM: 0, comprehension: 0, phonics: 0, fluency: 0, vocabulary: 0, el: false, iep: false, flag504: false, gate: false, notes: '', lastAssessed: new Date().toISOString().split('T')[0] };
-  S.students.push(newStudent);
-  saveAll();
-  renderRoster('all');
-  toast(`Added ${first} ${last}`, 'var(--t1)');
+  const readingLevel = document.getElementById('newStudentRL')?.value || 'TBD';
+  const fluencyWPM = parseInt(document.getElementById('newStudentWPM')?.value) || 0;
+  const comprehension = parseInt(document.getElementById('newStudentComp')?.value) || 0;
+  const phonics = parseInt(document.getElementById('newStudentPhonics')?.value) || 0;
+  const el = document.getElementById('newStudentEL')?.checked || false;
+  const iep = document.getElementById('newStudentIEP')?.checked || false;
+  if (\!first || \!last || \!grade || \!tier) { toast('Please fill required fields', 'var(--t3)'); return; }
+  const payload = { firstName: first, lastName: last, grade: parseInt(grade), tier, readingLevel, fluencyWPM, comprehension, phonics, fluency: fluencyWPM, vocabulary: comprehension, el, iep, flag504: false, gate: false, notes: '', lastAssessed: new Date().toISOString().split('T')[0] };
+  try {
+    const res = await fetch('/api/students', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    const saved = await res.json();
+    S.students.push(saved);
+    document.getElementById('detail-panel').style.display = 'none';
+    renderRoster('all');
+    toast(`Added ${first} ${last}`, 'var(--t1)');
+  } catch(e) { toast('Failed to save student', 'var(--t3)'); }
 }
-
 function renderDomains() {
   const domains = [
     { name: 'Phonics & Decoding', icon: '🔤', subs: ['Letter-sound', 'Blending', 'Multisyllabic'] },
@@ -547,18 +623,27 @@ function openNewIntervention() {
   modal.classList.add('active');
 }
 
-function saveNewIntervention() {
+async function saveNewIntervention() {
   const prog = document.getElementById('intProgram').value;
   const group = document.getElementById('intGroup').value;
-  if (!prog || !group) { toast('Fill required fields', 'var(--t3)'); return; }
-  const newInt = { id: Math.max(...S.interventions.map(i => i.id || 0), 0) + 1, programName: prog, groupName: group, goal: document.getElementById('intGoal').value, focusAreas: document.getElementById('intFocus').value.split(',').map(a => a.trim()), frequency: document.getElementById('intFreq').value, status: 'Planned', weekNumber: 1, totalWeeks: 8, participants: S.groups.find(g => g.name === group)?.students.length || 0 };
-  S.interventions.push(newInt);
-  saveAll();
-  closeModal('planModal');
-  renderInterventions();
-  toast('Intervention added', 'var(--t1)');
+  const goal = document.getElementById('intGoal').value;
+  const focus = document.getElementById('intFocus').value;
+  const freq = document.getElementById('intFreq').value;
+  if (\!prog) { toast('Enter a program name', 'var(--t3)'); return; }
+  const payload = {
+    programName: prog, groupName: group, goal, focusAreas: focus.split(',').map(a=>a.trim()).filter(Boolean),
+    frequency: freq, status: 'Planned', weekNumber: 1, totalWeeks: 8,
+    participants: S.groups.find(g=>g.name===group)?.students.length || 0
+  };
+  try {
+    const res = await fetch('/api/interventions', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    const saved = await res.json();
+    S.interventions.push(saved);
+    closeModal('planModal');
+    renderInterventions();
+    toast('Intervention added', 'var(--t1)');
+  } catch(e) { toast('Failed to save intervention', 'var(--t3)'); }
 }
-
 function updateProgress(id) {
   const int = S.interventions.find(i => i.id === id);
   if (int && int.weekNumber < int.totalWeeks) { int.weekNumber++; int.status = 'Active'; saveAll(); renderInterventions(); toast('Progress updated', 'var(--t1)'); }
@@ -734,23 +819,62 @@ function assignStrategy(id) { toast('Strategy assigned (demo)', 'var(--t1)'); }
 
 function openPlan(studentId) {
   const student = S.students.find(s => s.id === studentId);
-  if (!student) return;
-  const html = `<div style="margin-bottom: 16px;"><h3>${student.firstName} ${student.lastName}</h3><div style="margin: 8px 0;"><span class="tier-badge tier-${student.tier}">Tier ${student.tier[1]}</span></div></div><h4 style="margin-top: 16px; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Assessment History</h4><table style="font-size: 11px;"><thead><tr><th>Domain</th><th>Score</th></tr></thead><tbody><tr><td>Phonics</td><td>${student.phonics}%</td></tr><tr><td>Fluency</td><td>${student.fluency}%</td></tr><tr><td>Comprehension</td><td>${student.comprehension}%</td></tr><tr><td>Vocabulary</td><td>${student.vocabulary}%</td></tr></tbody></table><h4 style="margin-top: 16px; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Active Interventions</h4><p style="font-size: 12px; color: var(--muted);">${S.interventions.filter(i => i.status === 'Active').length} active interventions</p><h4 style="margin-top: 16px; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Recommended Next Steps</h4><p style="font-size: 12px;">Focus on ${student.phonics < 60 ? 'phonics' : 'comprehension'} through small-group instruction 3x weekly. Monitor progress every 2 weeks.</p>`;
+  if (\!student) return;
+  const studentAssessments = S.assessments.filter(a => a.studentId === studentId).slice(-6);
+  const flagsHTML = getFlagBadges(student);
+  const activeInts = S.interventions.filter(i => i.status === 'Active');
+  const obsCount = (S.qualObs[studentId] || []).length;
+  const assessTableRows = studentAssessments.length
+    ? studentAssessments.map(a => `<tr><td>${a.date||a.createdAt?.split('T')[0]||'—'}</td><td>${a.readingLevel||'—'}</td><td>${a.fluencyWPM||'—'}</td><td>${a.comprehension||'—'}%</td><td>${a.phonicsScore||'—'}%</td></tr>`).join('')
+    : '<tr><td colspan="5" style="color:var(--muted)">No assessments yet — use Record Assessment</td></tr>';
+  const tierColor = student.tier==='t3'?'var(--t3)':student.tier==='t2'?'var(--t2)':'var(--t1)';
+  const recommendation = student.tier==='t3'
+    ? `<strong style="color:var(--t3)">Intensive Intervention Recommended:</strong> Daily small-group instruction (20–30 min) using structured literacy approach. Focus on phonics (${student.phonics}%) and fluency (${student.fluencyWPM} WPM). Monitor every 2 weeks.`
+    : student.tier==='t2'
+    ? `<strong style="color:var(--t2)">Strategic Support Recommended:</strong> 3x/week targeted small-group instruction (20 min). Focus on comprehension (${student.comprehension}%) and building reading fluency toward grade-level benchmark.`
+    : `<strong style="color:var(--t1)">Core Instruction:</strong> On track. Continue grade-level instruction. Consider enrichment opportunities to extend vocabulary and critical thinking skills.`;
+  const html = `
+    <div style="display:flex;align-items:start;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)">
+      <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0">${student.firstName[0]}${student.lastName[0]}</div>
+      <div style="flex:1">
+        <div style="font-family:var(--serif);font-size:20px;font-weight:600">${student.firstName} ${student.lastName}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">Grade ${student.grade} · ${student.readingLevel} · ${student.fluencyWPM} WPM</div>
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><span class="tier-badge tier-${student.tier}">Tier ${student.tier[1]}</span>${flagsHTML}</div>
+      </div>
+      <div style="text-align:right;font-size:11px;color:var(--muted)">Last assessed<br><strong style="color:var(--text)">${student.lastAssessed||'Never'}</strong></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+      <div style="text-align:center;padding:12px;background:var(--bg3);border-radius:8px"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Phonics</div><div style="font-family:var(--serif);font-size:22px;font-weight:700;color:${student.phonics<60?'var(--t3)':student.phonics<75?'var(--t2)':'var(--t1)'}">${student.phonics}%</div></div>
+      <div style="text-align:center;padding:12px;background:var(--bg3);border-radius:8px"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Fluency</div><div style="font-family:var(--serif);font-size:22px;font-weight:700;color:${student.fluencyWPM<70?'var(--t3)':student.fluencyWPM<100?'var(--t2)':'var(--t1)'}">${student.fluencyWPM}</div></div>
+      <div style="text-align:center;padding:12px;background:var(--bg3);border-radius:8px"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Comp%</div><div style="font-family:var(--serif);font-size:22px;font-weight:700;color:${student.comprehension<60?'var(--t3)':student.comprehension<75?'var(--t2)':'var(--t1)'}">${student.comprehension}%</div></div>
+      <div style="text-align:center;padding:12px;background:var(--bg3);border-radius:8px"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Observations</div><div style="font-family:var(--serif);font-size:22px;font-weight:700;color:var(--accent)">${obsCount}</div></div>
+    </div>
+    <div style="padding:12px 14px;border-radius:8px;border-left:3px solid ${tierColor};background:${student.tier==='t3'?'var(--t3b)':student.tier==='t2'?'var(--t2b)':'var(--t1b)'};font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:20px">${recommendation}</div>
+    <div style="font-size:11px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Assessment History</div>
+    <table style="font-size:12px;margin-bottom:20px"><thead><tr><th>Date</th><th>Level</th><th>WPM</th><th>Comp%</th><th>Phonics%</th></tr></thead><tbody>${assessTableRows}</tbody></table>
+    <div style="font-size:11px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Active Interventions</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:20px">${activeInts.length ? activeInts.map(i=>`• ${i.programName||i.name} (${i.status})`).join('<br>') : 'No active interventions. Use the Interventions view to assign one.'}</p>
+    <div style="display:flex;gap:8px">
+      <button class="btn primary" onclick="go('assess',document.querySelector('[data-view=assess]'));closeModal('planModal')" style="flex:1">📊 Record Assessment</button>
+      <button class="btn" onclick="go('interventions',document.querySelector('[data-view=interventions]'));closeModal('planModal')" style="flex:1">◌ Add Intervention</button>
+    </div>
+  `;
   document.getElementById('plan-content').innerHTML = html;
   document.getElementById('planModal').classList.add('active');
 }
-
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
 function initCharts() {
   Chart.defaults.color = '#7a8099';
   Chart.defaults.borderColor = 'rgba(255,255,255,0.07)';
   const distCtx = document.getElementById('c-dist');
-  if (distCtx && !S.charts['dist']) {
+  if (distCtx) {
+    if (S.charts['dist']) { S.charts['dist'].destroy(); S.charts['dist'] = null; }
     S.charts['dist'] = new Chart(distCtx, { type: 'bar', data: { labels: ['DRA 4-6', 'DRA 10-14', 'DRA 20-24', 'DRA 30+'], datasets: [{ label: 'Students', data: [2, 2, 1, 1], backgroundColor: '#5b8dee', borderColor: 'rgba(91, 141, 238, 0.5)', borderWidth: 1 }] }, options: { indexAxis: 'x', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
   }
   const gapCtx = document.getElementById('c-gap');
-  if (gapCtx && !S.charts['gap']) {
+  if (gapCtx) {
+    if (S.charts['gap']) { S.charts['gap'].destroy(); S.charts['gap'] = null; }
     const avgPhonics = S.students.reduce((a, s) => a + s.phonics, 0) / S.students.length || 0;
     const avgFluency = S.students.reduce((a, s) => a + s.fluency, 0) / S.students.length || 0;
     const avgComp = S.students.reduce((a, s) => a + s.comprehension, 0) / S.students.length || 0;
@@ -758,7 +882,8 @@ function initCharts() {
     S.charts['gap'] = new Chart(gapCtx, { type: 'bar', data: { labels: ['Phonics', 'Fluency', 'Comprehension', 'Vocabulary'], datasets: [{ label: 'Class Average %', data: [avgPhonics, avgFluency, avgComp, avgVocab], backgroundColor: '#a78bfa', borderColor: 'rgba(167, 139, 250, 0.5)', borderWidth: 1 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
   }
   const tierCtx = document.getElementById('c-tier');
-  if (tierCtx && !S.charts['tier']) {
+  if (tierCtx) {
+    if (S.charts['tier']) { S.charts['tier'].destroy(); S.charts['tier'] = null; }
     const t3Count = S.students.filter(s => s.tier === 't3').length;
     const t2Count = S.students.filter(s => s.tier === 't2').length;
     const t1Count = S.students.filter(s => s.tier === 't1').length;
@@ -768,15 +893,18 @@ function initCharts() {
 
 function initGrowthCharts() {
   const growthCtx = document.getElementById('c-growth');
-  if (growthCtx && !S.charts['growth']) {
+  if (growthCtx) {
+    if (S.charts['growth']) { S.charts['growth'].destroy(); S.charts['growth'] = null; }
     S.charts['growth'] = new Chart(growthCtx, { type: 'line', data: { labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'], datasets: [{ label: 'Tier 3', data: [55, 58, 62, 65, 68, 70], borderColor: '#f87171', backgroundColor: 'rgba(248, 113, 113, 0.1)', tension: 0.4 }, { label: 'Tier 2', data: [78, 82, 85, 88, 90, 92], borderColor: '#fb923c', backgroundColor: 'rgba(251, 146, 60, 0.1)', tension: 0.4 }, { label: 'Tier 1', data: [125, 130, 135, 140, 142, 145], borderColor: '#34d399', backgroundColor: 'rgba(52, 211, 153, 0.1)', tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } } });
   }
   const moversCtx = document.getElementById('c-movers');
-  if (moversCtx && !S.charts['movers']) {
+  if (moversCtx) {
+    if (S.charts['movers']) { S.charts['movers'].destroy(); S.charts['movers'] = null; }
     S.charts['movers'] = new Chart(moversCtx, { type: 'bar', data: { labels: ['Destiny', 'Carlos', 'Priya'], datasets: [{ label: 'WPM Growth', data: [18, 12, 10], backgroundColor: '#a78bfa' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
   }
   const scatterCtx = document.getElementById('c-scatter');
-  if (scatterCtx && !S.charts['scatter']) {
+  if (scatterCtx) {
+    if (S.charts['scatter']) { S.charts['scatter'].destroy(); S.charts['scatter'] = null; }
     const points = S.students.map(s => ({ x: s.fluencyWPM, y: s.fluencyWPM + (Math.random() * 20 - 10) }));
     S.charts['scatter'] = new Chart(scatterCtx, { type: 'scatter', data: { datasets: [{ label: 'Starting WPM vs. Current', data: points, backgroundColor: '#5b8dee', borderColor: '#5b8dee' }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } } });
   }
@@ -824,6 +952,85 @@ window.addEventListener('load', () => {
   const savedInt = localStorage.getItem('lm_interventions');
   if (savedInt) { S.interventions = JSON.parse(savedInt); }
 });
-  </script>
+  
+function renderAssess() {
+  const sel = document.getElementById('assessStudent');
+  if (sel) {
+    sel.innerHTML = '<option value="">Select student...</option>' + S.students.map(s => `<option value="${s.id}">${s.firstName} ${s.lastName} — Grade ${s.grade} (${s.tier.toUpperCase()})</option>`).join('');
+    sel.onchange = () => loadAssessHistory(parseInt(sel.value));
+  }
+  const today = new Date().toISOString().split('T')[0];
+  const dateEl = document.getElementById('assessDate');
+  if (dateEl && \!dateEl.value) dateEl.value = today;
+}
+
+function loadAssessHistory(studentId) {
+  const student = S.students.find(s => s.id === studentId);
+  if (\!student) return;
+  const studentAssessments = S.assessments.filter(a => a.studentId === studentId);
+  const panel = document.getElementById('assess-history-panel');
+  const rows = studentAssessments.length === 0
+    ? '<p style="color:var(--muted);font-size:12px;margin-top:8px">No assessments recorded yet.</p>'
+    : `<table style="margin-top:12px;font-size:12px"><thead><tr><th>Date</th><th>Level</th><th>WPM</th><th>Comp%</th><th>Phonics%</th></tr></thead><tbody>${studentAssessments.map(a => `<tr><td>${a.date||a.createdAt?.split('T')[0]||'—'}</td><td>${a.readingLevel||'—'}</td><td>${a.fluencyWPM||'—'}</td><td>${a.comprehension||'—'}%</td><td>${a.phonicsScore||'—'}%</td></tr>`).join('')}</tbody></table>`;
+  panel.innerHTML = `<h3>${student.firstName} ${student.lastName}</h3>${rows}`;
+}
+
+async function submitAssessment() {
+  const studentId = parseInt(document.getElementById('assessStudent').value);
+  if (\!studentId) { toast('Select a student', 'var(--t3)'); return; }
+  const payload = {
+    studentId,
+    date: document.getElementById('assessDate').value,
+    readingLevel: document.getElementById('assessRL').value,
+    fluencyWPM: parseInt(document.getElementById('assessWPM').value) || null,
+    comprehension: parseInt(document.getElementById('assessComp').value) || null,
+    phonicsScore: parseInt(document.getElementById('assessPhonics').value) || null,
+    notes: document.getElementById('assessNotes').value
+  };
+  try {
+    const res = await fetch('/api/assessments', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    const saved = await res.json();
+    S.assessments.push(saved);
+    const student = S.students.find(s => s.id === studentId);
+    if (student) {
+      if (payload.readingLevel) student.readingLevel = payload.readingLevel;
+      if (payload.fluencyWPM) student.fluencyWPM = payload.fluencyWPM;
+      if (payload.comprehension) student.comprehension = payload.comprehension;
+      if (payload.phonicsScore) student.phonics = payload.phonicsScore;
+      student.lastAssessed = payload.date;
+      await fetch('/api/students/' + studentId, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(student) });
+    }
+    ['assessRL','assessWPM','assessComp','assessPhonics','assessNotes'].forEach(id => { document.getElementById(id).value = ''; });
+    loadAssessHistory(studentId);
+    toast(`Assessment saved for ${student?.firstName}`, 'var(--t1)');
+  } catch(e) { toast('Failed to save assessment', 'var(--t3)'); }
+}
+
+
+function generateHandoff() {
+  let text = `LITERACY INTERVENTION HANDOFF DOCUMENT\nGenerated: ${new Date().toLocaleDateString()}\nTeacher: Ms. Rowe — Reading Specialist\n\n${'='.repeat(60)}\n\n`;
+  ['t3','t2','t1'].forEach(tier => {
+    const tierName = tier==='t3'?'TIER 3 — INTENSIVE':tier==='t2'?'TIER 2 — STRATEGIC':'TIER 1 — CORE';
+    const students = S.students.filter(s=>s.tier===tier);
+    if (!students.length) return;
+    text += `${tierName} (${students.length} students)\n${'-'.repeat(40)}\n`;
+    students.forEach(s => {
+      const flags = [s.el&&'EL',s.iep&&'IEP',s.flag504&&'504',s.gate&&'GATE'].filter(Boolean).join(', ');
+      text += `${s.firstName} ${s.lastName} · Grade ${s.grade}${flags?' ['+flags+']':''}\n`;
+      text += `  Reading Level: ${s.readingLevel} | Fluency: ${s.fluencyWPM} WPM | Comp: ${s.comprehension}% | Phonics: ${s.phonics}%\n`;
+      text += `  Last Assessed: ${s.lastAssessed||'—'}\n\n`;
+    });
+    text += '\n';
+  });
+  text += `\nActive Interventions\n${'-'.repeat(40)}\n`;
+  S.interventions.filter(i=>i.status==='Active').forEach(i => { text += `• ${i.programName||i.name} — Week ${i.weekNumber}/${i.totalWeeks}\n`; });
+  const el = document.createElement('a');
+  el.href = 'data:text/plain,' + encodeURIComponent(text);
+  el.download = `LiteracyMap-Handoff-${new Date().toISOString().split('T')[0]}.txt`;
+  el.click();
+  toast('Handoff doc downloaded', 'var(--t1)');
+}
+
+</script>
 </body>
 </html>
