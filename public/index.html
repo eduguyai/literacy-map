@@ -716,9 +716,7 @@ async function saveEditStudent(id) {
   renderRoster('all');
   selStudent(id);
   toast('Student updated', 'var(--t1)');
-  saveToStorage(); // Sprint 0: persist after mutation
-  APP_STATE.students = students;
-  }
+}
 
 async function deleteStudent(id) {
   const student = S.students.find(s => s.id === id);
@@ -733,9 +731,7 @@ async function deleteStudent(id) {
   renderRoster('all');
   renderOverview();
   toast(`Removed ${student.firstName} ${student.lastName}`, 'var(--t2)');
-  saveToStorage(); // Sprint 0: persist after mutation
-  APP_STATE.students = students;
-  }
+}
 
 function openAddStudent() {
   const form = `
@@ -781,9 +777,7 @@ async function saveNewStudent() {
     renderRoster('all');
     toast(`Added ${first} ${last}`, 'var(--t1)');
   } catch(e) { toast('Failed to save student', 'var(--t3)'); }
-  saveToStorage(); // Sprint 0: persist after mutation
-  APP_STATE.students = students;
-  }
+}
 
 /* === DOMAIN / SKILLS === */
 function renderDomains() {
@@ -2149,6 +2143,28 @@ function generateHandoff() {
   toast('Handoff doc downloaded', 'var(--t1)');
 }
 
+
+/* === SPRINT 0: MUTATION HOOKS (localStorage auto-save) === */
+// Wrap mutation functions so student data persists after every change.
+// Uses window[name] because function declarations in <script> are global.
+(function() {
+  var _mutators = ['saveNewStudent', 'saveEditStudent', 'deleteStudent'];
+  _mutators.forEach(function(name) {
+    var orig = window[name];
+    if (typeof orig !== 'function') return;
+    window[name] = function() {
+      var result = orig.apply(this, arguments);
+      // Keep APP_STATE in sync then persist
+      if (typeof students !== 'undefined') APP_STATE.students = students;
+      saveToStorage();
+      return result;
+    };
+  });
+  // Load persisted data if app hasn't already populated students
+  if (typeof students !== 'undefined' && students.length === 0) {
+    loadFromStorage();
+  }
+})();
 </script>
 </body>
 </html>
