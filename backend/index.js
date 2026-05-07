@@ -104,18 +104,12 @@ app.get('/api/analytics/summary', (_, res) => {
 
 // ââ SPA fallback ââââââââââââââââââââââââââââââââââââââââââââââ
 
-// Claude API proxy — keeps API key server-side
+// Claude API proxy — forwards requests to Anthropic server-side
 app.post('/api/claude', (req, res) => {
-  const { prompt, system } = req.body;
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'ANTHROPIC_API_KEY not set on server' });
   const https = require('https');
-  const body = JSON.stringify({
-    model: 'claude-haiku-4-5-20251001',
-    max_tokens: 1024,
-    messages: [{ role: 'user', content: prompt }],
-    ...(system ? { system } : {})
-  });
+  const body = JSON.stringify(req.body);
   const opts = {
     hostname: 'api.anthropic.com',
     path: '/v1/messages',
@@ -139,7 +133,6 @@ app.post('/api/claude', (req, res) => {
   pr.write(body);
   pr.end();
 });
-
 app.get('*', (_, res) =>
   res.sendFile(path.join(__dirname, '../public/index.html')));
 
