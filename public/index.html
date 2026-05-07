@@ -386,7 +386,7 @@
         <h3 style="margin-bottom:12px">ð¤ AI Features (Claude API)</h3>
         <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Enter your Anthropic API key to enable AI-powered student analysis and observation tagging.</p>
         <label>Anthropic API Key</label>
-        <input type="password" id="set-apikey" placeholder="sk-ant-api03-...">
+        <input type="password" id="set-apikey" placeholder="">
         <button class="btn primary" onclick="saveAPIKey()" style="width:100%;margin-top:8px">ð Save API Key</button>
         <div id="apikey-status" style="font-size:11px;margin-top:8px;color:var(--muted)"></div>
       </div>
@@ -934,10 +934,10 @@ async function analyzeWithAI() {
   toast('Analyzing with Claude...', 'var(--accent)');
   try {
     const allTags = Array.from(document.querySelectorAll('.obs-tag-btn')).map(b => b.getAttribute('data-context')).filter(Boolean);
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 150,
+    const res = await fetch('/api/claude', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 150,
         messages: [{ role: 'user', content: `Analyze this teacher observation of a K-5 reading student. Return ONLY a JSON array (no markdown) containing 1-3 matching tags from this list: ${JSON.stringify(allTags)}.\n\nObservation: "${text}"\n\nReturn only a valid JSON array.` }]
       })
     });
@@ -1734,10 +1734,10 @@ async function aiCaseloadInsights() {
   }).join('\n');
   const prompt = `You are an expert reading coach analyzing a teacher's K-5 literacy caseload. Be specific, use student names, and write in a collegial, practical tone.\n\nCALLOAD SNAPSHOT:\nTier 3 Intensive: ${t3.length} | Tier 2 Strategic: ${t2.length} | Tier 1 Core: ${t1.length}\nEL: ${S.students.filter(s=>s.el).length} | IEP: ${S.students.filter(s=>s.iep).length}\nClass avg â Phonics: ${avgPhonics}% | Comprehension: ${avgComp}%\n\nROSTER:\n${roster}\n\nProvide:\n1. CASELOAD PATTERNS (2-3 observations about the overall picture)\n2. HIGHEST PRIORITY STUDENTS (2-3 students needing most urgent attention and why)\n3. GROUPING SUGGESTION (small groups based on skill profiles â name students)\n4. THIS WEEK'S INSTRUCTIONAL FOCUS (top 3 priorities across the caseload)\n5. QUICK WIN (one thing the teacher can do tomorrow to help multiple students)\n\nBe direct and specific.`;
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 900, messages: [{ role: 'user', content: prompt }] })
+    const res = await fetch('/api/claude', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 900, messages: [{ role: 'user', content: prompt }] })
     });
     const data = await res.json();
     if (data.error) throw new Error(data.error.message);
@@ -1984,10 +1984,10 @@ async function aiAnalyzeStudent(studentId) {
   const qualObs = (S.qualObs[studentId] || []).map(o => `[${o.date}] ${o.text}`).join('\n') || 'No observations recorded';
   const prompt = `You are an expert reading specialist and MTSS coordinator. Analyze this student's literacy data.\n\nSTUDENT: ${student.firstName} ${student.lastName} | Grade ${student.grade} | ${student.tier.toUpperCase()} | Level: ${student.readingLevel}\nScores: WPM=${student.fluencyWPM} (${wpmPct}% of ${bm} WPM benchmark), Comp=${student.comprehension}%, Phonics=${student.phonics}%\nFlags: ${[student.el&&'EL',student.iep&&'IEP',student.flag504&&'504',student.gate&&'GATE'].filter(Boolean).join(', ')||'None'}\n\nASSESSMENT HISTORY:\n${assessSummary}\n\nTEACHER OBSERVATIONS:\n${qualObs}\n\nProvide a concise analysis with:\n1. PROFILE SUMMARY (2 sentences on reading strengths/gaps)\n2. TOP PRIORITIES (2-3 bullet points of what to target first)\n3. RECOMMENDED STRATEGIES (specific programs or approaches)\n4. MONITORING PLAN (frequency and what to track)\n\nBe specific, practical, and use educator language.`;
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 600, messages: [{ role: 'user', content: prompt }] })
+    const res = await fetch('/api/claude', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 600, messages: [{ role: 'user', content: prompt }] })
     });
     const data = await res.json();
     if (data.error) throw new Error(data.error.message);
