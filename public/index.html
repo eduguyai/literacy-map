@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LiteracyMap — Reading Intervention Tracker</title>
+  <title>LiteracyMap â Reading Intervention Tracker</title>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,10 +11,10 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Chart.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
   <!-- SheetJS for CSV/Excel -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -223,62 +223,62 @@
       <div style="flex: 1; overflow-y: auto;">
         <div class="sidebar-section">
           <div class="sidebar-section-title">Analysis</div>
-          <div class="sidebar-item active" data-view="overview" onclick="go('overview', this)">◈ Overview</div>
-          <div class="sidebar-item" data-view="roster" onclick="go('roster', this)" style="justify-content:space-between">◫ Student Roster <span id="roster-badge" style="display:none;background:var(--t3);color:#fff;font-size:9px;font-weight:700;border-radius:10px;padding:2px 6px;line-height:1.4;flex-shrink:0"></span></div>
-          <div class="sidebar-item" data-view="domains" onclick="go('domains', this)">◎ Skill Domains</div>
-          <div class="sidebar-item" data-view="growth" onclick="go('growth', this)">◷ Growth Trends</div>
-          <div class="sidebar-item" data-view="qualdata" onclick="go('qualdata', this)">◑ Qualitative Data</div>
+          <div class="sidebar-item active" data-view="overview" onclick="go('overview', this)">â Overview</div>
+          <div class="sidebar-item" data-view="roster" onclick="go('roster', this)" style="justify-content:space-between">â« Student Roster <span id="roster-badge" style="display:none;background:var(--t3);color:#fff;font-size:9px;font-weight:700;border-radius:10px;padding:2px 6px;line-height:1.4;flex-shrink:0"></span></div>
+          <div class="sidebar-item" data-view="domains" onclick="go('domains', this)">â Skill Domains</div>
+          <div class="sidebar-item" data-view="growth" onclick="go('growth', this)">â· Growth Trends</div>
+          <div class="sidebar-item" data-view="qualdata" onclick="go('qualdata', this)">â Qualitative Data</div>
         </div>
         <div class="sidebar-section">
           <div class="sidebar-section-title">Planning</div>
-          <div class="sidebar-item" data-view="groups" onclick="go('groups', this)">⊞ Group Builder</div>
-          <div class="sidebar-item" data-view="interventions" onclick="go('interventions', this)">◌ Interventions</div>
-          <div class="sidebar-item" data-view="assess" onclick="go('assess', this)">📊 Record Assessment</div>
-          <div class="sidebar-item" data-view="reports" onclick="go('reports', this)">◻ Reports</div>
-          <div class="sidebar-item" data-view="import" onclick="go('import', this)">⬆ Import Data</div>
-          <div class="sidebar-item" data-view="strategies" onclick="go('strategies', this)">📝 Strategies</div>
-          <div class="sidebar-item" data-view="settings" onclick="go('settings', this)">⚙ Settings</div>
+          <div class="sidebar-item" data-view="groups" onclick="go('groups', this)">â Group Builder</div>
+          <div class="sidebar-item" data-view="interventions" onclick="go('interventions', this)">â Interventions</div>
+          <div class="sidebar-item" data-view="assess" onclick="go('assess', this)">ð Record Assessment</div>
+          <div class="sidebar-item" data-view="reports" onclick="go('reports', this)">â» Reports</div>
+          <div class="sidebar-item" data-view="import" onclick="go('import', this)">â¬ Import Data</div>
+          <div class="sidebar-item" data-view="strategies" onclick="go('strategies', this)">ð Strategies</div>
+          <div class="sidebar-item" data-view="settings" onclick="go('settings', this)">â Settings</div>
         </div>
       </div>
       <div class="sidebar-footer">
         <div class="avatar-chip"><div class="avatar" id="sidebar-avatar">KR</div><div><div style="font-weight: 600; font-size: 13px;" id="sidebar-teacher-name">Ms. Rowe</div><div style="font-size: 11px; color: var(--muted);" id="sidebar-teacher-role">Reading Specialist</div></div></div>
         <div class="sidebar-actions">
-          <button class="btn" onclick="saveAll()">💾 Save</button>
-          <button class="btn" onclick="exportSession()">⬇ Export</button>
-          <button class="btn" onclick="resetSession()">↻ Reset</button>
-          <button class="btn" onclick="setAPIKey()">🔑 API Key</button>
+          <button class="btn" onclick="saveAll()">ð¾ Save</button>
+          <button class="btn" onclick="exportSession()">â¬ Export</button>
+          <button class="btn" onclick="resetSession()">â» Reset</button>
+          <button class="btn" onclick="setAPIKey()">ð API Key</button>
         </div>
       </div>
     </div>
 
     <div class="main">
       <div class="topbar">
-        <button class="hamburger" onclick="toggleNav()">☰</button>
+        <button class="hamburger" onclick="toggleNav()">â°</button>
         <h1>LiteracyMap</h1>
         <div class="topbar-search"><input type="text" placeholder="Search students..." id="globalSearch" onkeyup="globalSearch(this.value)"></div>
       </div>
 
       <div class="content" id="contentArea">
-        <div class="view active" id="view-overview"><h2 style="margin-bottom: 24px;">Overview</h2><div id="demo-banner" style="display:none;margin-bottom:16px;padding:12px 16px;background:rgba(91,141,238,0.1);border:1px solid rgba(91,141,238,0.3);border-radius:8px;font-size:13px;color:var(--text)">📚 <strong>You're viewing demo data.</strong> Add your own students via the Roster or <a href="#" onclick="go('import',document.querySelector('[data-view=import]'));event.preventDefault()" style="color:var(--accent);text-decoration:underline">import a class list</a> to get started. <button onclick="this.parentElement.style.display='none'" style="float:right;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">✕</button></div><div id="overdue-alert" style="display:none;margin-bottom:16px;padding:12px 16px;background:var(--t3b);border:1px solid var(--t3d);border-radius:8px;font-size:13px;color:var(--t3)"></div><div class="g4" id="kpi-container"></div><div style="margin-bottom:16px;display:flex;justify-content:flex-end"><button class="btn secondary" onclick="aiCaseloadInsights()" style="padding:8px 16px">🤖 Analyze My Caseload (Claude)</button></div><div id="ai-caseload-result" style="display:none;margin-bottom:16px;padding:16px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:13px;line-height:1.8;border-left:3px solid var(--accent2)"></div><div class="g2"><div class="card"><h3>Reading Level Distribution</h3><div class="chart-container"><canvas id="c-dist"></canvas></div></div><div class="card"><h3>Skill Gaps by Domain</h3><div class="chart-container"><canvas id="c-gap"></canvas></div></div></div><div class="card"><h3>Tier Distribution</h3><div class="chart-container-wide"><canvas id="c-tier"></canvas></div></div></div>
+        <div class="view active" id="view-overview"><h2 style="margin-bottom: 24px;">Overview</h2><div id="demo-banner" style="display:none;margin-bottom:16px;padding:12px 16px;background:rgba(91,141,238,0.1);border:1px solid rgba(91,141,238,0.3);border-radius:8px;font-size:13px;color:var(--text)">ð <strong>You're viewing demo data.</strong> Add your own students via the Roster or <a href="#" onclick="go('import',document.querySelector('[data-view=import]'));event.preventDefault()" style="color:var(--accent);text-decoration:underline">import a class list</a> to get started. <button onclick="this.parentElement.style.display='none'" style="float:right;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">â</button></div><div id="overdue-alert" style="display:none;margin-bottom:16px;padding:12px 16px;background:var(--t3b);border:1px solid var(--t3d);border-radius:8px;font-size:13px;color:var(--t3)"></div><div class="g4" id="kpi-container"></div><div style="margin-bottom:16px;display:flex;justify-content:flex-end"><button class="btn secondary" onclick="aiCaseloadInsights()" style="padding:8px 16px">ð¤ Analyze My Caseload (Claude)</button></div><div id="ai-caseload-result" style="display:none;margin-bottom:16px;padding:16px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:13px;line-height:1.8;border-left:3px solid var(--accent2)"></div><div class="g2"><div class="card"><h3>Reading Level Distribution</h3><div class="chart-container"><canvas id="c-dist"></canvas></div></div><div class="card"><h3>Skill Gaps by Domain</h3><div class="chart-container"><canvas id="c-gap"></canvas></div></div></div><div class="card"><h3>Tier Distribution</h3><div class="chart-container-wide"><canvas id="c-tier"></canvas></div></div></div>
 
         <div class="view" id="view-roster"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
   <h2>Student Roster</h2>
-  <button class="btn" onclick="generateHandoff()" style="display:flex;align-items:center;gap:6px">📋 Handoff Doc</button>
+  <button class="btn" onclick="generateHandoff()" style="display:flex;align-items:center;gap:6px">ð Handoff Doc</button>
 </div><div class="filter-group"><button class="filter-btn active" onclick="renderRoster('all')">All</button><button class="filter-btn" onclick="renderRoster('t3')">Tier 3 Intensive</button><button class="filter-btn" onclick="renderRoster('t2')">Tier 2 Strategic</button><button class="filter-btn" onclick="renderRoster('t1')">Tier 1 Core</button></div><button class="btn primary" onclick="openAddStudent()" style="margin-bottom: 16px;">+ Add Student</button><div class="g-aside"><div class="card"><table><thead><tr><th>Student</th><th>Tier</th><th>Reading Level</th><th>Fluency WPM</th><th>Comp %</th><th>Flags</th><th>Last Assessed</th></tr></thead><tbody id="roster-tbody"></tbody></table></div><div id="detail-panel" class="detail-panel" style="display: none;"></div></div></div>
 
         <div class="view" id="view-domains">
   <h2 style="margin-bottom:16px">Skill Domains</h2>
   <div style="background:linear-gradient(135deg,rgba(91,141,238,0.08),rgba(167,139,250,0.08));border:1px solid rgba(91,141,238,0.2);border-radius:10px;padding:16px 20px;margin-bottom:20px">
     <div style="display:flex;align-items:start;gap:14px">
-      <div style="font-size:28px;flex-shrink:0">🧠</div>
+      <div style="font-size:28px;flex-shrink:0">ð§ </div>
       <div>
         <div style="font-family:var(--serif);font-size:15px;font-weight:600;margin-bottom:4px">The Science of Reading Framework</div>
-        <div style="font-size:12px;color:var(--muted);line-height:1.7">Reading is not natural — it is a taught skill that requires explicit instruction across five interdependent pillars identified by the <strong style="color:var(--text)">National Reading Panel (2000)</strong> and extended by <strong style="color:var(--text)">Scarborough's Reading Rope (2001)</strong>. Cognitive science research shows that skilled reading requires both <em>Word Recognition</em> (phonological awareness, decoding, sight words) and <em>Language Comprehension</em> (background knowledge, vocabulary, verbal reasoning). Each domain below maps to this evidence base.</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.7">Reading is not natural â it is a taught skill that requires explicit instruction across five interdependent pillars identified by the <strong style="color:var(--text)">National Reading Panel (2000)</strong> and extended by <strong style="color:var(--text)">Scarborough's Reading Rope (2001)</strong>. Cognitive science research shows that skilled reading requires both <em>Word Recognition</em> (phonological awareness, decoding, sight words) and <em>Language Comprehension</em> (background knowledge, vocabulary, verbal reasoning). Each domain below maps to this evidence base.</div>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">
-          <a href="https://www.nichd.nih.gov/sites/default/files/publications/pubs/nrp/Documents/report.pdf" target="_blank" style="font-size:10px;padding:3px 8px;background:rgba(91,141,238,0.15);border:1px solid rgba(91,141,238,0.3);border-radius:4px;color:var(--accent);text-decoration:none;font-weight:600">📄 NRP Report (2000)</a>
-          <a href="https://www.thereadingleague.org/what-is-the-science-of-reading/" target="_blank" style="font-size:10px;padding:3px 8px;background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.3);border-radius:4px;color:var(--accent2);text-decoration:none;font-weight:600">🔬 Science of Reading</a>
-          <a href="https://www.readingrockets.org/article/scarboroughs-reading-rope-theoretical-model" target="_blank" style="font-size:10px;padding:3px 8px;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.25);border-radius:4px;color:var(--t1);text-decoration:none;font-weight:600">🪢 Scarborough's Rope</a>
-          <a href="https://dyslexiaida.org/knowledge-and-practice-standards-for-teachers-of-reading/" target="_blank" style="font-size:10px;padding:3px 8px;background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.25);border-radius:4px;color:var(--t2);text-decoration:none;font-weight:600">📚 IDA Knowledge Standards</a>
+          <a href="https://www.nichd.nih.gov/sites/default/files/publications/pubs/nrp/Documents/report.pdf" target="_blank" style="font-size:10px;padding:3px 8px;background:rgba(91,141,238,0.15);border:1px solid rgba(91,141,238,0.3);border-radius:4px;color:var(--accent);text-decoration:none;font-weight:600">ð NRP Report (2000)</a>
+          <a href="https://www.thereadingleague.org/what-is-the-science-of-reading/" target="_blank" style="font-size:10px;padding:3px 8px;background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.3);border-radius:4px;color:var(--accent2);text-decoration:none;font-weight:600">ð¬ Science of Reading</a>
+          <a href="https://www.readingrockets.org/article/scarboroughs-reading-rope-theoretical-model" target="_blank" style="font-size:10px;padding:3px 8px;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.25);border-radius:4px;color:var(--t1);text-decoration:none;font-weight:600">ðª¢ Scarborough's Rope</a>
+          <a href="https://dyslexiaida.org/knowledge-and-practice-standards-for-teachers-of-reading/" target="_blank" style="font-size:10px;padding:3px 8px;background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.25);border-radius:4px;color:var(--t2);text-decoration:none;font-weight:600">ð IDA Knowledge Standards</a>
         </div>
       </div>
     </div>
@@ -289,15 +289,15 @@
 
         <div class="view" id="view-growth"><h2 style="margin-bottom: 24px;">Growth Trends</h2><div class="g4" id="growth-kpi-container"></div><div class="g2"><div class="card"><h3>Trajectory by Tier</h3><div class="chart-container"><canvas id="c-growth"></canvas></div></div><div class="card"><h3>Top Fluency Movers</h3><div class="chart-container"><canvas id="c-movers"></canvas></div></div></div><div class="card"><h3>Growth vs. Starting Level</h3><div class="chart-container-wide"><canvas id="c-scatter"></canvas></div></div></div>
 
-        <div class="view" id="view-qualdata"><h2 style="margin-bottom: 24px;">Qualitative Data</h2><div class="g2"><div><div class="card"><label>Select Student</label><input type="text" placeholder="Search students..." id="qualdata-search" oninput="filterStudentList()"><div style="max-height: 300px; overflow-y: auto; margin-top: 8px;" id="student-list"></div></div><div class="observation-entry"><label>Add Observation</label><textarea id="obs-text" class="obs-textarea" placeholder="Document classroom observation..."></textarea><label style="margin-top: 12px;">Context</label><div class="obs-tags"><button class="obs-tag-btn" data-context="Classroom obs" onclick="toggleObsTag(this)">Classroom obs</button><button class="obs-tag-btn" data-context="Student interview" onclick="toggleObsTag(this)">Student interview</button><button class="obs-tag-btn" data-context="Parent call" onclick="toggleObsTag(this)">Parent call</button><button class="obs-tag-btn" data-context="Small group" onclick="toggleObsTag(this)">Small group</button><button class="obs-tag-btn" data-context="Assessment review" onclick="toggleObsTag(this)">Assessment review</button><button class="obs-tag-btn" data-context="Counselor note" onclick="toggleObsTag(this)">Counselor note</button></div><button class="btn primary" onclick="analyzeWithAI()" style="width: 100%; margin-top: 12px;">✨ Analyze & Tag</button><button class="btn" onclick="submitObservation()" style="width: 100%; margin-top: 8px;">📝 Add Observation</button></div></div><div><div class="card"><h3>Observation Log</h3><div class="obs-log" id="obs-log" style="min-height: 300px;"></div></div><button class="btn" onclick="exportObsLog()" style="width: 100%; margin-top: 12px;">⬇ Export Log</button></div></div></div>
+        <div class="view" id="view-qualdata"><h2 style="margin-bottom: 24px;">Qualitative Data</h2><div class="g2"><div><div class="card"><label>Select Student</label><input type="text" placeholder="Search students..." id="qualdata-search" oninput="filterStudentList()"><div style="max-height: 300px; overflow-y: auto; margin-top: 8px;" id="student-list"></div></div><div class="observation-entry"><label>Add Observation</label><textarea id="obs-text" class="obs-textarea" placeholder="Document classroom observation..."></textarea><label style="margin-top: 12px;">Context</label><div class="obs-tags"><button class="obs-tag-btn" data-context="Classroom obs" onclick="toggleObsTag(this)">Classroom obs</button><button class="obs-tag-btn" data-context="Student interview" onclick="toggleObsTag(this)">Student interview</button><button class="obs-tag-btn" data-context="Parent call" onclick="toggleObsTag(this)">Parent call</button><button class="obs-tag-btn" data-context="Small group" onclick="toggleObsTag(this)">Small group</button><button class="obs-tag-btn" data-context="Assessment review" onclick="toggleObsTag(this)">Assessment review</button><button class="obs-tag-btn" data-context="Counselor note" onclick="toggleObsTag(this)">Counselor note</button></div><button class="btn primary" onclick="analyzeWithAI()" style="width: 100%; margin-top: 12px;">â¨ Analyze & Tag</button><button class="btn" onclick="submitObservation()" style="width: 100%; margin-top: 8px;">ð Add Observation</button></div></div><div><div class="card"><h3>Observation Log</h3><div class="obs-log" id="obs-log" style="min-height: 300px;"></div></div><button class="btn" onclick="exportObsLog()" style="width: 100%; margin-top: 12px;">â¬ Export Log</button></div></div></div>
 
-        <div class="view" id="view-groups"><h2 style="margin-bottom: 16px;">Group Builder</h2><div style="display: flex; gap: 12px; margin-bottom: 16px;"><button class="btn primary" onclick="autoGenerateGroups()">🤖 Auto-Generate</button><button class="btn" onclick="exportGroups()">⬇ Export Groups</button><button class="btn danger" onclick="resetGroups()">↻ Reset</button></div><div class="g3" id="groups-container"></div></div>
+        <div class="view" id="view-groups"><h2 style="margin-bottom: 16px;">Group Builder</h2><div style="display: flex; gap: 12px; margin-bottom: 16px;"><button class="btn primary" onclick="autoGenerateGroups()">ð¤ Auto-Generate</button><button class="btn" onclick="exportGroups()">â¬ Export Groups</button><button class="btn danger" onclick="resetGroups()">â» Reset</button></div><div class="g3" id="groups-container"></div></div>
 
         <div class="view" id="view-interventions"><h2 style="margin-bottom: 24px;">Interventions</h2><div class="g4" id="intervention-kpi-container"></div><button class="btn primary" onclick="openNewIntervention()" style="margin-bottom: 16px;">+ New Intervention</button><div id="interventions-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px;"></div></div>
 
         <div class="view" id="view-reports"><h2 style="margin-bottom: 24px;">Reports</h2><div class="g2" id="reports-container"></div></div>
 
-        <div class="view" id="view-import"><h2 style="margin-bottom: 24px;">Import Data</h2><div class="g2"><div><div class="card"><h3>Import Students</h3><div class="import-zone" id="import-zone" onclick="document.getElementById('file-input').click()"><div class="import-zone-text">📁 Drop CSV or Excel file here</div><div class="import-zone-hint">or click to browse</div></div><input type="file" id="file-input" accept=".csv,.xlsx,.xls" onchange="handleImportFile(this.files[0])" style="display: none;"><div id="preview-container" style="display: none; margin-top: 16px;"><label>Preview (first 5 rows)</label><table style="font-size: 11px;"><thead id="preview-head"></thead><tbody id="preview-body"></tbody></table></div><button class="btn primary" id="import-btn" onclick="applyImport()" style="width: 100%; margin-top: 16px; display: none;">✓ Import Students</button></div></div><div><div class="card"><h3>Column Mapper</h3><table id="mapper-table" style="display: none;"><thead><tr><th>File Column</th><th>Maps To</th></tr></thead><tbody id="mapper-body"></tbody></table><p id="no-file" style="color: var(--muted); font-size: 12px;">Load a file to configure column mappings</p><h3 style="margin-top: 24px;">Session Management</h3><button class="btn" onclick="downloadTemplate()" style="width: 100%; margin-bottom: 8px;">📄 Download Template</button><button class="btn" onclick="exportSessionJSON()" style="width: 100%; margin-bottom: 8px;">💾 Export JSON</button><button class="btn" onclick="importSessionJSON()" style="width: 100%; margin-bottom: 8px;">📂 Load JSON</button><button class="btn danger" onclick="hardReset()" style="width: 100%;">🗑 Hard Reset</button></div></div></div></div>
+        <div class="view" id="view-import"><h2 style="margin-bottom: 24px;">Import Data</h2><div class="g2"><div><div class="card"><h3>Import Students</h3><div class="import-zone" id="import-zone" onclick="document.getElementById('file-input').click()"><div class="import-zone-text">ð Drop CSV or Excel file here</div><div class="import-zone-hint">or click to browse</div></div><input type="file" id="file-input" accept=".csv,.xlsx,.xls" onchange="handleImportFile(this.files[0])" style="display: none;"><div id="preview-container" style="display: none; margin-top: 16px;"><label>Preview (first 5 rows)</label><table style="font-size: 11px;"><thead id="preview-head"></thead><tbody id="preview-body"></tbody></table></div><button class="btn primary" id="import-btn" onclick="applyImport()" style="width: 100%; margin-top: 16px; display: none;">â Import Students</button></div></div><div><div class="card"><h3>Column Mapper</h3><table id="mapper-table" style="display: none;"><thead><tr><th>File Column</th><th>Maps To</th></tr></thead><tbody id="mapper-body"></tbody></table><p id="no-file" style="color: var(--muted); font-size: 12px;">Load a file to configure column mappings</p><h3 style="margin-top: 24px;">Session Management</h3><button class="btn" onclick="downloadTemplate()" style="width: 100%; margin-bottom: 8px;">ð Download Template</button><button class="btn" onclick="exportSessionJSON()" style="width: 100%; margin-bottom: 8px;">ð¾ Export JSON</button><button class="btn" onclick="importSessionJSON()" style="width: 100%; margin-bottom: 8px;">ð Load JSON</button><button class="btn danger" onclick="hardReset()" style="width: 100%;">ð Hard Reset</button></div></div></div></div>
 
             <div class="view" id="view-assess">
       <h2 style="margin-bottom:24px;">Record Assessment</h2>
@@ -315,12 +315,12 @@
           <label>Fluency WPM</label>
           <input type="number" id="assessWPM" placeholder="Words per minute (e.g. 92)">
           <label>Comprehension %</label>
-          <input type="number" id="assessComp" placeholder="0–100">
+          <input type="number" id="assessComp" placeholder="0â100">
           <label>Phonics / Decoding %</label>
-          <input type="number" id="assessPhonics" placeholder="0–100">
+          <input type="number" id="assessPhonics" placeholder="0â100">
           <label>Notes</label>
           <textarea id="assessNotes" style="min-height:80px" placeholder="Observation notes, conditions, strengths..."></textarea>
-          <button class="btn primary" onclick="submitAssessment()" style="width:100%;margin-top:16px;padding:10px">✓ Save Assessment</button>
+          <button class="btn primary" onclick="submitAssessment()" style="width:100%;margin-top:16px;padding:10px">â Save Assessment</button>
         </div>
         <div>
           <div class="card" id="assess-history-panel">
@@ -346,10 +346,10 @@
         <label>Role / Position</label>
         <input type="text" id="set-role" placeholder="e.g. Reading Specialist">
         <label>Grade Levels Served</label>
-        <input type="text" id="set-grades" placeholder="e.g. K–5">
+        <input type="text" id="set-grades" placeholder="e.g. Kâ5">
         <label>School Year</label>
-        <input type="text" id="set-year" placeholder="e.g. 2025–2026">
-        <button class="btn primary" onclick="saveSettings()" style="width:100%;margin-top:16px">💾 Save Settings</button>
+        <input type="text" id="set-year" placeholder="e.g. 2025â2026">
+        <button class="btn primary" onclick="saveSettings()" style="width:100%;margin-top:16px">ð¾ Save Settings</button>
       </div>
       <div class="card">
         <h3 style="margin-bottom:16px">Fluency Benchmark Targets (WPM)</h3>
@@ -362,7 +362,7 @@
           <label style="text-transform:none;font-size:13px;margin:0;color:var(--text)">Grade 4</label><input type="number" id="bm-4" placeholder="140" style="margin:0">
           <label style="text-transform:none;font-size:13px;margin:0;color:var(--text)">Grade 5</label><input type="number" id="bm-5" placeholder="160" style="margin:0">
         </div>
-        <button class="btn primary" onclick="saveBenchmarks()" style="width:100%;margin-top:16px">💾 Save Benchmarks</button>
+        <button class="btn primary" onclick="saveBenchmarks()" style="width:100%;margin-top:16px">ð¾ Save Benchmarks</button>
       </div>
     </div>
     <div>
@@ -379,24 +379,24 @@
           <li>MTSS report generation</li>
         </ul>
         <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:8px;font-size:11px;font-family:var(--mono);color:var(--dim)">
-          Version 1.0 · Sprint 5 · Built for Ms. Rowe
+          Version 1.0 Â· Sprint 5 Â· Built for Ms. Rowe
         </div>
       </div>
       <div class="card" style="margin-bottom:16px">
-        <h3 style="margin-bottom:12px">🤖 AI Features (Claude API)</h3>
+        <h3 style="margin-bottom:12px">ð¤ AI Features (Claude API)</h3>
         <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Enter your Anthropic API key to enable AI-powered student analysis and observation tagging.</p>
         <label>Anthropic API Key</label>
         <input type="password" id="set-apikey" placeholder="sk-ant-api03-...">
-        <button class="btn primary" onclick="saveAPIKey()" style="width:100%;margin-top:8px">🔑 Save API Key</button>
+        <button class="btn primary" onclick="saveAPIKey()" style="width:100%;margin-top:8px">ð Save API Key</button>
         <div id="apikey-status" style="font-size:11px;margin-top:8px;color:var(--muted)"></div>
       </div>
       <div class="card">
         <h3 style="margin-bottom:12px">Data Management</h3>
         <p style="font-size:12px;color:var(--muted);margin-bottom:12px">All data is stored on your Railway server. Export regularly as backup.</p>
-        <button class="btn" onclick="exportSessionJSON()" style="width:100%;margin-bottom:8px">⬇ Export All Data (JSON)</button>
-        <button class="btn" onclick="importSessionJSON()" style="width:100%;margin-bottom:8px">⬆ Import Session (JSON)</button>
-        <button class="btn" style="width:100%;margin-bottom:8px;color:var(--t2);border-color:var(--t2d)" onclick="clearCharts()">🔄 Reset Charts</button>
-        <button class="btn" style="width:100%;color:var(--t3);border-color:var(--t3d)" onclick="hardReset()">🗑 Hard Reset All Data</button>
+        <button class="btn" onclick="exportSessionJSON()" style="width:100%;margin-bottom:8px">â¬ Export All Data (JSON)</button>
+        <button class="btn" onclick="importSessionJSON()" style="width:100%;margin-bottom:8px">â¬ Import Session (JSON)</button>
+        <button class="btn" style="width:100%;margin-bottom:8px;color:var(--t2);border-color:var(--t2d)" onclick="clearCharts()">ð Reset Charts</button>
+        <button class="btn" style="width:100%;color:var(--t3);border-color:var(--t3d)" onclick="hardReset()">ð Hard Reset All Data</button>
       </div>
     </div>
   </div>
@@ -405,9 +405,9 @@
     </div>
   </div>
 
-  <div class="modal" id="planModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('planModal')">✕</button><h2>Student Plan</h2><div id="plan-content"></div></div></div>
-  <div class="modal" id="adaptModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('adaptModal')">✕</button><h2>Adapt Strategy</h2><div id="adapt-content"></div></div></div>
-  <div class="modal" id="reportModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('reportModal')">✕</button><h2>Report</h2><div id="report-content" style="max-height: 600px; overflow-y: auto; white-space: pre-wrap; font-family: var(--mono); font-size: 12px;"></div><div style="display:flex;gap:8px;margin-top:16px"><button class="btn primary" onclick="copyReportText()" style="flex:1">📋 Copy</button><button class="btn" onclick="printReport()" style="flex:1">🖨 Print</button></div></div></div>
+  <div class="modal" id="planModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('planModal')">â</button><h2>Student Plan</h2><div id="plan-content"></div></div></div>
+  <div class="modal" id="adaptModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('adaptModal')">â</button><h2>Adapt Strategy</h2><div id="adapt-content"></div></div></div>
+  <div class="modal" id="reportModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('reportModal')">â</button><h2>Report</h2><div id="report-content" style="max-height: 600px; overflow-y: auto; white-space: pre-wrap; font-family: var(--mono); font-size: 12px;"></div><div style="display:flex;gap:8px;margin-top:16px"><button class="btn primary" onclick="copyReportText()" style="flex:1">ð Copy</button><button class="btn" onclick="printReport()" style="flex:1">ð¨ Print</button></div></div></div>
 
   <script>
 const S = { students: [], assessments: [], interventions: [], observations: {}, groups: [], qualObs: {}, selectedStudent: null, period: 'all', searchQ: '', charts: {}, importData: null, importHeaders: [], currentView: 'overview', apiKey: localStorage.getItem('lm_apikey') || null, _pendingAssessId: null };
@@ -415,8 +415,8 @@ const strategies = [
   { id: 'phonics-ogillingham', domain: 'phonics', title: 'Orton-Gillingham Phoneme Segmentation', objective: 'Students segment words into individual phonemes using multisensory techniques', time: '30 min', tier: 'T3', materials: 'Letter tiles, word cards', steps: ['1. Model phoneme segmentation with a CVC word (e.g., "cat")', '2. Have student repeat word, then hold up fingers for each phoneme', '3. Use letter tiles to show grapheme-phoneme correspondence', '4. Practice with 5-8 words, gradually increasing difficulty', '5. Student writes word while saying each phoneme'] },
   { id: 'phonics-wordbuilding', domain: 'phonics', title: 'Word Building with Magnetic Letters', objective: 'Build orthographic awareness by manipulating letter sequences', time: '20 min', tier: 'T2/T3', materials: 'Magnetic letters, board, word families list', steps: ['1. Start with known word (e.g., "at")', '2. Add initial consonants to create word family (cat, bat, mat, rat)', '3. Have student read each word aloud', '4. Remove a word, have student rebuild it', '5. Challenge: give word family, have student generate new words'] },
   { id: 'fluency-repeated', domain: 'fluency', title: 'Repeated Reading with Graph', objective: 'Increase oral reading rate and accuracy through timed readings', time: '15 min', tier: 'T2', materials: 'Grade-level passage (100-150 words), stopwatch, progress graph', steps: ['1. Choose appropriately leveled passage', '2. Student reads aloud for 1 minute, count words read correctly', '3. Record WPM on progress graph', '4. Student rereads same passage 4-5 more times', '5. Graph shows improvement; celebrate gains'] },
-  { id: 'fluency-partnerreading', domain: 'fluency', title: 'Partner Reading — Echo & Choral', objective: 'Build fluency and prosody through peer modeling', time: '20 min', tier: 'T2', materials: 'Grade-level text, two copies', steps: ['1. Pair strong and developing reader', '2. Stronger reader reads sentence with expression', '3. Developing reader echoes the same sentence', '4. Switch roles; partner reads next sentence', '5. Conclude with choral reading of full passage together'] },
-  { id: 'comp-storymap', domain: 'comprehension', title: 'Story Mapping — Narrative Structure', objective: 'Organize comprehension using story grammar framework', time: '40 min', tier: 'T2', materials: 'Story map graphic organizer, anchor text', steps: ['1. Read aloud narrative text', '2. Model filling in: Setting, Characters, Problem, Events', '3. Guide students to identify turning point', '4. Complete solution and resolution sections', '5. Retell story using map as guide'] },
+  { id: 'fluency-partnerreading', domain: 'fluency', title: 'Partner Reading â Echo & Choral', objective: 'Build fluency and prosody through peer modeling', time: '20 min', tier: 'T2', materials: 'Grade-level text, two copies', steps: ['1. Pair strong and developing reader', '2. Stronger reader reads sentence with expression', '3. Developing reader echoes the same sentence', '4. Switch roles; partner reads next sentence', '5. Conclude with choral reading of full passage together'] },
+  { id: 'comp-storymap', domain: 'comprehension', title: 'Story Mapping â Narrative Structure', objective: 'Organize comprehension using story grammar framework', time: '40 min', tier: 'T2', materials: 'Story map graphic organizer, anchor text', steps: ['1. Read aloud narrative text', '2. Model filling in: Setting, Characters, Problem, Events', '3. Guide students to identify turning point', '4. Complete solution and resolution sections', '5. Retell story using map as guide'] },
   { id: 'comp-thinkaloud', domain: 'comprehension', title: 'Think-Aloud with Anchor Text', objective: 'Model metacognitive strategies for comprehension monitoring', time: '45 min', tier: 'T2/T3', materials: 'Complex text passage, sticky notes', steps: ['1. Read aloud text passage slowly', '2. Pause frequently and verbalize thinking ("I wonder...", "This reminds me...")', '3. Point out when confusion occurs and how to resolve it', '4. Students place sticky notes with thoughts at key points', '5. Discuss predictions and confirmations'] },
   { id: 'vocab-semantic', domain: 'vocabulary', title: 'Semantic Mapping', objective: 'Build rich word knowledge through concept mapping', time: '30 min', tier: 'T2', materials: 'Large paper, markers, target word', steps: ['1. Write target word (e.g., "migration") in center circle', '2. Create branches: Definition, Examples, Antonyms, Synonyms, Sentence', '3. Students contribute ideas for each branch', '4. Create visual connections between concepts', '5. Post map and reference throughout unit'] },
   { id: 'vocab-frayer', domain: 'vocabulary', title: 'Frayer Model for Tier 2 Words', objective: 'Develop deep understanding of grade-level vocabulary', time: '25 min', tier: 'T2', materials: 'Frayer Model template, target word', steps: ['1. Introduce target word in context', '2. Complete Definition section with student input', '3. Generate Examples and Non-examples quadrants', '4. Create visual representation or drawing', '5. Use word in sentences throughout week'] }
@@ -453,7 +453,7 @@ async function boot() {
         { id:1, studentId:1, date:'2026-02-10', readingLevel:'DRA 4', fluencyWPM:44, comprehension:38, phonicsScore:32, notes:'Struggling with CVC words' },
         { id:2, studentId:1, date:'2026-03-12', readingLevel:'DRA 4', fluencyWPM:48, comprehension:41, phonicsScore:36, notes:'Small gains with Heggerty' },
         { id:3, studentId:1, date:'2026-04-10', readingLevel:'DRA 6', fluencyWPM:52, comprehension:45, phonicsScore:38, notes:'Progressing slowly' },
-        { id:4, studentId:2, date:'2026-02-10', readingLevel:'DRA 10', fluencyWPM:68, comprehension:55, phonicsScore:58, notes:'EL — needs vocab support' },
+        { id:4, studentId:2, date:'2026-02-10', readingLevel:'DRA 10', fluencyWPM:68, comprehension:55, phonicsScore:58, notes:'EL â needs vocab support' },
         { id:5, studentId:2, date:'2026-04-15', readingLevel:'DRA 14', fluencyWPM:78, comprehension:62, phonicsScore:65, notes:'Good growth this quarter' },
         { id:6, studentId:3, date:'2026-02-10', readingLevel:'DRA 16', fluencyWPM:82, comprehension:64, phonicsScore:68, notes:'' },
         { id:7, studentId:3, date:'2026-04-12', readingLevel:'DRA 20', fluencyWPM:95, comprehension:71, phonicsScore:72, notes:'Strong growth' },
@@ -497,9 +497,9 @@ function renderOverview() {
   const kpiData = { totalStudents: S.students.length, tier3: S.students.filter(s => s.tier === 't3').length, tier2: S.students.filter(s => s.tier === 't2').length, tier1: S.students.filter(s => s.tier === 't1').length };
   const kpiHTML = `
   <div class="card card-kpi" style="border-top:2px solid var(--accent)"><div class="kpi-label">Total Students</div><div class="kpi-value" style="color:var(--text)">${kpiData.totalStudents}</div><div style="font-size:11px;color:var(--muted)">enrolled</div></div>
-  <div class="card card-kpi" style="border-top:2px solid var(--t3)"><div class="kpi-label">Tier 3 · Intensive</div><div class="kpi-value" style="color:var(--t3)">${kpiData.tier3}</div><div style="font-size:11px;color:var(--muted)">significant gaps</div></div>
-  <div class="card card-kpi" style="border-top:2px solid var(--t2)"><div class="kpi-label">Tier 2 · Strategic</div><div class="kpi-value" style="color:var(--t2)">${kpiData.tier2}</div><div style="font-size:11px;color:var(--muted)">targeted support</div></div>
-  <div class="card card-kpi" style="border-top:2px solid var(--t1)"><div class="kpi-label">Tier 1 · Core</div><div class="kpi-value" style="color:var(--t1)">${kpiData.tier1}</div><div style="font-size:11px;color:var(--muted)">on track</div></div>
+  <div class="card card-kpi" style="border-top:2px solid var(--t3)"><div class="kpi-label">Tier 3 Â· Intensive</div><div class="kpi-value" style="color:var(--t3)">${kpiData.tier3}</div><div style="font-size:11px;color:var(--muted)">significant gaps</div></div>
+  <div class="card card-kpi" style="border-top:2px solid var(--t2)"><div class="kpi-label">Tier 2 Â· Strategic</div><div class="kpi-value" style="color:var(--t2)">${kpiData.tier2}</div><div style="font-size:11px;color:var(--muted)">targeted support</div></div>
+  <div class="card card-kpi" style="border-top:2px solid var(--t1)"><div class="kpi-label">Tier 1 Â· Core</div><div class="kpi-value" style="color:var(--t1)">${kpiData.tier1}</div><div style="font-size:11px;color:var(--muted)">on track</div></div>
 `;
   document.getElementById('kpi-container').innerHTML = kpiHTML;
   updateOverdueBadge();
@@ -509,7 +509,7 @@ function renderOverview() {
   if (alertEl) {
     if (overdue.length > 0) {
       alertEl.style.display = 'block';
-      alertEl.innerHTML = `⚠ <strong>${overdue.length} student${overdue.length > 1 ? 's' : ''}</strong> not assessed in 30+ days: ${overdue.map(s => s.firstName).join(', ')} — <a href="#" onclick="go('assess', document.querySelector('[data-view=assess]'));event.preventDefault()" style="color:var(--t3);text-decoration:underline">Record now →</a>`;
+      alertEl.innerHTML = `â  <strong>${overdue.length} student${overdue.length > 1 ? 's' : ''}</strong> not assessed in 30+ days: ${overdue.map(s => s.firstName).join(', ')} â <a href="#" onclick="go('assess', document.querySelector('[data-view=assess]'));event.preventDefault()" style="color:var(--t3);text-decoration:underline">Record now â</a>`;
     } else { alertEl.style.display = 'none'; }
   }
   // Demo data banner
@@ -532,7 +532,7 @@ function renderRoster(filter) {
   else if (filter === 't2') filtered = S.students.filter(s => s.tier === 't2');
   else if (filter === 't1') filtered = S.students.filter(s => s.tier === 't1');
   if (S.searchQ) { filtered = filtered.filter(s => `${s.firstName} ${s.lastName}`.toLowerCase().includes(S.searchQ.toLowerCase())); }
-  const rows = filtered.map(s => `<tr onclick="selStudent(${s.id})"><td><strong>${s.firstName} ${s.lastName}</strong></td><td><span class="tier-badge tier-${s.tier}">Tier ${s.tier[1]}</span></td><td>${s.readingLevel}</td><td>${s.fluencyWPM} WPM</td><td>${s.comprehension}%</td><td><div class="flags">${getFlagBadges(s)}</div></td><td style="font-size: 11px; color: var(--muted);">${(() => { if (!s.lastAssessed) return '<span style="color:var(--t3)">Never</span>'; const days = Math.floor((Date.now() - new Date(s.lastAssessed)) / 86400000); return days > 30 ? `<span style="color:var(--t3)" title="${days} days ago">⚠ ${s.lastAssessed}</span>` : s.lastAssessed; })()}</td></tr>`).join('');
+  const rows = filtered.map(s => `<tr onclick="selStudent(${s.id})"><td><strong>${s.firstName} ${s.lastName}</strong></td><td><span class="tier-badge tier-${s.tier}">Tier ${s.tier[1]}</span></td><td>${s.readingLevel}</td><td>${s.fluencyWPM} WPM</td><td>${s.comprehension}%</td><td><div class="flags">${getFlagBadges(s)}</div></td><td style="font-size: 11px; color: var(--muted);">${(() => { if (!s.lastAssessed) return '<span style="color:var(--t3)">Never</span>'; const days = Math.floor((Date.now() - new Date(s.lastAssessed)) / 86400000); return days > 30 ? `<span style="color:var(--t3)" title="${days} days ago">â  ${s.lastAssessed}</span>` : s.lastAssessed; })()}</td></tr>`).join('');
   document.getElementById('roster-tbody').innerHTML = rows;
 }
 
@@ -562,7 +562,7 @@ function selStudent(id) {
   const bmPct = Math.min(Math.round(student.fluencyWPM/bm*100),100);
   const bmColor = bmPct>=85?'var(--t1)':bmPct>=60?'var(--t2)':'var(--t3)';
   const bmSection = `<div class="detail-section"><div class="detail-section-title">Fluency vs. Benchmark</div><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px"><span>${student.fluencyWPM} WPM</span><span style="color:var(--muted)">Target: ${bm} WPM</span></div><div class="score-bar"><div class="score-bar-fill" style="width:${bmPct}%;background:${bmColor}"></div></div><div style="font-size:11px;color:${bmColor};margin-top:4px;font-weight:600">${bmPct}% of grade ${student.grade} benchmark</div></div>`;
-  const panelHTML = `<div class="detail-header"><h2>${student.firstName} ${student.lastName}</h2><div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Grade ${student.grade}</div><div style="margin-top: 8px;"><span class="tier-badge tier-${student.tier}">Tier ${student.tier[1]}</span></div></div>${bmSection}${flagsHTML ? `<div class="detail-section"><div class="detail-section-title">Flags</div>${flagsHTML}</div>` : ''}<div class="detail-section"><div class="detail-section-title">Domain Scores</div>${domainsHTML}</div><div class="detail-section"><div class="detail-section-title">Reading Data</div><div style="font-size: 12px;"><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>Level:</span> <strong>${student.readingLevel}</strong></div><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>WPM:</span> <strong>${student.fluencyWPM}</strong></div></div></div><div class="detail-section"><button class="btn primary" onclick="openPlan(${student.id})" style="width: 100%; padding: 10px; margin-bottom: 8px;">📋 View Full Profile</button><button class="btn" onclick="editStudent(${student.id})" style="width: 100%; padding: 10px; margin-bottom: 8px;">✏ Edit Student</button><button class="btn danger" onclick="deleteStudent(${student.id})" style="width: 100%; padding: 10px;">🗑 Remove from Caseload</button></div>`;
+  const panelHTML = `<div class="detail-header"><h2>${student.firstName} ${student.lastName}</h2><div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Grade ${student.grade}</div><div style="margin-top: 8px;"><span class="tier-badge tier-${student.tier}">Tier ${student.tier[1]}</span></div></div>${bmSection}${flagsHTML ? `<div class="detail-section"><div class="detail-section-title">Flags</div>${flagsHTML}</div>` : ''}<div class="detail-section"><div class="detail-section-title">Domain Scores</div>${domainsHTML}</div><div class="detail-section"><div class="detail-section-title">Reading Data</div><div style="font-size: 12px;"><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>Level:</span> <strong>${student.readingLevel}</strong></div><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>WPM:</span> <strong>${student.fluencyWPM}</strong></div></div></div><div class="detail-section"><button class="btn primary" onclick="openPlan(${student.id})" style="width: 100%; padding: 10px; margin-bottom: 8px;">ð View Full Profile</button><button class="btn" onclick="editStudent(${student.id})" style="width: 100%; padding: 10px; margin-bottom: 8px;">â Edit Student</button><button class="btn danger" onclick="deleteStudent(${student.id})" style="width: 100%; padding: 10px;">ð Remove from Caseload</button></div>`;
   panel.innerHTML = panelHTML;
   panel.style.display = 'block';
 }
@@ -579,9 +579,9 @@ function editStudent(id) {
     </select>
     <label>Tier</label>
     <select id="editTier">
-      <option value="t1" ${student.tier==='t1'?'selected':''}>Tier 1 — Core</option>
-      <option value="t2" ${student.tier==='t2'?'selected':''}>Tier 2 — Strategic</option>
-      <option value="t3" ${student.tier==='t3'?'selected':''}>Tier 3 — Intensive</option>
+      <option value="t1" ${student.tier==='t1'?'selected':''}>Tier 1 â Core</option>
+      <option value="t2" ${student.tier==='t2'?'selected':''}>Tier 2 â Strategic</option>
+      <option value="t3" ${student.tier==='t3'?'selected':''}>Tier 3 â Intensive</option>
     </select>
     <label>Reading Level (DRA/F&P)</label>
     <input type="text" id="editRL" value="${student.readingLevel||''}">
@@ -597,7 +597,7 @@ function editStudent(id) {
       <label style="display:flex;align-items:center;gap:6px;text-transform:none;font-size:13px"><input type="checkbox" id="edit504" style="width:auto;margin:0" ${student.flag504?'checked':''}> 504</label>
       <label style="display:flex;align-items:center;gap:6px;text-transform:none;font-size:13px"><input type="checkbox" id="editGATE" style="width:auto;margin:0" ${student.gate?'checked':''}> GATE</label>
     </div>
-    <button class="btn primary" onclick="saveEditStudent(${id})" style="width:100%;margin-top:12px;padding:10px">✓ Save Changes</button>
+    <button class="btn primary" onclick="saveEditStudent(${id})" style="width:100%;margin-top:12px;padding:10px">â Save Changes</button>
     <button class="btn" onclick="selStudent(${id})" style="width:100%;margin-top:8px">Cancel</button>
   `;
   panel.style.display = 'block';
@@ -654,7 +654,7 @@ function openAddStudent() {
       <label style="display:flex;align-items:center;gap:6px;text-transform:none;font-size:13px"><input type="checkbox" id="newStudentEL" style="width:auto;margin:0"> EL</label>
       <label style="display:flex;align-items:center;gap:6px;text-transform:none;font-size:13px"><input type="checkbox" id="newStudentIEP" style="width:auto;margin:0"> IEP</label>
     </div>
-    <button class="btn primary" onclick="saveNewStudent()" style="width:100%;margin-top:12px;padding:10px">✓ Add Student</button>
+    <button class="btn primary" onclick="saveNewStudent()" style="width:100%;margin-top:12px;padding:10px">â Add Student</button>
     <button class="btn" onclick="document.getElementById('detail-panel').style.display='none'" style="width:100%;margin-top:8px">Cancel</button>
   `;
   const panel = document.getElementById('detail-panel');
@@ -699,7 +699,7 @@ function renderDomains() {
   const domains = [
     {
       name: 'Phonological Awareness & Phonics',
-      icon: '🔤',
+      icon: 'ð¤',
       color: '#5b8dee',
       score: phonicsAvg,
       subs: [
@@ -708,19 +708,19 @@ function renderDomains() {
         { label: 'Blending & segmenting', score: Math.min(100, phonicsAvg - 8) },
         { label: 'Multisyllabic decoding', score: Math.min(100, phonicsAvg - 12) }
       ],
-      why: 'Phonological awareness — the ability to hear and manipulate sounds — is the strongest early predictor of reading success (Torgesen, 1998). Without explicit phonics instruction, roughly 1 in 3 children will not learn to decode reliably.',
-      research: 'National Reading Panel (2000) · Torgesen et al. (1998) · Adams, <em>Beginning to Read</em> (1990) · Gough & Tunmer Simple View (1986)',
-      framework: 'Science of Reading · Structured Literacy · MTSS Tier 2/3',
+      why: 'Phonological awareness â the ability to hear and manipulate sounds â is the strongest early predictor of reading success (Torgesen, 1998). Without explicit phonics instruction, roughly 1 in 3 children will not learn to decode reliably.',
+      research: 'National Reading Panel (2000) Â· Torgesen et al. (1998) Â· Adams, <em>Beginning to Read</em> (1990) Â· Gough & Tunmer Simple View (1986)',
+      framework: 'Science of Reading Â· Structured Literacy Â· MTSS Tier 2/3',
       links: [
         { label: 'UFLI Foundations Phonics', url: 'https://ufli.education.ufl.edu/foundations/' },
-        { label: 'Reading Rockets — Phonics', url: 'https://www.readingrockets.org/topics/phonics-and-decoding' },
+        { label: 'Reading Rockets â Phonics', url: 'https://www.readingrockets.org/topics/phonics-and-decoding' },
         { label: 'FCRR Phonological Awareness Activities', url: 'https://fcrr.org/student-center-activities/PA.htm' },
         { label: 'IDA Structured Literacy Overview', url: 'https://dyslexiaida.org/structured-literacy-effective-instruction-for-students-with-dyslexia-and-related-reading-difficulties/' }
       ]
     },
     {
       name: 'Reading Fluency',
-      icon: '⚡',
+      icon: 'â¡',
       color: '#34d399',
       score: fluencyPct,
       subs: [
@@ -730,10 +730,10 @@ function renderDomains() {
         { label: 'Reading stamina', score: Math.min(100, fluencyPct - 8) }
       ],
       why: 'Fluency bridges decoding and comprehension. LaBerge & Samuels\' Automaticity Theory (1974) shows that when decoding is effortful, working memory cannot support comprehension. Fluent reading frees cognitive resources for meaning-making.',
-      research: 'LaBerge & Samuels Automaticity Theory (1974) · Rasinski, <em>The Fluent Reader</em> (2003) · NAEP Oral Reading Fluency Study (2002) · Wolf & Katzir-Cohen (2001)',
-      framework: 'Automaticity Theory · Cognitive Load Theory · DIBELS',
+      research: 'LaBerge & Samuels Automaticity Theory (1974) Â· Rasinski, <em>The Fluent Reader</em> (2003) Â· NAEP Oral Reading Fluency Study (2002) Â· Wolf & Katzir-Cohen (2001)',
+      framework: 'Automaticity Theory Â· Cognitive Load Theory Â· DIBELS',
       links: [
-        { label: 'Reading Rockets — Fluency', url: 'https://www.readingrockets.org/topics/fluency' },
+        { label: 'Reading Rockets â Fluency', url: 'https://www.readingrockets.org/topics/fluency' },
         { label: 'Rasinski Fluency Resources', url: 'https://www.timrasinski.com/' },
         { label: 'DIBELS 8th Edition', url: 'https://dibels.uoregon.edu/' },
         { label: 'FCRR Fluency Activities', url: 'https://fcrr.org/student-center-activities/F.htm' }
@@ -741,7 +741,7 @@ function renderDomains() {
     },
     {
       name: 'Reading Comprehension',
-      icon: '💭',
+      icon: 'ð­',
       color: '#a78bfa',
       score: compAvg,
       subs: [
@@ -750,11 +750,11 @@ function renderDomains() {
         { label: 'Text structure awareness', score: Math.min(100, compAvg - 5) },
         { label: 'Self-monitoring / metacognition', score: Math.min(100, compAvg - 14) }
       ],
-      why: 'Comprehension is the ultimate goal of reading. Scarborough\'s Reading Rope (2001) demonstrates that skilled comprehension requires the simultaneous integration of language comprehension strands with automatic word recognition — neither alone is sufficient.',
-      research: 'Scarborough Reading Rope (2001) · RAND Reading Study Group (2002) · Duke & Pearson (2002) · Pressley et al. comprehension strategies research',
-      framework: 'Reading Rope · Simple View · Cognitive Load · Metacognition',
+      why: 'Comprehension is the ultimate goal of reading. Scarborough\'s Reading Rope (2001) demonstrates that skilled comprehension requires the simultaneous integration of language comprehension strands with automatic word recognition â neither alone is sufficient.',
+      research: 'Scarborough Reading Rope (2001) Â· RAND Reading Study Group (2002) Â· Duke & Pearson (2002) Â· Pressley et al. comprehension strategies research',
+      framework: 'Reading Rope Â· Simple View Â· Cognitive Load Â· Metacognition',
       links: [
-        { label: 'Reading Rockets — Comprehension', url: 'https://www.readingrockets.org/topics/comprehension' },
+        { label: 'Reading Rockets â Comprehension', url: 'https://www.readingrockets.org/topics/comprehension' },
         { label: 'Scarborough\'s Rope Explained', url: 'https://www.readingrockets.org/article/scarboroughs-reading-rope-theoretical-model' },
         { label: 'IES Practice Guide: Comprehension', url: 'https://ies.ed.gov/ncee/wwc/practiceguide/14' },
         { label: 'The Reading League Journal', url: 'https://www.thereadingleague.org/journal/' }
@@ -762,7 +762,7 @@ function renderDomains() {
     },
     {
       name: 'Vocabulary & Academic Language',
-      icon: '📚',
+      icon: 'ð',
       color: '#fb923c',
       score: vocabAvg || compAvg * 0.85,
       subs: [
@@ -772,10 +772,10 @@ function renderDomains() {
         { label: 'Word consciousness', score: Math.min(100, (vocabAvg || compAvg * 0.85) - 12) }
       ],
       why: 'Vocabulary knowledge is among the strongest predictors of reading comprehension. Hart & Risley (1995) documented a 30-million word exposure gap by age 3. Beck\'s Tier 1/2/3 framework provides a practical structure for prioritizing high-utility academic words.',
-      research: 'Beck, McKeown & Kucan (2002) · Hart & Risley (1995) · Nation & Waring threshold research · Biemiller vocabulary development',
-      framework: 'Tier 1/2/3 Framework · Simple View · Morphological Instruction',
+      research: 'Beck, McKeown & Kucan (2002) Â· Hart & Risley (1995) Â· Nation & Waring threshold research Â· Biemiller vocabulary development',
+      framework: 'Tier 1/2/3 Framework Â· Simple View Â· Morphological Instruction',
       links: [
-        { label: 'Reading Rockets — Vocabulary', url: 'https://www.readingrockets.org/topics/vocabulary' },
+        { label: 'Reading Rockets â Vocabulary', url: 'https://www.readingrockets.org/topics/vocabulary' },
         { label: 'Beck: Bringing Words to Life', url: 'https://www.readingrockets.org/article/selecting-vocabulary-words-teach' },
         { label: 'IES Practice Guide: Vocabulary', url: 'https://ies.ed.gov/ncee/wwc/PracticeGuide/23' },
         { label: 'Vocabulary.com for Educators', url: 'https://www.vocabulary.com/educators/' }
@@ -783,7 +783,7 @@ function renderDomains() {
     },
     {
       name: 'Oral Language & Print Concepts',
-      icon: '🗣',
+      icon: 'ð£',
       color: '#f87171',
       score: Math.min(100, oralAvg),
       subs: [
@@ -792,14 +792,14 @@ function renderDomains() {
         { label: 'Print concepts / directionality', score: Math.min(100, oralAvg + 10) },
         { label: 'Narrative & oral retell', score: Math.min(100, oralAvg - 8) }
       ],
-      why: 'Oral language is the bedrock of literacy. Biemiller\'s research shows early oral language exposure directly predicts reading comprehension years later. Phonemic awareness — the ability to hear, identify, and manipulate individual phonemes — is the most powerful early predictor of decoding success.',
-      research: 'Biemiller oral language & vocabulary (2006) · Torgesen phonemic awareness (1998) · Snow, Burns & Griffin, <em>Preventing Reading Difficulties</em> (NRC, 1998) · Catts et al. language-to-literacy research',
-      framework: 'Language Comprehension Strand · Oral Language Foundation · NRC Framework',
+      why: 'Oral language is the bedrock of literacy. Biemiller\'s research shows early oral language exposure directly predicts reading comprehension years later. Phonemic awareness â the ability to hear, identify, and manipulate individual phonemes â is the most powerful early predictor of decoding success.',
+      research: 'Biemiller oral language & vocabulary (2006) Â· Torgesen phonemic awareness (1998) Â· Snow, Burns & Griffin, <em>Preventing Reading Difficulties</em> (NRC, 1998) Â· Catts et al. language-to-literacy research',
+      framework: 'Language Comprehension Strand Â· Oral Language Foundation Â· NRC Framework',
       links: [
-        { label: 'Reading Rockets — Phonological Awareness', url: 'https://www.readingrockets.org/topics/phonological-and-phonemic-awareness' },
+        { label: 'Reading Rockets â Phonological Awareness', url: 'https://www.readingrockets.org/topics/phonological-and-phonemic-awareness' },
         { label: 'FCRR Phonological Awareness', url: 'https://fcrr.org/student-center-activities/PA.htm' },
         { label: 'Preventing Reading Difficulties (NRC)', url: 'https://nap.nationalacademies.org/catalog/6023/preventing-reading-difficulties-in-young-children' },
-        { label: 'Haskins Labs — CERI', url: 'https://haskinslabs.org/' }
+        { label: 'Haskins Labs â CERI', url: 'https://haskinslabs.org/' }
       ]
     }
   ];
@@ -821,7 +821,7 @@ function renderDomains() {
       return `<div class="domain-sub-bar"><div class="domain-sub-bar-label">${sub.label}</div><div class="domain-sub-bar-fill"><div class="score-bar-fill" style="width:${s}%;height:100%;background:${c}"></div></div><div class="domain-sub-bar-value" style="color:${c}">${s}%</div></div>`;
     }).join('');
     const linkChips = d.links.map(l =>
-      `<a href="${l.url}" target="_blank" rel="noopener" style="display:inline-block;font-size:10px;padding:3px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--accent);text-decoration:none;font-weight:500;margin:2px 2px 2px 0;white-space:nowrap">↗ ${l.label}</a>`
+      `<a href="${l.url}" target="_blank" rel="noopener" style="display:inline-block;font-size:10px;padding:3px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--accent);text-decoration:none;font-weight:500;margin:2px 2px 2px 0;white-space:nowrap">â ${l.label}</a>`
     ).join('');
     return `
       <div class="domain-card" style="display:flex;flex-direction:column;gap:0">
@@ -841,7 +841,7 @@ function renderDomains() {
           ${subBars}
         </div>
         <details style="margin-bottom:10px">
-          <summary style="font-size:11px;font-weight:600;color:var(--accent);cursor:pointer;letter-spacing:.03em;text-transform:uppercase;list-style:none;display:flex;align-items:center;gap:4px;user-select:none">🔬 Research Base</summary>
+          <summary style="font-size:11px;font-weight:600;color:var(--accent);cursor:pointer;letter-spacing:.03em;text-transform:uppercase;list-style:none;display:flex;align-items:center;gap:4px;user-select:none">ð¬ Research Base</summary>
           <div style="margin-top:8px;padding:10px;background:var(--bg3);border-radius:6px;font-size:11px;color:var(--muted);line-height:1.7">
             <div style="color:var(--text);margin-bottom:6px;font-size:12px">${d.why}</div>
             <div style="font-size:10px;color:var(--dim);font-style:italic;margin-bottom:6px">${d.research}</div>
@@ -849,7 +849,7 @@ function renderDomains() {
           </div>
         </details>
         <details>
-          <summary style="font-size:11px;font-weight:600;color:var(--accent2);cursor:pointer;letter-spacing:.03em;text-transform:uppercase;list-style:none;display:flex;align-items:center;gap:4px;user-select:none">📖 Teacher Learning</summary>
+          <summary style="font-size:11px;font-weight:600;color:var(--accent2);cursor:pointer;letter-spacing:.03em;text-transform:uppercase;list-style:none;display:flex;align-items:center;gap:4px;user-select:none">ð Teacher Learning</summary>
           <div style="margin-top:8px;padding:8px 10px;background:var(--bg3);border-radius:6px">
             <div style="font-size:10px;color:var(--muted);margin-bottom:6px">Curated free resources for deepening your knowledge in this domain:</div>
             <div style="display:flex;flex-wrap:wrap;gap:4px">${linkChips}</div>
@@ -880,8 +880,8 @@ function renderDomains() {
         }).join('')}
       </div>
       <div style="font-size:12px;color:var(--muted);line-height:1.7;padding:10px;background:var(--bg3);border-radius:6px;border-left:3px solid var(--t3)">
-        <strong style="color:var(--t3)">⚠ Priority focus: ${scored[0].name}</strong> (${scored[0].val.toFixed(0)}% class avg) — research suggests Tier 2/3 targeted small-group instruction using structured literacy approaches.<br>
-        <strong style="color:var(--t1)" style="margin-top:4px;display:block">✓ Class strength: ${scored[scored.length-1].name}</strong> (${scored[scored.length-1].val.toFixed(0)}% class avg) — leverage as a scaffold for weaker domains and consider peer-supported enrichment.
+        <strong style="color:var(--t3)">â  Priority focus: ${scored[0].name}</strong> (${scored[0].val.toFixed(0)}% class avg) â research suggests Tier 2/3 targeted small-group instruction using structured literacy approaches.<br>
+        <strong style="color:var(--t1)" style="margin-top:4px;display:block">â Class strength: ${scored[scored.length-1].name}</strong> (${scored[scored.length-1].val.toFixed(0)}% class avg) â leverage as a scaffold for weaker domains and consider peer-supported enrichment.
       </div>`;
   }
 }
@@ -892,7 +892,7 @@ function renderGrowth() {
     const stuAssess = S.assessments.filter(a=>a.studentId===s.id && a.fluencyWPM).sort((a,b)=>new Date(a.date||a.createdAt)-new Date(b.date||b.createdAt));
     return stuAssess.length>=2 ? stuAssess[stuAssess.length-1].fluencyWPM - stuAssess[0].fluencyWPM : 0;
   });
-  const avgGrowth = gains.length ? (gains.reduce((a,b)=>a+b,0)/gains.length).toFixed(1) : '—';
+  const avgGrowth = gains.length ? (gains.reduce((a,b)=>a+b,0)/gains.length).toFixed(1) : 'â';
   const onTrack = S.students.filter(s => s.fluencyWPM >= getBenchmark(s.grade)*0.85).length;
   const onTrackPct = S.students.length ? Math.round((onTrack/S.students.length)*100) : 0;
   const promotions = S.students.filter(s=>s.tier==='t1').length;
@@ -930,7 +930,7 @@ function toggleObsTag(btn) { btn.classList.toggle('selected'); }
 async function analyzeWithAI() {
   const text = document.getElementById('obs-text').value;
   if (!text) { toast('Write an observation first', 'var(--t3)'); return; }
-  if (!S.apiKey) { toast('Add Anthropic API key in ⚙ Settings to use AI tagging', 'var(--t3)'); return; }
+  if (!S.apiKey) { toast('Add Anthropic API key in â Settings to use AI tagging', 'var(--t3)'); return; }
   toast('Analyzing with Claude...', 'var(--accent)');
   try {
     const allTags = Array.from(document.querySelectorAll('.obs-tag-btn')).map(b => b.getAttribute('data-context')).filter(Boolean);
@@ -947,7 +947,7 @@ async function analyzeWithAI() {
       if (suggested.includes(btn.getAttribute('data-context'))) btn.classList.add('selected');
     });
     toast(`${suggested.length} AI tags suggested`, 'var(--t1)');
-  } catch(e) { toast('AI tagging failed — check API key in Settings', 'var(--t3)'); }
+  } catch(e) { toast('AI tagging failed â check API key in Settings', 'var(--t3)'); }
 }
 
 function submitObservation() {
@@ -968,7 +968,7 @@ function submitObservation() {
 function renderObsLog() {
   const studentId = S.selectedStudent?.id;
   const obs = studentId ? (S.qualObs[studentId] || []) : [];
-  const html = obs.length === 0 ? '<div style="color: var(--muted); font-size: 12px;">No observations yet</div>' : obs.map((o, i) => `<div class="obs-item"><div style="flex: 1;"><div class="obs-item-text">${o.text}</div><div class="obs-item-tags">${o.tags.map(t => `<span class="obs-item-tag">${t}</span>`).join('')}</div></div><div style="display: flex; flex-direction: column; gap: 8px;"><div class="obs-item-date">${o.date}</div><button class="btn" style="padding: 4px 8px; font-size: 10px;" onclick="removeObservation(${studentId}, ${i})">✕</button></div></div>`).join('');
+  const html = obs.length === 0 ? '<div style="color: var(--muted); font-size: 12px;">No observations yet</div>' : obs.map((o, i) => `<div class="obs-item"><div style="flex: 1;"><div class="obs-item-text">${o.text}</div><div class="obs-item-tags">${o.tags.map(t => `<span class="obs-item-tag">${t}</span>`).join('')}</div></div><div style="display: flex; flex-direction: column; gap: 8px;"><div class="obs-item-date">${o.date}</div><button class="btn" style="padding: 4px 8px; font-size: 10px;" onclick="removeObservation(${studentId}, ${i})">â</button></div></div>`).join('');
   document.getElementById('obs-log').innerHTML = html;
 }
 
@@ -996,11 +996,11 @@ function renderGroups() {
     const tierColor = g.tier === 't3' ? 'var(--t3)' : g.tier === 't2' ? 'var(--t2)' : 'var(--t1)';
     const studentChips = g.students.map(sid => {
       const s = S.students.find(x => x.id === sid);
-      return s ? `<div class="student-chip" style="display:flex;align-items:center;gap:4px">${s.firstName} <button onclick="removeStudentFromGroup(${idx},${sid})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:10px;padding:0;line-height:1" title="Remove">✕</button></div>` : '';
+      return s ? `<div class="student-chip" style="display:flex;align-items:center;gap:4px">${s.firstName} <button onclick="removeStudentFromGroup(${idx},${sid})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:10px;padding:0;line-height:1" title="Remove">â</button></div>` : '';
     }).join('');
     const notInGroup = S.students.filter(s => !g.students.includes(s.id));
     const addOptions = notInGroup.length ? `<select id="add-select-${idx}" style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:11px;padding:3px 6px;flex:1"><option value="">+ Add student...</option>${notInGroup.map(s => `<option value="${s.id}">${s.firstName} ${s.lastName}</option>`).join('')}</select><button class="btn" onclick="addStudentToGroup(${idx})" style="padding:4px 8px;font-size:11px">Add</button>` : '<span style="font-size:11px;color:var(--muted)">All students added</span>';
-    return `<div class="group-card"><div class="group-color" style="background: ${tierColor};"></div><div class="group-name">${g.name}</div><div class="group-skill">${g.focus}</div><div class="student-chips">${studentChips || '<span style="font-size:11px;color:var(--muted)">No students</span>'}</div><div style="display:flex;gap:6px;align-items:center;margin-top:8px">${addOptions}</div><button class="btn" onclick="removeGroup(${idx})" style="width: 100%; padding: 6px; font-size: 11px; margin-top:8px;">✕ Remove Group</button></div>`;
+    return `<div class="group-card"><div class="group-color" style="background: ${tierColor};"></div><div class="group-name">${g.name}</div><div class="group-skill">${g.focus}</div><div class="student-chips">${studentChips || '<span style="font-size:11px;color:var(--muted)">No students</span>'}</div><div style="display:flex;gap:6px;align-items:center;margin-top:8px">${addOptions}</div><button class="btn" onclick="removeGroup(${idx})" style="width: 100%; padding: 6px; font-size: 11px; margin-top:8px;">â Remove Group</button></div>`;
   }).join('');
   document.getElementById('groups-container').innerHTML = groupCards;
 }
@@ -1063,19 +1063,19 @@ function renderInterventions() {
   const activeInts = S.interventions.filter(i => i.status === 'Active');
   const studentsServed = new Set(S.groups.filter(g => activeInts.some(i => i.groupName === g.name)).flatMap(g => g.students)).size || (S.students.filter(s=>s.tier==='t3').length + S.students.filter(s=>s.tier==='t2').length);
   const weeksLeft = activeInts.reduce((sum,i) => sum + Math.max(0, i.totalWeeks - i.weekNumber), 0);
-  const kpiHTML = `<div class="card card-kpi"><div class="kpi-label">Active Interventions</div><div class="kpi-value">${activeInts.length}</div></div><div class="card card-kpi"><div class="kpi-label">Students Served</div><div class="kpi-value" style="color:var(--accent2)">${studentsServed}</div></div><div class="card card-kpi"><div class="kpi-label">Tier 3 Intensive</div><div class="kpi-value" style="color:var(--t3)">${S.students.filter(s=>s.tier==='t3').length}</div></div><div class="card card-kpi"><div class="kpi-label">Weeks Remaining</div><div class="kpi-value" style="color:var(--t2)">${weeksLeft||'—'}</div></div>`;
+  const kpiHTML = `<div class="card card-kpi"><div class="kpi-label">Active Interventions</div><div class="kpi-value">${activeInts.length}</div></div><div class="card card-kpi"><div class="kpi-label">Students Served</div><div class="kpi-value" style="color:var(--accent2)">${studentsServed}</div></div><div class="card card-kpi"><div class="kpi-label">Tier 3 Intensive</div><div class="kpi-value" style="color:var(--t3)">${S.students.filter(s=>s.tier==='t3').length}</div></div><div class="card card-kpi"><div class="kpi-label">Weeks Remaining</div><div class="kpi-value" style="color:var(--t2)">${weeksLeft||'â'}</div></div>`;
   document.getElementById('intervention-kpi-container').innerHTML = kpiHTML;
   const interventionCards = (S.interventions || []).map(i => {
     const progress = Math.floor((i.weekNumber / i.totalWeeks) * 100);
     const statusColor = i.status === 'Active' ? 'var(--t1b)' : i.status === 'Planned' ? 'var(--t2b)' : 'var(--t3b)';
     const statusColorText = i.status === 'Active' ? 'var(--t1)' : i.status === 'Planned' ? 'var(--t2)' : 'var(--t3)';
-    return `<div class="icard"><div class="icard-header"><div><div class="icard-title">${i.programName}</div><div class="icard-meta">${i.participants} students • ${i.frequency}</div></div><div class="icard-status" style="background: ${statusColor}; color: ${statusColorText};">${i.status}</div></div><div class="icard-tags">${(i.focusAreas || []).map(a => `<div class="icard-tag">${a}</div>`).join('')}</div><div class="icard-progress"><div class="score-bar" style="flex: 1;"><div class="score-bar-fill" style="width: ${progress}%"></div></div><span>Week ${i.weekNumber}/${i.totalWeeks}</span></div><div class="icard-footer"><button class="btn" onclick="updateProgress(${i.id})">⚡ Update</button><button class="btn" onclick="viewIntervention(${i.id})">👥 View</button></div></div>`;
+    return `<div class="icard"><div class="icard-header"><div><div class="icard-title">${i.programName}</div><div class="icard-meta">${i.participants} students â¢ ${i.frequency}</div></div><div class="icard-status" style="background: ${statusColor}; color: ${statusColorText};">${i.status}</div></div><div class="icard-tags">${(i.focusAreas || []).map(a => `<div class="icard-tag">${a}</div>`).join('')}</div><div class="icard-progress"><div class="score-bar" style="flex: 1;"><div class="score-bar-fill" style="width: ${progress}%"></div></div><span>Week ${i.weekNumber}/${i.totalWeeks}</span></div><div class="icard-footer"><button class="btn" onclick="updateProgress(${i.id})">â¡ Update</button><button class="btn" onclick="viewIntervention(${i.id})">ð¥ View</button></div></div>`;
   }).join('');
   document.getElementById('interventions-container').innerHTML = interventionCards;
 }
 
 function openNewIntervention() {
-  const form = `<label>Program Name</label><input type="text" id="intProgram" placeholder="e.g., LLI"><label>Group</label><select id="intGroup"><option value="">Select group</option>${S.groups.map(g => `<option value="${g.name}">${g.name}</option>`).join('')}</select><label>Goal</label><input type="text" id="intGoal" placeholder="e.g., Improve fluency to 85 WPM"><label>Focus Areas</label><input type="text" id="intFocus" placeholder="e.g., fluency, comprehension"><label>Frequency</label><input type="text" id="intFreq" placeholder="e.g., 3x/week, 20 min"><button class="btn primary" onclick="saveNewIntervention()" style="width: 100%; margin-top: 12px;">✓ Add</button>`;
+  const form = `<label>Program Name</label><input type="text" id="intProgram" placeholder="e.g., LLI"><label>Group</label><select id="intGroup"><option value="">Select group</option>${S.groups.map(g => `<option value="${g.name}">${g.name}</option>`).join('')}</select><label>Goal</label><input type="text" id="intGoal" placeholder="e.g., Improve fluency to 85 WPM"><label>Focus Areas</label><input type="text" id="intFocus" placeholder="e.g., fluency, comprehension"><label>Frequency</label><input type="text" id="intFreq" placeholder="e.g., 3x/week, 20 min"><button class="btn primary" onclick="saveNewIntervention()" style="width: 100%; margin-top: 12px;">â Add</button>`;
   const modal = document.getElementById('planModal');
   modal.querySelector('#plan-content').innerHTML = form;
   modal.classList.add('active');
@@ -1117,7 +1117,7 @@ function viewIntervention(id) {
   const statusCol = inv.status === 'Active' ? 'var(--t1)' : inv.status === 'Planned' ? 'var(--t2)' : 'var(--t3)';
   const html = `
     <h3 style="margin-bottom:4px;font-family:var(--serif)">${inv.programName}</h3>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:16px">${inv.groupName||'No group assigned'} · ${inv.frequency||'—'} · <span style="color:${statusCol};font-weight:600">${inv.status}</span></div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:16px">${inv.groupName||'No group assigned'} Â· ${inv.frequency||'â'} Â· <span style="color:${statusCol};font-weight:600">${inv.status}</span></div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
       <div style="padding:10px;background:var(--bg3);border-radius:8px;text-align:center"><div style="font-size:9px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Progress</div><div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--accent)">Wk ${inv.weekNumber}/${inv.totalWeeks}</div></div>
       <div style="padding:10px;background:var(--bg3);border-radius:8px;text-align:center"><div style="font-size:9px;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Complete</div><div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--accent2)">${progress}%</div></div>
@@ -1127,10 +1127,10 @@ function viewIntervention(id) {
     <div style="font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:6px">Progress Bar</div>
     <div class="score-bar" style="height:8px;margin-bottom:16px"><div class="score-bar-fill" style="width:${progress}%;background:var(--t1)"></div></div>
     <div style="font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:8px">Students in Group</div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">${students.length ? students.map(s => `<div style="padding:6px 10px;background:var(--bg3);border-radius:6px;font-size:12px"><strong>${s.firstName} ${s.lastName}</strong> <span class="tier-badge tier-${s.tier}" style="margin-left:4px">T${s.tier[1]}</span></div>`).join('') : '<span style="color:var(--muted);font-size:12px">No students linked — create a group in Group Builder and assign it here.</span>'}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">${students.length ? students.map(s => `<div style="padding:6px 10px;background:var(--bg3);border-radius:6px;font-size:12px"><strong>${s.firstName} ${s.lastName}</strong> <span class="tier-badge tier-${s.tier}" style="margin-left:4px">T${s.tier[1]}</span></div>`).join('') : '<span style="color:var(--muted);font-size:12px">No students linked â create a group in Group Builder and assign it here.</span>'}</div>
     ${inv.weekNumber < inv.totalWeeks
-      ? `<button class="btn primary" onclick="updateProgress(${id});closeModal('planModal')" style="width:100%;padding:10px">⚡ Advance to Week ${inv.weekNumber + 1}</button>`
-      : `<div style="text-align:center;padding:12px;background:var(--t1b);border-radius:8px;color:var(--t1);font-weight:600">✓ Intervention Complete — ${inv.totalWeeks} weeks</div>`}
+      ? `<button class="btn primary" onclick="updateProgress(${id});closeModal('planModal')" style="width:100%;padding:10px">â¡ Advance to Week ${inv.weekNumber + 1}</button>`
+      : `<div style="text-align:center;padding:12px;background:var(--t1b);border-radius:8px;color:var(--t1);font-weight:600">â Intervention Complete â ${inv.totalWeeks} weeks</div>`}
   `;
   document.getElementById('plan-content').innerHTML = html;
   document.getElementById('planModal').classList.add('active');
@@ -1138,16 +1138,16 @@ function viewIntervention(id) {
 
 function renderReports() {
   const reports = [
-    { id:'boy', icon:'📋', title:'BOY Intervention Plan', desc:'Tier 3 & 2 students — goals, groupings, recommended programs' },
-    { id:'tier', icon:'📊', title:'Tier Placement Summary', desc:'All students by tier with fluency % of benchmark' },
-    { id:'skillgap', icon:'📈', title:'Skill Gap Analysis', desc:'Class-wide proficiency by domain with visual bars' },
-    { id:'parent', icon:'👨‍👩‍👧', title:'Parent Communication Packets', desc:'Individual letters for each student in plain language' },
-    { id:'mtss', icon:'🏫', title:'Grade-Level MTSS Summary', desc:'Admin-ready overview — tier counts, populations, priorities' },
-    { id:'atrisk', icon:'⚠️', title:'At-Risk Watchlist', desc:'Students below 60% of benchmark with concern flags' },
-    { id:'moy', icon:'✅', title:'MOY Progress Tracking Sheet', desc:'Tabular view: WPM, benchmark %, status for all students' },
-    { id:'custom', icon:'✏️', title:'Custom Report', desc:'Blank report template with current session metadata' },
-    { id:'csv', icon:'📊', title:'Export Roster as CSV', desc:'Download all student data as an Excel-compatible spreadsheet' },
-    { id:'handoff', icon:'📤', title:'Intervention Handoff Doc', desc:'Tiered student list with scores — downloadable as .txt for co-teachers' }
+    { id:'boy', icon:'ð', title:'BOY Intervention Plan', desc:'Tier 3 & 2 students â goals, groupings, recommended programs' },
+    { id:'tier', icon:'ð', title:'Tier Placement Summary', desc:'All students by tier with fluency % of benchmark' },
+    { id:'skillgap', icon:'ð', title:'Skill Gap Analysis', desc:'Class-wide proficiency by domain with visual bars' },
+    { id:'parent', icon:'ð¨âð©âð§', title:'Parent Communication Packets', desc:'Individual letters for each student in plain language' },
+    { id:'mtss', icon:'ð«', title:'Grade-Level MTSS Summary', desc:'Admin-ready overview â tier counts, populations, priorities' },
+    { id:'atrisk', icon:'â ï¸', title:'At-Risk Watchlist', desc:'Students below 60% of benchmark with concern flags' },
+    { id:'moy', icon:'â', title:'MOY Progress Tracking Sheet', desc:'Tabular view: WPM, benchmark %, status for all students' },
+    { id:'custom', icon:'âï¸', title:'Custom Report', desc:'Blank report template with current session metadata' },
+    { id:'csv', icon:'ð', title:'Export Roster as CSV', desc:'Download all student data as an Excel-compatible spreadsheet' },
+    { id:'handoff', icon:'ð¤', title:'Intervention Handoff Doc', desc:'Tiered student list with scores â downloadable as .txt for co-teachers' }
   ];
   const html = reports.map(r => `
     <div class="card" style="display:flex;flex-direction:column;gap:12px">
@@ -1155,7 +1155,7 @@ function renderReports() {
         <div style="font-size:24px;width:36px;text-align:center;flex-shrink:0">${r.icon}</div>
         <div><div style="font-family:var(--serif);font-size:15px;font-weight:600;margin-bottom:4px">${r.title}</div><div style="font-size:12px;color:var(--muted)">${r.desc}</div></div>
       </div>
-      <button class="btn primary" onclick="generateReport('${r.id}')" style="width:100%;padding:8px">Generate →</button>
+      <button class="btn primary" onclick="generateReport('${r.id}')" style="width:100%;padding:8px">Generate â</button>
     </div>`).join('');
   document.getElementById('reports-container').innerHTML = html;
 }
@@ -1165,21 +1165,21 @@ function generateReport(type) {
   const settings = JSON.parse(localStorage.getItem('lm_settings') || '{}');
   const school = settings.school || 'School';
   const teacher = settings.teacher || 'Ms. Rowe';
-  const header = `${school}\nGenerated: ${today}\nPrepared by: ${teacher}\n${'═'.repeat(55)}\n\n`;
+  const header = `${school}\nGenerated: ${today}\nPrepared by: ${teacher}\n${'â'.repeat(55)}\n\n`;
   let text = '';
 
   if (type === 'boy') {
     text = `BEGINNING OF YEAR INTERVENTION PLAN\n${header}`;
     text += `PROGRAM OVERVIEW\nThis intervention plan addresses the needs of students identified through universal screening. Students are grouped into MTSS Tiers based on assessment data.\n\n`;
     ['t3','t2'].forEach(tier => {
-      const label = tier==='t3'?'TIER 3 — INTENSIVE INTERVENTION':'TIER 2 — STRATEGIC INTERVENTION';
+      const label = tier==='t3'?'TIER 3 â INTENSIVE INTERVENTION':'TIER 2 â STRATEGIC INTERVENTION';
       const freq = tier==='t3'?'Daily, 30 min':'3x/week, 20 min';
       const program = tier==='t3'?'Orton-Gillingham / SPIRE':'F&P LLI / Wilson Reading';
       const students = S.students.filter(s=>s.tier===tier);
       text += `${label}\nFrequency: ${freq}\nRecommended Program: ${program}\nStudents (${students.length}):\n`;
       students.forEach(s => {
         const flags = [s.el&&'EL',s.iep&&'IEP',s.flag504&&'504'].filter(Boolean);
-        text += `  • ${s.firstName} ${s.lastName} (Gr.${s.grade}) — ${s.readingLevel}, ${s.fluencyWPM} WPM${flags.length?' ['+flags.join(',')+']':''}\n`;
+        text += `  â¢ ${s.firstName} ${s.lastName} (Gr.${s.grade}) â ${s.readingLevel}, ${s.fluencyWPM} WPM${flags.length?' ['+flags.join(',')+']':''}\n`;
       });
       text += '\n';
     });
@@ -1187,10 +1187,10 @@ function generateReport(type) {
     text = `TIER PLACEMENT SUMMARY\n${header}`;
     const total = S.students.length;
     ['t3','t2','t1'].forEach(tier => {
-      const label = tier==='t3'?'TIER 3 — INTENSIVE':tier==='t2'?'TIER 2 — STRATEGIC':'TIER 1 — CORE';
+      const label = tier==='t3'?'TIER 3 â INTENSIVE':tier==='t2'?'TIER 2 â STRATEGIC':'TIER 1 â CORE';
       const students = S.students.filter(s=>s.tier===tier);
       const pct = total ? Math.round(students.length/total*100) : 0;
-      text += `${label} — ${students.length} students (${pct}%)\n${'-'.repeat(40)}\n`;
+      text += `${label} â ${students.length} students (${pct}%)\n${'-'.repeat(40)}\n`;
       students.forEach(s => {
         const flags = [s.el&&'EL',s.iep&&'IEP',s.flag504&&'504',s.gate&&'GATE'].filter(Boolean);
         const bm = getBenchmark(s.grade);
@@ -1206,13 +1206,13 @@ function generateReport(type) {
     text += `CLASS-WIDE AVERAGES\n`;
     domains.forEach(d => {
       const avg = S.students.reduce((a,s)=>a+(s[d]||0),0)/Math.max(S.students.length,1);
-      const bar = '█'.repeat(Math.round(avg/5)) + '░'.repeat(20-Math.round(avg/5));
+      const bar = 'â'.repeat(Math.round(avg/5)) + 'â'.repeat(20-Math.round(avg/5));
       text += `  ${labels[d].padEnd(25)} ${bar} ${avg.toFixed(1)}%\n`;
     });
-    text += '\nSTUDENTS BELOW 60% — PRIORITY FOR INTERVENTION\n';
+    text += '\nSTUDENTS BELOW 60% â PRIORITY FOR INTERVENTION\n';
     domains.forEach(d => {
       const below = S.students.filter(s=>(s[d]||0)<60);
-      if (below.length) { text += `\n  ${labels[d]} (${below.length} students):\n`; below.forEach(s => { text += `    • ${s.firstName} ${s.lastName}: ${s[d]}%\n`; }); }
+      if (below.length) { text += `\n  ${labels[d]} (${below.length} students):\n`; below.forEach(s => { text += `    â¢ ${s.firstName} ${s.lastName}: ${s[d]}%\n`; }); }
     });
   } else if (type === 'parent') {
     text = `PARENT COMMUNICATION PACKETS\n${header}`;
@@ -1226,8 +1226,8 @@ function generateReport(type) {
         : 'Your child is meeting grade-level reading expectations and receiving core classroom instruction.';
       text += `\nDear Family of ${s.firstName} ${s.lastName},\n\n`;
       text += `${tierMsg}\n\n`;
-      text += `Current Reading Data:\n  • Reading Level: ${s.readingLevel}\n  • Fluency: ${s.fluencyWPM} words per minute (grade benchmark: ${bm} WPM)\n  • Comprehension: ${s.comprehension}%\n  • Last Assessed: ${s.lastAssessed||'This school year'}\n\n`;
-      text += `If you have questions about your child's reading progress, please contact ${teacher} at ${school}.\n\n${'─'.repeat(50)}\n`;
+      text += `Current Reading Data:\n  â¢ Reading Level: ${s.readingLevel}\n  â¢ Fluency: ${s.fluencyWPM} words per minute (grade benchmark: ${bm} WPM)\n  â¢ Comprehension: ${s.comprehension}%\n  â¢ Last Assessed: ${s.lastAssessed||'This school year'}\n\n`;
+      text += `If you have questions about your child's reading progress, please contact ${teacher} at ${school}.\n\n${'â'.repeat(50)}\n`;
     });
   } else if (type === 'mtss') {
     text = `GRADE-LEVEL MTSS SUMMARY\n${header}`;
@@ -1237,12 +1237,12 @@ function generateReport(type) {
     const total = S.students.length;
     text += `TIER DISTRIBUTION OVERVIEW\n  Tier 3 Intensive: ${t3.length} students (${total?Math.round(t3.length/total*100):0}%)\n  Tier 2 Strategic: ${t2.length} students (${total?Math.round(t2.length/total*100):0}%)\n  Tier 1 Core:      ${t1.length} students (${total?Math.round(t1.length/total*100):0}%)\n  Total Enrolled:   ${total} students\n\n`;
     text += `ACTIVE INTERVENTIONS (${S.interventions.filter(i=>i.status==='Active').length})\n`;
-    S.interventions.filter(i=>i.status==='Active').forEach(i => { text += `  • ${i.programName} — ${i.participants} students, Week ${i.weekNumber}/${i.totalWeeks}\n`; });
+    S.interventions.filter(i=>i.status==='Active').forEach(i => { text += `  â¢ ${i.programName} â ${i.participants} students, Week ${i.weekNumber}/${i.totalWeeks}\n`; });
     text += `\nPRIORITY SKILL AREAS\n`;
     const avgPhonics = S.students.reduce((a,s)=>a+s.phonics,0)/Math.max(total,1);
     const avgComp = S.students.reduce((a,s)=>a+s.comprehension,0)/Math.max(total,1);
-    if (avgPhonics < 70) text += `  ⚠ Phonics & Decoding — class avg ${avgPhonics.toFixed(0)}% (priority)\n`;
-    if (avgComp < 75) text += `  ⚠ Comprehension — class avg ${avgComp.toFixed(0)}% (priority)\n`;
+    if (avgPhonics < 70) text += `  â  Phonics & Decoding â class avg ${avgPhonics.toFixed(0)}% (priority)\n`;
+    if (avgComp < 75) text += `  â  Comprehension â class avg ${avgComp.toFixed(0)}% (priority)\n`;
     text += `\nSPECIAL POPULATIONS\n  EL Students: ${S.students.filter(s=>s.el).length}\n  IEP Students: ${S.students.filter(s=>s.iep).length}\n  504 Plans: ${S.students.filter(s=>s.flag504).length}\n  GATE: ${S.students.filter(s=>s.gate).length}\n`;
   } else if (type === 'atrisk') {
     text = `AT-RISK STUDENT WATCHLIST\n${header}`;
@@ -1255,27 +1255,27 @@ function generateReport(type) {
     atRisk.forEach(s => {
       const bm = getBenchmark(s.grade);
       const flags = [s.el&&'EL',s.iep&&'IEP',s.flag504&&'504'].filter(Boolean);
-      text += `${s.firstName} ${s.lastName} — Grade ${s.grade}${flags.length?' ['+flags.join(',')+']':''}\n`;
+      text += `${s.firstName} ${s.lastName} â Grade ${s.grade}${flags.length?' ['+flags.join(',')+']':''}\n`;
       text += `  Fluency: ${s.fluencyWPM} WPM (${Math.round(s.fluencyWPM/bm*100)}% of ${bm} WPM benchmark)\n`;
       text += `  Comprehension: ${s.comprehension}%  |  Phonics: ${s.phonics}%\n`;
-      text += `  Level: ${s.readingLevel}  |  Last assessed: ${s.lastAssessed||'—'}\n`;
+      text += `  Level: ${s.readingLevel}  |  Last assessed: ${s.lastAssessed||'â'}\n`;
       const concerns = [];
       if (s.fluencyWPM < bm*0.6) concerns.push('Fluency significantly below benchmark');
       if (s.comprehension < 50) concerns.push('Critical comprehension gap');
-      if (s.phonics < 50) concerns.push('Phonics deficit — consider structured literacy');
+      if (s.phonics < 50) concerns.push('Phonics deficit â consider structured literacy');
       text += `  Concerns: ${concerns.join('; ')}\n\n`;
     });
   } else if (type === 'moy') {
     text = `MID-YEAR PROGRESS TRACKING SHEET\n${header}`;
     text += `${'Student'.padEnd(22)}${'Gr'.padEnd(4)}${'Tier'.padEnd(6)}${'Level'.padEnd(9)}${'WPM'.padEnd(6)}${'BM'.padEnd(6)}${'%BM'.padEnd(6)}${'Comp'.padEnd(6)}${'Status'}\n`;
-    text += `${'─'.repeat(75)}\n`;
+    text += `${'â'.repeat(75)}\n`;
     S.students.sort((a,b)=>a.tier.localeCompare(b.tier)).forEach(s => {
       const bm = getBenchmark(s.grade);
       const pctBm = Math.round(s.fluencyWPM/bm*100);
       const status = pctBm>=85?'On Track':pctBm>=60?'Watch':'At Risk';
-      text += `${(s.firstName+' '+s.lastName).padEnd(22)}${String(s.grade).padEnd(4)}${s.tier.toUpperCase().padEnd(6)}${(s.readingLevel||'—').padEnd(9)}${String(s.fluencyWPM).padEnd(6)}${String(bm).padEnd(6)}${(pctBm+'%').padEnd(6)}${(s.comprehension+'%').padEnd(6)}${status}\n`;
+      text += `${(s.firstName+' '+s.lastName).padEnd(22)}${String(s.grade).padEnd(4)}${s.tier.toUpperCase().padEnd(6)}${(s.readingLevel||'â').padEnd(9)}${String(s.fluencyWPM).padEnd(6)}${String(bm).padEnd(6)}${(pctBm+'%').padEnd(6)}${(s.comprehension+'%').padEnd(6)}${status}\n`;
     });
-    text += `\n${'─'.repeat(75)}\nNote: Benchmark = end-of-year fluency target. ≥85% = On Track, 60–84% = Watch, <60% = At Risk\n`;
+    text += `\n${'â'.repeat(75)}\nNote: Benchmark = end-of-year fluency target. â¥85% = On Track, 60â84% = Watch, <60% = At Risk\n`;
   } else if (type === 'csv') {
     exportRosterCSV(); return;
   } else if (type === 'handoff') {
@@ -1329,7 +1329,7 @@ function showImportPreview() {
   document.getElementById('import-btn').style.display = 'block';
   // Populate column mapper
   const mapperFields = [
-    { value: 'skip', label: '— skip —' },
+    { value: 'skip', label: 'â skip â' },
     { value: 'firstName', label: 'First Name' },
     { value: 'lastName', label: 'Last Name' },
     { value: 'grade', label: 'Grade' },
@@ -1358,7 +1358,7 @@ function showImportPreview() {
     if (mapperTable) mapperTable.style.display = 'table';
     if (noFile) noFile.style.display = 'none';
   }
-  toast('File loaded — review column mappings', 'var(--t1)');
+  toast('File loaded â review column mappings', 'var(--t1)');
 }
 
 function applyImport() {
@@ -1456,10 +1456,10 @@ function hardReset() {
 }
 
 const strategyResearch = {
-  phonics: { cite: 'NRP (2000) · Adams (1990) · IDA Structured Literacy', link: 'https://www.readingrockets.org/topics/phonics-and-decoding' },
-  fluency: { cite: 'LaBerge & Samuels Automaticity (1974) · Rasinski (2003)', link: 'https://www.readingrockets.org/topics/fluency' },
-  comprehension: { cite: 'Duke & Pearson (2002) · RAND Study Group (2002) · Scarborough Rope (2001)', link: 'https://www.readingrockets.org/topics/comprehension' },
-  vocabulary: { cite: 'Beck, McKeown & Kucan (2002) · Hart & Risley (1995)', link: 'https://www.readingrockets.org/topics/vocabulary' }
+  phonics: { cite: 'NRP (2000) Â· Adams (1990) Â· IDA Structured Literacy', link: 'https://www.readingrockets.org/topics/phonics-and-decoding' },
+  fluency: { cite: 'LaBerge & Samuels Automaticity (1974) Â· Rasinski (2003)', link: 'https://www.readingrockets.org/topics/fluency' },
+  comprehension: { cite: 'Duke & Pearson (2002) Â· RAND Study Group (2002) Â· Scarborough Rope (2001)', link: 'https://www.readingrockets.org/topics/comprehension' },
+  vocabulary: { cite: 'Beck, McKeown & Kucan (2002) Â· Hart & Risley (1995)', link: 'https://www.readingrockets.org/topics/vocabulary' }
 };
 
 function renderStrategies(domain) {
@@ -1471,8 +1471,8 @@ function renderStrategies(domain) {
     const tierColor = s.tier === 'T3' ? 'var(--t3)' : s.tier === 'T2' || s.tier === 'T2/T3' ? 'var(--t2)' : 'var(--t1)';
     const stepsHTML = s.steps.join('\n');
     const rs = strategyResearch[s.domain] || {};
-    const researchTag = rs.cite ? `<details style="margin-top:8px"><summary style="font-size:10px;font-weight:600;color:var(--accent);cursor:pointer;letter-spacing:.03em;text-transform:uppercase;list-style:none;user-select:none">🔬 Research Base</summary><div style="margin-top:6px;padding:8px;background:var(--bg2);border-radius:5px;font-size:10px;color:var(--dim);line-height:1.6">${rs.cite} <a href="${rs.link}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;margin-left:4px">↗ Learn more</a></div></details>` : '';
-    return `<div class="strategy-card"><div class="strategy-header"><div><div class="strategy-domain-badge">${s.domain}</div><div class="strategy-title">${s.title}</div><div class="strategy-objective">${s.objective}</div></div></div><div class="strategy-meta"><span>⏱ ${s.time}</span><span style="color: ${tierColor}; font-weight: 600;">🎯 ${s.tier}</span><span>📦 ${s.materials}</span></div><div class="strategy-steps">${stepsHTML}</div>${researchTag}<div class="strategy-footer" style="margin-top:8px"><button class="btn" onclick="printStrategy('${s.id}')">🖨 Print</button><button class="btn" onclick="openAdapt('${s.id}')">▾ Adapt</button><button class="btn secondary" onclick="assignStrategy('${s.id}')">✦ For Student</button></div></div>`;
+    const researchTag = rs.cite ? `<details style="margin-top:8px"><summary style="font-size:10px;font-weight:600;color:var(--accent);cursor:pointer;letter-spacing:.03em;text-transform:uppercase;list-style:none;user-select:none">ð¬ Research Base</summary><div style="margin-top:6px;padding:8px;background:var(--bg2);border-radius:5px;font-size:10px;color:var(--dim);line-height:1.6">${rs.cite} <a href="${rs.link}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;margin-left:4px">â Learn more</a></div></details>` : '';
+    return `<div class="strategy-card"><div class="strategy-header"><div><div class="strategy-domain-badge">${s.domain}</div><div class="strategy-title">${s.title}</div><div class="strategy-objective">${s.objective}</div></div></div><div class="strategy-meta"><span>â± ${s.time}</span><span style="color: ${tierColor}; font-weight: 600;">ð¯ ${s.tier}</span><span>ð¦ ${s.materials}</span></div><div class="strategy-steps">${stepsHTML}</div>${researchTag}<div class="strategy-footer" style="margin-top:8px"><button class="btn" onclick="printStrategy('${s.id}')">ð¨ Print</button><button class="btn" onclick="openAdapt('${s.id}')">â¾ Adapt</button><button class="btn secondary" onclick="assignStrategy('${s.id}')">â¦ For Student</button></div></div>`;
   }).join('');
   document.getElementById('strategies-container').innerHTML = cards;
 }
@@ -1509,7 +1509,7 @@ function assignStrategy(stratId) {
   const studentOptions = S.students.map(s =>
     `<div style="padding:8px 12px;cursor:pointer;border-radius:6px;border:1px solid var(--border);margin-bottom:6px;font-size:13px;background:var(--bg3)" onclick="confirmAssignStrategy('${stratId}', ${s.id}, this)">
       <div style="font-weight:600">${s.firstName} ${s.lastName}</div>
-      <div style="font-size:11px;color:var(--muted)">Grade ${s.grade} · ${s.tier.toUpperCase()} · ${s.readingLevel}</div>
+      <div style="font-size:11px;color:var(--muted)">Grade ${s.grade} Â· ${s.tier.toUpperCase()} Â· ${s.readingLevel}</div>
     </div>`
   ).join('');
   const html = `
@@ -1534,7 +1534,7 @@ function confirmAssignStrategy(stratId, studentId, el) {
   localStorage.setItem('lm_qualobs', JSON.stringify(S.qualObs));
   el.style.background = 'var(--t1b)';
   el.style.borderColor = 'var(--t1)';
-  el.innerHTML += '<div style="color:var(--t1);font-size:11px;margin-top:4px">✓ Assigned and logged to observations</div>';
+  el.innerHTML += '<div style="color:var(--t1);font-size:11px;margin-top:4px">â Assigned and logged to observations</div>';
   toast(`"${strat.title}" assigned to ${student.firstName}`, 'var(--t1)');
 }
 
@@ -1551,20 +1551,20 @@ function openPlan(studentId) {
   const wpmPct = Math.round((student.fluencyWPM / benchmark) * 100);
   const tierColor = student.tier==='t3'?'var(--t3)':student.tier==='t2'?'var(--t2)':'var(--t1)';
   const recommendation = student.tier==='t3'
-    ? `<strong style="color:var(--t3)">Intensive Intervention Recommended:</strong> Daily small-group instruction (20–30 min) using structured literacy approach. Focus on phonics (${student.phonics}%) and fluency (${student.fluencyWPM} WPM vs. ${benchmark} WPM benchmark). Monitor every 2 weeks.`
+    ? `<strong style="color:var(--t3)">Intensive Intervention Recommended:</strong> Daily small-group instruction (20â30 min) using structured literacy approach. Focus on phonics (${student.phonics}%) and fluency (${student.fluencyWPM} WPM vs. ${benchmark} WPM benchmark). Monitor every 2 weeks.`
     : student.tier==='t2'
     ? `<strong style="color:var(--t2)">Strategic Support Recommended:</strong> 3x/week targeted small-group (20 min). Comprehension: ${student.comprehension}%, Fluency: ${student.fluencyWPM}/${benchmark} WPM (${wpmPct}% of benchmark). Progress-monitor every 4 weeks.`
     : `<strong style="color:var(--t1)">Core Instruction:</strong> On track at ${student.fluencyWPM}/${benchmark} WPM (${wpmPct}% of benchmark). Continue grade-level instruction. Consider enrichment.`;
   const assessTableRows = studentAssessments.length
-    ? studentAssessments.map(a => `<tr><td>${a.date||a.createdAt?.split('T')[0]||'—'}</td><td>${a.readingLevel||'—'}</td><td>${a.fluencyWPM!=null?a.fluencyWPM+'  WPM':'—'}</td><td>${a.comprehension!=null?a.comprehension+'%':'—'}</td><td>${a.phonicsScore!=null?a.phonicsScore+'%':'—'}</td></tr>`).join('')
-    : '<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:16px">No assessments yet — use 📊 Record Assessment</td></tr>';
+    ? studentAssessments.map(a => `<tr><td>${a.date||a.createdAt?.split('T')[0]||'â'}</td><td>${a.readingLevel||'â'}</td><td>${a.fluencyWPM!=null?a.fluencyWPM+'  WPM':'â'}</td><td>${a.comprehension!=null?a.comprehension+'%':'â'}</td><td>${a.phonicsScore!=null?a.phonicsScore+'%':'â'}</td></tr>`).join('')
+    : '<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:16px">No assessments yet â use ð Record Assessment</td></tr>';
   const hasChartData = studentAssessments.length >= 2;
   const html = `
     <div style="display:flex;align-items:start;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)">
       <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0">${student.firstName[0]}${student.lastName[0]}</div>
       <div style="flex:1">
         <div style="font-family:var(--serif);font-size:20px;font-weight:600">${student.firstName} ${student.lastName}</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:4px">Grade ${student.grade} · ${student.readingLevel} · ${student.fluencyWPM} WPM · Last assessed: ${student.lastAssessed||'Never'}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">Grade ${student.grade} Â· ${student.readingLevel} Â· ${student.fluencyWPM} WPM Â· Last assessed: ${student.lastAssessed||'Never'}</div>
         <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><span class="tier-badge tier-${student.tier}">Tier ${student.tier[1]}</span>${flagsHTML}</div>
       </div>
     </div>
@@ -1580,21 +1580,21 @@ function openPlan(studentId) {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
       <div class="card" style="padding:12px"><div style="font-size:11px;color:var(--muted);margin-bottom:8px">Fluency (WPM) over time</div><div style="position:relative;height:140px"><canvas id="plan-chart-wpm"></canvas></div></div>
       <div class="card" style="padding:12px"><div style="font-size:11px;color:var(--muted);margin-bottom:8px">Comprehension % over time</div><div style="position:relative;height:140px"><canvas id="plan-chart-comp"></canvas></div></div>
-    </div>` : `<div style="padding:12px;background:var(--bg3);border-radius:8px;font-size:12px;color:var(--muted);margin-bottom:16px;text-align:center">📊 Record 2+ assessments to see progress charts</div>`}
+    </div>` : `<div style="padding:12px;background:var(--bg3);border-radius:8px;font-size:12px;color:var(--muted);margin-bottom:16px;text-align:center">ð Record 2+ assessments to see progress charts</div>`}
     <div style="font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Assessment History</div>
     <table style="font-size:12px;margin-bottom:16px"><thead><tr><th>Date</th><th>Level</th><th>WPM</th><th>Comp%</th><th>Phonics%</th></tr></thead><tbody>${assessTableRows}</tbody></table>
     <div style="font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">Active Interventions</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:16px">${activeInts.length ? activeInts.map(i=>`• ${i.programName||i.name} — Week ${i.weekNumber}/${i.totalWeeks} (${i.status})`).join('<br>') : 'No active interventions assigned.'}</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:16px">${activeInts.length ? activeInts.map(i=>`â¢ ${i.programName||i.name} â Week ${i.weekNumber}/${i.totalWeeks} (${i.status})`).join('<br>') : 'No active interventions assigned.'}</p>
     <div style="display:flex;gap:8px">
-      <button class="btn primary" onclick="S._pendingAssessId=${studentId};go('assess',document.querySelector('[data-view=assess]'));closeModal('planModal')" style="flex:1">📊 Record Assessment</button>
-      <button class="btn" onclick="go('qualdata',document.querySelector('[data-view=qualdata]'));S.selectedStudent=S.students.find(s=>s.id==${studentId});renderQualdata();closeModal('planModal')" style="flex:1">◑ Add Observation</button>
+      <button class="btn primary" onclick="S._pendingAssessId=${studentId};go('assess',document.querySelector('[data-view=assess]'));closeModal('planModal')" style="flex:1">ð Record Assessment</button>
+      <button class="btn" onclick="go('qualdata',document.querySelector('[data-view=qualdata]'));S.selectedStudent=S.students.find(s=>s.id==${studentId});renderQualdata();closeModal('planModal')" style="flex:1">â Add Observation</button>
     </div>
     <div style="display:flex;gap:8px;margin-top:8px">
-      <button class="btn" onclick="closeModal('planModal');editStudent(${studentId})" style="flex:1;padding:10px">✏ Edit</button>
-      <button class="btn danger" onclick="closeModal('planModal');deleteStudent(${studentId})" style="flex:1;padding:10px">🗑 Remove</button>
+      <button class="btn" onclick="closeModal('planModal');editStudent(${studentId})" style="flex:1;padding:10px">â Edit</button>
+      <button class="btn danger" onclick="closeModal('planModal');deleteStudent(${studentId})" style="flex:1;padding:10px">ð Remove</button>
     </div>
-    ${studentAssessments.length ? `<button class="btn" onclick="exportAssessmentCSV(${studentId})" style="width:100%;margin-top:8px;padding:10px">⬇ Export Assessment History (CSV)</button>` : ''}
-    <button class="btn secondary" onclick="aiAnalyzeStudent(${studentId})" style="width:100%;margin-top:8px;padding:10px">🤖 AI Insights (Claude)</button>
+    ${studentAssessments.length ? `<button class="btn" onclick="exportAssessmentCSV(${studentId})" style="width:100%;margin-top:8px;padding:10px">â¬ Export Assessment History (CSV)</button>` : ''}
+    <button class="btn secondary" onclick="aiAnalyzeStudent(${studentId})" style="width:100%;margin-top:8px;padding:10px">ð¤ AI Insights (Claude)</button>
     <div id="ai-analysis-result-${studentId}" style="display:none;margin-top:12px;padding:14px;background:var(--bg3);border-radius:8px;font-size:12px;color:var(--text);line-height:1.7;border-left:3px solid var(--accent2)"></div>
   `;
   document.getElementById('plan-content').innerHTML = html;
@@ -1635,7 +1635,7 @@ function initCharts() {
     if (S.charts['dist']) { S.charts['dist'].destroy(); S.charts['dist'] = null; }
     // Build real reading level distribution from student data
     const levelBands = [
-      { label: 'Pre-K–K (DRA 1-3)', test: s => { const n = parseInt((s.readingLevel||'').replace(/\D/g,'')); return n <= 3; } },
+      { label: 'Pre-KâK (DRA 1-3)', test: s => { const n = parseInt((s.readingLevel||'').replace(/\D/g,'')); return n <= 3; } },
       { label: 'Grade 1 (DRA 4-16)', test: s => { const n = parseInt((s.readingLevel||'').replace(/\D/g,'')); return n >= 4 && n <= 16; } },
       { label: 'Grade 2 (DRA 18-24)', test: s => { const n = parseInt((s.readingLevel||'').replace(/\D/g,'')); return n >= 18 && n <= 24; } },
       { label: 'Grade 3 (DRA 28-34)', test: s => { const n = parseInt((s.readingLevel||'').replace(/\D/g,'')); return n >= 28 && n <= 34; } },
@@ -1713,16 +1713,16 @@ function initGrowthCharts() {
     });
     const colorMap = { t3:'#f87171', t2:'#fb923c', t1:'#34d399' };
     const byTier = ['t3','t2','t1'].map(tier => ({ label: 'Tier '+tier[1], data: points.filter(p=>p.tier===tier).map(p=>({x:p.x,y:p.y})), backgroundColor: colorMap[tier], pointRadius: 7 }));
-    S.charts['scatter'] = new Chart(scatterCtx, { type:'scatter', data:{ datasets: byTier }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'top', labels:{ color:'#7a8099' } }, tooltip:{ callbacks:{ label: ctx => `${ctx.raw.x}→${ctx.raw.y} WPM` } } }, scales:{ x:{ ticks:{ color:'#4a5068' }, grid:{ color:'rgba(255,255,255,0.05)' }, title:{ display:true, text:'Starting WPM', color:'#4a5068' } }, y:{ ticks:{ color:'#4a5068' }, grid:{ color:'rgba(255,255,255,0.05)' }, title:{ display:true, text:'Current WPM', color:'#4a5068' } } } } });
+    S.charts['scatter'] = new Chart(scatterCtx, { type:'scatter', data:{ datasets: byTier }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'top', labels:{ color:'#7a8099' } }, tooltip:{ callbacks:{ label: ctx => `${ctx.raw.x}â${ctx.raw.y} WPM` } } }, scales:{ x:{ ticks:{ color:'#4a5068' }, grid:{ color:'rgba(255,255,255,0.05)' }, title:{ display:true, text:'Starting WPM', color:'#4a5068' } }, y:{ ticks:{ color:'#4a5068' }, grid:{ color:'rgba(255,255,255,0.05)' }, title:{ display:true, text:'Current WPM', color:'#4a5068' } } } } });
   }
 }
 
 async function aiCaseloadInsights() {
-  if (!S.apiKey) { toast('Add Anthropic API key in ⚙ Settings to use AI', 'var(--t3)'); return; }
+  if (!S.apiKey) { toast('Add Anthropic API key in â Settings to use AI', 'var(--t3)'); return; }
   const resultEl = document.getElementById('ai-caseload-result');
   if (!resultEl) return;
   resultEl.style.display = 'block';
-  resultEl.innerHTML = '<em style="color:var(--accent)">🤖 Claude is analyzing your full caseload...</em>';
+  resultEl.innerHTML = '<em style="color:var(--accent)">ð¤ Claude is analyzing your full caseload...</em>';
   const t3 = S.students.filter(s=>s.tier==='t3');
   const t2 = S.students.filter(s=>s.tier==='t2');
   const t1 = S.students.filter(s=>s.tier==='t1');
@@ -1730,9 +1730,9 @@ async function aiCaseloadInsights() {
   const avgComp = (S.students.reduce((a,s)=>a+(s.comprehension||0),0)/Math.max(S.students.length,1)).toFixed(0);
   const roster = S.students.map(s => {
     const bm = getBenchmark(s.grade);
-    return `${s.firstName} ${s.lastName} (Gr${s.grade}, ${s.tier.toUpperCase()}): Level=${s.readingLevel||'—'}, WPM=${s.fluencyWPM}/${bm}bm, Comp=${s.comprehension}%, Phonics=${s.phonics}%${s.el?' [EL]':''}${s.iep?' [IEP]':''}`;
+    return `${s.firstName} ${s.lastName} (Gr${s.grade}, ${s.tier.toUpperCase()}): Level=${s.readingLevel||'â'}, WPM=${s.fluencyWPM}/${bm}bm, Comp=${s.comprehension}%, Phonics=${s.phonics}%${s.el?' [EL]':''}${s.iep?' [IEP]':''}`;
   }).join('\n');
-  const prompt = `You are an expert reading coach analyzing a teacher's K-5 literacy caseload. Be specific, use student names, and write in a collegial, practical tone.\n\nCALLOAD SNAPSHOT:\nTier 3 Intensive: ${t3.length} | Tier 2 Strategic: ${t2.length} | Tier 1 Core: ${t1.length}\nEL: ${S.students.filter(s=>s.el).length} | IEP: ${S.students.filter(s=>s.iep).length}\nClass avg — Phonics: ${avgPhonics}% | Comprehension: ${avgComp}%\n\nROSTER:\n${roster}\n\nProvide:\n1. CASELOAD PATTERNS (2-3 observations about the overall picture)\n2. HIGHEST PRIORITY STUDENTS (2-3 students needing most urgent attention and why)\n3. GROUPING SUGGESTION (small groups based on skill profiles — name students)\n4. THIS WEEK'S INSTRUCTIONAL FOCUS (top 3 priorities across the caseload)\n5. QUICK WIN (one thing the teacher can do tomorrow to help multiple students)\n\nBe direct and specific.`;
+  const prompt = `You are an expert reading coach analyzing a teacher's K-5 literacy caseload. Be specific, use student names, and write in a collegial, practical tone.\n\nCALLOAD SNAPSHOT:\nTier 3 Intensive: ${t3.length} | Tier 2 Strategic: ${t2.length} | Tier 1 Core: ${t1.length}\nEL: ${S.students.filter(s=>s.el).length} | IEP: ${S.students.filter(s=>s.iep).length}\nClass avg â Phonics: ${avgPhonics}% | Comprehension: ${avgComp}%\n\nROSTER:\n${roster}\n\nProvide:\n1. CASELOAD PATTERNS (2-3 observations about the overall picture)\n2. HIGHEST PRIORITY STUDENTS (2-3 students needing most urgent attention and why)\n3. GROUPING SUGGESTION (small groups based on skill profiles â name students)\n4. THIS WEEK'S INSTRUCTIONAL FOCUS (top 3 priorities across the caseload)\n5. QUICK WIN (one thing the teacher can do tomorrow to help multiple students)\n\nBe direct and specific.`;
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -1742,7 +1742,7 @@ async function aiCaseloadInsights() {
     const data = await res.json();
     if (data.error) throw new Error(data.error.message);
     const analysis = data.content[0].text;
-    resultEl.innerHTML = '<div style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--accent2);margin-bottom:12px;font-family:var(--mono);font-weight:600">🤖 Claude Caseload Analysis</div>' + analysis.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'</p><p style="margin-top:10px">').replace(/\n/g,'<br>').replace(/^/,'<p>') + '</p>';
+    resultEl.innerHTML = '<div style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--accent2);margin-bottom:12px;font-family:var(--mono);font-weight:600">ð¤ Claude Caseload Analysis</div>' + analysis.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'</p><p style="margin-top:10px">').replace(/\n/g,'<br>').replace(/^/,'<p>') + '</p>';
     toast('Caseload analysis ready', 'var(--t1)');
   } catch(e) { resultEl.innerHTML = '<span style="color:var(--t3)">AI analysis failed: ' + e.message + '</span>'; }
 }
@@ -1761,7 +1761,7 @@ function renderSettings() {
   const apikeyEl = document.getElementById('set-apikey');
   if (apikeyEl && S.apiKey) apikeyEl.value = S.apiKey;
   const statusEl = document.getElementById('apikey-status');
-  if (statusEl) { statusEl.textContent = S.apiKey ? '✓ API key set — AI features active' : 'No API key — AI features disabled'; statusEl.style.color = S.apiKey ? 'var(--t1)' : 'var(--muted)'; }
+  if (statusEl) { statusEl.textContent = S.apiKey ? 'â API key set â AI features active' : 'No API key â AI features disabled'; statusEl.style.color = S.apiKey ? 'var(--t1)' : 'var(--muted)'; }
 }
 
 function saveSettings() {
@@ -1864,8 +1864,8 @@ function saveAPIKey() {
   if (!key) { toast('Enter an API key', 'var(--t3)'); return; }
   S.apiKey = key; localStorage.setItem('lm_apikey', key);
   const statusEl = document.getElementById('apikey-status');
-  if (statusEl) { statusEl.textContent = '✓ API key saved — AI features active'; statusEl.style.color = 'var(--t1)'; }
-  toast('API key saved — AI features enabled', 'var(--t1)');
+  if (statusEl) { statusEl.textContent = 'â API key saved â AI features active'; statusEl.style.color = 'var(--t1)'; }
+  toast('API key saved â AI features enabled', 'var(--t1)');
 }
 function printReport() {
   const text = document.getElementById('report-content').textContent;
@@ -1879,7 +1879,7 @@ function printReport() {
 function renderAssess() {
   const sel = document.getElementById('assessStudent');
   if (sel) {
-    sel.innerHTML = '<option value="">Select student...</option>' + S.students.map(s => `<option value="${s.id}">${s.firstName} ${s.lastName} — Grade ${s.grade} (${s.tier.toUpperCase()})</option>`).join('');
+    sel.innerHTML = '<option value="">Select student...</option>' + S.students.map(s => `<option value="${s.id}">${s.firstName} ${s.lastName} â Grade ${s.grade} (${s.tier.toUpperCase()})</option>`).join('');
     sel.onchange = () => loadAssessHistory(parseInt(sel.value));
     if (S._pendingAssessId) {
       sel.value = S._pendingAssessId;
@@ -1920,10 +1920,10 @@ function loadAssessHistory(studentId) {
   if (!student) return;
   const studentAssessments = S.assessments.filter(a => a.studentId === studentId);
   const panel = document.getElementById('assess-history-panel');
-  const exportBtn = studentAssessments.length ? `<button class="btn" onclick="exportAssessmentCSV(${studentId})" style="margin-top:10px;width:100%;font-size:11px">⬇ Export History CSV</button>` : '';
+  const exportBtn = studentAssessments.length ? `<button class="btn" onclick="exportAssessmentCSV(${studentId})" style="margin-top:10px;width:100%;font-size:11px">â¬ Export History CSV</button>` : '';
   const rows = studentAssessments.length === 0
     ? '<p style="color:var(--muted);font-size:12px;margin-top:8px">No assessments recorded yet.</p>'
-    : `<table style="margin-top:12px;font-size:12px"><thead><tr><th>Date</th><th>Level</th><th>WPM</th><th>Comp%</th><th>Phonics%</th></tr></thead><tbody>${studentAssessments.map(a => `<tr><td>${a.date||a.createdAt?.split('T')[0]||'—'}</td><td>${a.readingLevel||'—'}</td><td>${a.fluencyWPM||'—'}</td><td>${a.comprehension||'—'}%</td><td>${a.phonicsScore||'—'}%</td></tr>`).join('')}</tbody></table>`;
+    : `<table style="margin-top:12px;font-size:12px"><thead><tr><th>Date</th><th>Level</th><th>WPM</th><th>Comp%</th><th>Phonics%</th></tr></thead><tbody>${studentAssessments.map(a => `<tr><td>${a.date||a.createdAt?.split('T')[0]||'â'}</td><td>${a.readingLevel||'â'}</td><td>${a.fluencyWPM||'â'}</td><td>${a.comprehension||'â'}%</td><td>${a.phonicsScore||'â'}%</td></tr>`).join('')}</tbody></table>`;
   panel.innerHTML = `<h3>${student.firstName} ${student.lastName}</h3>${rows}${exportBtn}`;
   // Show benchmark hint next to WPM field
   const bm = getBenchmark(student.grade);
@@ -1931,7 +1931,7 @@ function loadAssessHistory(studentId) {
   if (wpmField) {
     let hint = document.getElementById('wpm-hint');
     if (!hint) { hint = document.createElement('div'); hint.id = 'wpm-hint'; hint.style.cssText = 'font-size:11px;color:var(--muted);margin-top:-4px;margin-bottom:8px'; wpmField.parentNode.insertBefore(hint, wpmField.nextSibling); }
-    hint.innerHTML = `Grade ${student.grade} benchmark: <strong style="color:var(--accent)">${bm} WPM</strong> · ${student.fluencyWPM} WPM current (${Math.round(student.fluencyWPM/bm*100)}% of target)`;
+    hint.innerHTML = `Grade ${student.grade} benchmark: <strong style="color:var(--accent)">${bm} WPM</strong> Â· ${student.fluencyWPM} WPM current (${Math.round(student.fluencyWPM/bm*100)}% of target)`;
   }
 }
 
@@ -1968,18 +1968,18 @@ async function submitAssessment() {
 }
 
 async function aiAnalyzeStudent(studentId) {
-  if (!S.apiKey) { toast('Add Anthropic API key in ⚙ Settings to use AI', 'var(--t3)'); return; }
+  if (!S.apiKey) { toast('Add Anthropic API key in â Settings to use AI', 'var(--t3)'); return; }
   const student = S.students.find(s => s.id === studentId);
   if (!student) return;
   const resultEl = document.getElementById('ai-analysis-result-' + studentId);
   if (!resultEl) return;
   resultEl.style.display = 'block';
-  resultEl.innerHTML = '<em style="color:var(--accent)">🤖 Claude is analyzing this student\'s reading profile...</em>';
+  resultEl.innerHTML = '<em style="color:var(--accent)">ð¤ Claude is analyzing this student\'s reading profile...</em>';
   const bm = getBenchmark(student.grade);
   const wpmPct = Math.round(student.fluencyWPM / bm * 100);
   const stuAssess = S.assessments.filter(a => a.studentId === studentId).sort((a,b) => new Date(a.date||a.createdAt) - new Date(b.date||b.createdAt));
   const assessSummary = stuAssess.length
-    ? stuAssess.map(a => `${a.date||'?'}: Level=${a.readingLevel||'—'}, WPM=${a.fluencyWPM||'—'}, Comp=${a.comprehension||'—'}%, Phonics=${a.phonicsScore||'—'}%`).join('\n')
+    ? stuAssess.map(a => `${a.date||'?'}: Level=${a.readingLevel||'â'}, WPM=${a.fluencyWPM||'â'}, Comp=${a.comprehension||'â'}%, Phonics=${a.phonicsScore||'â'}%`).join('\n')
     : 'No assessments recorded yet';
   const qualObs = (S.qualObs[studentId] || []).map(o => `[${o.date}] ${o.text}`).join('\n') || 'No observations recorded';
   const prompt = `You are an expert reading specialist and MTSS coordinator. Analyze this student's literacy data.\n\nSTUDENT: ${student.firstName} ${student.lastName} | Grade ${student.grade} | ${student.tier.toUpperCase()} | Level: ${student.readingLevel}\nScores: WPM=${student.fluencyWPM} (${wpmPct}% of ${bm} WPM benchmark), Comp=${student.comprehension}%, Phonics=${student.phonics}%\nFlags: ${[student.el&&'EL',student.iep&&'IEP',student.flag504&&'504',student.gate&&'GATE'].filter(Boolean).join(', ')||'None'}\n\nASSESSMENT HISTORY:\n${assessSummary}\n\nTEACHER OBSERVATIONS:\n${qualObs}\n\nProvide a concise analysis with:\n1. PROFILE SUMMARY (2 sentences on reading strengths/gaps)\n2. TOP PRIORITIES (2-3 bullet points of what to target first)\n3. RECOMMENDED STRATEGIES (specific programs or approaches)\n4. MONITORING PLAN (frequency and what to track)\n\nBe specific, practical, and use educator language.`;
@@ -1992,8 +1992,8 @@ async function aiAnalyzeStudent(studentId) {
     const data = await res.json();
     if (data.error) throw new Error(data.error.message);
     const analysis = data.content[0].text;
-    resultEl.innerHTML = '<div style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--accent2);margin-bottom:10px;font-family:var(--mono);font-weight:600">🤖 Claude AI Analysis</div>' + analysis.replace(/\n\n/g,'</p><p style="margin-top:8px">').replace(/\n/g,'<br>').replace(/^/,'<p>') + '</p>';
-  } catch(e) { resultEl.innerHTML = '<span style="color:var(--t3)">AI analysis failed. Check your API key in ⚙ Settings. Error: ' + e.message + '</span>'; }
+    resultEl.innerHTML = '<div style="font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--accent2);margin-bottom:10px;font-family:var(--mono);font-weight:600">ð¤ Claude AI Analysis</div>' + analysis.replace(/\n\n/g,'</p><p style="margin-top:8px">').replace(/\n/g,'<br>').replace(/^/,'<p>') + '</p>';
+  } catch(e) { resultEl.innerHTML = '<span style="color:var(--t3)">AI analysis failed. Check your API key in â Settings. Error: ' + e.message + '</span>'; }
 }
 
 function exportRosterCSV() {
@@ -2002,7 +2002,7 @@ function exportRosterCSV() {
     s.firstName, s.lastName, s.grade, s.tier.toUpperCase(), s.readingLevel||'',
     s.fluencyWPM||0, s.comprehension||0, s.phonics||0,
     s.el?'Yes':'No', s.iep?'Yes':'No', s.flag504?'Yes':'No', s.gate?'Yes':'No',
-    s.lastAssessed||'—'
+    s.lastAssessed||'â'
   ]);
   const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
   const el = document.createElement('a');
@@ -2017,22 +2017,22 @@ function generateHandoff() {
   const htName = hs.teacher || 'Ms. Rowe';
   const htRole = hs.role || 'Reading Specialist';
   const htSchool = hs.school ? hs.school + '\n' : '';
-  let text = `LITERACY INTERVENTION HANDOFF DOCUMENT\n${htSchool}Teacher: ${htName} — ${htRole}\nGenerated: ${new Date().toLocaleDateString()}\n\n${'='.repeat(60)}\n\n`;
+  let text = `LITERACY INTERVENTION HANDOFF DOCUMENT\n${htSchool}Teacher: ${htName} â ${htRole}\nGenerated: ${new Date().toLocaleDateString()}\n\n${'='.repeat(60)}\n\n`;
   ['t3','t2','t1'].forEach(tier => {
-    const tierName = tier==='t3'?'TIER 3 — INTENSIVE':tier==='t2'?'TIER 2 — STRATEGIC':'TIER 1 — CORE';
+    const tierName = tier==='t3'?'TIER 3 â INTENSIVE':tier==='t2'?'TIER 2 â STRATEGIC':'TIER 1 â CORE';
     const students = S.students.filter(s=>s.tier===tier);
     if (!students.length) return;
     text += `${tierName} (${students.length} students)\n${'-'.repeat(40)}\n`;
     students.forEach(s => {
       const flags = [s.el&&'EL',s.iep&&'IEP',s.flag504&&'504',s.gate&&'GATE'].filter(Boolean).join(', ');
-      text += `${s.firstName} ${s.lastName} · Grade ${s.grade}${flags?' ['+flags+']':''}\n`;
+      text += `${s.firstName} ${s.lastName} Â· Grade ${s.grade}${flags?' ['+flags+']':''}\n`;
       text += `  Reading Level: ${s.readingLevel} | Fluency: ${s.fluencyWPM} WPM | Comp: ${s.comprehension}% | Phonics: ${s.phonics}%\n`;
-      text += `  Last Assessed: ${s.lastAssessed||'—'}\n\n`;
+      text += `  Last Assessed: ${s.lastAssessed||'â'}\n\n`;
     });
     text += '\n';
   });
   text += `\nActive Interventions\n${'-'.repeat(40)}\n`;
-  S.interventions.filter(i=>i.status==='Active').forEach(i => { text += `• ${i.programName||i.name} — Week ${i.weekNumber}/${i.totalWeeks}\n`; });
+  S.interventions.filter(i=>i.status==='Active').forEach(i => { text += `â¢ ${i.programName||i.name} â Week ${i.weekNumber}/${i.totalWeeks}\n`; });
   const el = document.createElement('a');
   el.href = 'data:text/plain,' + encodeURIComponent(text);
   el.download = `LiteracyMap-Handoff-${new Date().toISOString().split('T')[0]}.txt`;
