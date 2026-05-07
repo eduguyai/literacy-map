@@ -215,6 +215,13 @@
       .toast { display: none !important; }
     }
   </style>
+  <style id="lm-toast-styles">
+  @keyframes lm-fadein { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+  #lm-toast-container { position:fixed; top:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:8px; pointer-events:none; }
+  .lm-toast { padding:12px 18px; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.25); font-size:14px; font-weight:500; max-width:340px; animation:lm-fadein .25s ease; pointer-events:auto; color:#fff; }
+  .lm-toast-info { background:#3b82f6; } .lm-toast-success { background:#10b981; }
+  .lm-toast-error { background:#ef4444; } .lm-toast-warn { background:#f59e0b; }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -410,6 +417,80 @@
   <div class="modal" id="reportModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('reportModal')">✕</button><h2>Report</h2><div id="report-content" style="max-height: 600px; overflow-y: auto; white-space: pre-wrap; font-family: var(--mono); font-size: 12px;"></div><div style="display:flex;gap:8px;margin-top:16px"><button class="btn primary" onclick="copyReportText()" style="flex:1">📋 Copy</button><button class="btn" onclick="printReport()" style="flex:1">🖨 Print</button></div></div></div>
 
   <script>
+
+/* ===================================================================
+   LITERACY-MAP — SPRINT 0: FOUNDATION
+   APP_STATE  : central state store (all data & filters live here)
+   showToast  : user-facing notifications (replaces silent console.error)
+   saveToStorage / loadFromStorage : localStorage persistence
+   =================================================================== */
+
+/* === STATE MANAGEMENT === */
+window.APP_STATE = {
+  students: [],
+  filters: { grade: 'all', teacher: 'all', level: 'all', search: '' },
+  settings: {
+    specialistName: '',
+    schools: [],
+    benchmarks: {
+      phonics:       { K:50, 1:70, 2:85, 3:92 },
+      fluency:       { K:30, 1:60, 2:90, 3:110 },
+      comprehension: { K:55, 1:65, 2:75, 3:80 },
+      phonological:  { K:65, 1:75, 2:85, 3:90 },
+      vocabulary:    { K:55, 1:65, 2:75, 3:82 }
+    }
+  }
+};
+
+/* === TOAST NOTIFICATIONS === */
+function showToast(message, type) {
+  type = type || 'info';
+  var container = document.getElementById('lm-toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'lm-toast-container';
+    document.body.appendChild(container);
+  }
+  var toast = document.createElement('div');
+  toast.className = 'lm-toast lm-toast-' + type;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(function() {
+    toast.style.transition = 'opacity 0.35s, transform 0.35s';
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(-8px)';
+    setTimeout(function() { toast.remove(); }, 360);
+  }, 4000);
+}
+
+/* === LOCALSTORAGE PERSISTENCE === */
+var LM_LS_KEY = 'literacymap_v1';
+function saveToStorage() {
+  try {
+    localStorage.setItem(LM_LS_KEY, JSON.stringify(APP_STATE.students));
+  } catch(e) {
+    console.warn('[LiteracyMap] saveToStorage failed:', e.message);
+  }
+}
+function loadFromStorage() {
+  try {
+    var raw = localStorage.getItem(LM_LS_KEY);
+    if (raw) {
+      var parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        // Mutate in-place so const students reference stays valid
+        APP_STATE.students.splice(0, APP_STATE.students.length);
+        parsed.forEach(function(s) { APP_STATE.students.push(s); });
+        return true;
+      }
+    }
+  } catch(e) {
+    console.warn('[LiteracyMap] loadFromStorage failed:', e.message);
+  }
+  return false;
+}
+
+
 const S = { students: [], assessments: [], interventions: [], observations: {}, groups: [], qualObs: {}, selectedStudent: null, period: 'all', searchQ: '', charts: {}, importData: null, importHeaders: [], currentView: 'overview', apiKey: localStorage.getItem('lm_apikey') || null, _pendingAssessId: null };
 const strategies = [
   { id: 'phonics-ogillingham', domain: 'phonics', title: 'Orton-Gillingham Phoneme Segmentation', objective: 'Students segment words into individual phonemes using multisensory techniques', time: '30 min', tier: 'T3', materials: 'Letter tiles, word cards', steps: ['1. Model phoneme segmentation with a CVC word (e.g., "cat")', '2. Have student repeat word, then hold up fingers for each phoneme', '3. Use letter tiles to show grapheme-phoneme correspondence', '4. Practice with 5-8 words, gradually increasing difficulty', '5. Student writes word while saying each phoneme'] },
@@ -424,7 +505,12 @@ const strategies = [
 
 document.addEventListener('DOMContentLoaded', async () => { await boot(); });
 
-async function boot() {
+async 
+/* === INITIALIZATION === */
+function boot() {
+  // Sprint 0: restore persisted student data on startup (mutates const array in-place)
+  loadFromStorage();
+
   try {
     const [stu, ass, inv] = await Promise.all([
       fetch('/api/students').then(r => r.json()).catch(() => []),
@@ -482,6 +568,8 @@ function go(view, btn) {
   if (renders[view]) renders[view]();
 }
 
+
+/* === NAVIGATION === */
 function toggleNav() {
   const active = document.getElementById('sidebar').classList.toggle('active');
   const overlay = document.getElementById('sidebarOverlay');
@@ -493,6 +581,8 @@ function closeNav() {
   if (overlay) overlay.style.display = 'none';
 }
 
+
+/* === OVERVIEW / DASHBOARD === */
 function renderOverview() {
   const kpiData = { totalStudents: S.students.length, tier3: S.students.filter(s => s.tier === 't3').length, tier2: S.students.filter(s => s.tier === 't2').length, tier1: S.students.filter(s => s.tier === 't1').length };
   const kpiHTML = `
@@ -521,6 +611,8 @@ function renderOverview() {
   setTimeout(() => { initCharts(); }, 100);
 }
 
+
+/* === ROSTER === */
 function renderRoster(filter) {
   const filterBtn = event?.target;
   if (filterBtn) {
@@ -545,6 +637,8 @@ function getFlagBadges(student) {
   return flags.join('');
 }
 
+
+/* === STUDENT DETAIL === */
 function selStudent(id) {
   const student = S.students.find(s => s.id === id);
   if (!student) return;
@@ -622,7 +716,9 @@ async function saveEditStudent(id) {
   renderRoster('all');
   selStudent(id);
   toast('Student updated', 'var(--t1)');
-}
+  saveToStorage(); // Sprint 0: persist after mutation
+  APP_STATE.students = students;
+  }
 
 async function deleteStudent(id) {
   const student = S.students.find(s => s.id === id);
@@ -637,7 +733,9 @@ async function deleteStudent(id) {
   renderRoster('all');
   renderOverview();
   toast(`Removed ${student.firstName} ${student.lastName}`, 'var(--t2)');
-}
+  saveToStorage(); // Sprint 0: persist after mutation
+  APP_STATE.students = students;
+  }
 
 function openAddStudent() {
   const form = `
@@ -683,7 +781,11 @@ async function saveNewStudent() {
     renderRoster('all');
     toast(`Added ${first} ${last}`, 'var(--t1)');
   } catch(e) { toast('Failed to save student', 'var(--t3)'); }
-}
+  saveToStorage(); // Sprint 0: persist after mutation
+  APP_STATE.students = students;
+  }
+
+/* === DOMAIN / SKILLS === */
 function renderDomains() {
   const n = Math.max(S.students.length, 1);
   const avg = field => S.students.reduce((a,s) => a + (parseFloat(s[field]) || 0), 0) / n;
@@ -886,6 +988,8 @@ function renderDomains() {
   }
 }
 
+
+/* === GROWTH / PROGRESS === */
 function renderGrowth() {
   // Calculate real growth metrics
   const gains = S.students.map(s => {
@@ -916,6 +1020,7 @@ function renderQualdata() {
 function filterStudentList() {
   const search = document.getElementById('qualdata-search').value.toLowerCase();
   const students = S.students.filter(s => `${s.firstName} ${s.lastName}`.toLowerCase().includes(search));
+APP_STATE.students = students; // Sprint 0: link central store to existing const
   const list = students.map(s => `<div style="padding: 6px 8px; background: var(--bg3); border-radius: 4px; cursor: pointer; font-size: 12px;" onclick="selectQualStudent(${s.id})">${s.firstName} ${s.lastName} <span class="tier-badge tier-${s.tier}" style="float: right;">T${s.tier[1]}</span></div>`).join('');
   document.getElementById('student-list').innerHTML = list;
 }
@@ -927,7 +1032,9 @@ function selectQualStudent(id) {
 
 function toggleObsTag(btn) { btn.classList.toggle('selected'); }
 
-async function analyzeWithAI() {
+async 
+/* === AI ANALYSIS === */
+function analyzeWithAI() {
   const text = document.getElementById('obs-text').value;
   if (!text) { toast('Write an observation first', 'var(--t3)'); return; }
   if (!S.apiKey) { toast('Add Anthropic API key in ⚙ Settings to use AI tagging', 'var(--t3)'); return; }
@@ -990,6 +1097,8 @@ function exportObsLog() {
   toast('Exported', 'var(--t1)');
 }
 
+
+/* === GROUPS === */
 function renderGroups() {
   if (S.groups.length === 0) { document.getElementById('groups-container').innerHTML = '<div style="grid-column: 1/-1; color: var(--muted); padding: 40px; text-align: center;">No groups yet. Click "Auto-Generate" to create groups.</div>'; return; }
   const groupCards = S.groups.map((g, idx) => {
