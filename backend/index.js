@@ -10,14 +10,14 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, '../public')));
 
-// ── In-memory store ─────────────────────────────────────────
+// ââ In-memory store âââââââââââââââââââââââââââââââââââââââââ
 const store = { students: [], assessments: [], interventions: [] };
 const uid = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
 
-// ── Health ────────────────────────────────────────────────────
+// ââ Health ââââââââââââââââââââââââââââââââââââââââââââââââââââ
 app.get('/health', (_, res) => res.json({ status: 'ok', service: 'literacy-map' }));
 
-// ── Students ──────────────────────────────────────────────────
+// ââ Students ââââââââââââââââââââââââââââââââââââââââââââââââââ
 app.get('/api/students', (_, res) => res.json(store.students));
 
 app.post('/api/students', (req, res) => {
@@ -44,7 +44,7 @@ app.delete('/api/students/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-// ── Assessments ───────────────────────────────────────────────
+// ââ Assessments âââââââââââââââââââââââââââââââââââââââââââââââ
 app.get('/api/assessments', (_, res) => res.json(store.assessments));
 
 app.get('/api/assessments/student/:studentId', (req, res) =>
@@ -61,7 +61,7 @@ app.delete('/api/assessments/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-// ── Interventions ─────────────────────────────────────────────
+// ââ Interventions âââââââââââââââââââââââââââââââââââââââââââââ
 app.get('/api/interventions', (_, res) => res.json(store.interventions));
 
 app.get('/api/interventions/student/:studentId', (req, res) =>
@@ -80,7 +80,7 @@ app.put('/api/interventions/:id', (req, res) => {
   res.json(store.interventions[i]);
 });
 
-// ── Bulk import ───────────────────────────────────────────────
+// ââ Bulk import âââââââââââââââââââââââââââââââââââââââââââââââ
 app.post('/api/import/students', (req, res) => {
   const rows = req.body.students || [];
   const created = rows.map(row => {
@@ -91,7 +91,7 @@ app.post('/api/import/students', (req, res) => {
   res.status(201).json({ imported: created.length, students: created });
 });
 
-// ── Analytics ─────────────────────────────────────────────────
+// ââ Analytics âââââââââââââââââââââââââââââââââââââââââââââââââ
 app.get('/api/analytics/summary', (_, res) => {
   const byTier = { 1: 0, 2: 0, 3: 0 };
   store.students.forEach(s => { byTier[s.tier] = (byTier[s.tier] || 0) + 1; });
@@ -102,7 +102,44 @@ app.get('/api/analytics/summary', (_, res) => {
   });
 });
 
-// ── SPA fallback ──────────────────────────────────────────────
+// ââ SPA fallback ââââââââââââââââââââââââââââââââââââââââââââââ
+
+// Claude API proxy — keeps API key server-side
+app.post('/api/claude', (req, res) => {
+  const { prompt, system } = req.body;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return res.status(500).json({ error: 'ANTHROPIC_API_KEY not set on server' });
+  const https = require('https');
+  const body = JSON.stringify({
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: 1024,
+    messages: [{ role: 'user', content: prompt }],
+    ...(system ? { system } : {})
+  });
+  const opts = {
+    hostname: 'api.anthropic.com',
+    path: '/v1/messages',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'Content-Length': Buffer.byteLength(body)
+    }
+  };
+  const pr = https.request(opts, (pr2) => {
+    let d = '';
+    pr2.on('data', c => d += c);
+    pr2.on('end', () => {
+      try { res.json(JSON.parse(d)); }
+      catch(e) { res.status(500).json({ error: 'Bad Anthropic response' }); }
+    });
+  });
+  pr.on('error', e => res.status(500).json({ error: e.message }));
+  pr.write(body);
+  pr.end();
+});
+
 app.get('*', (_, res) =>
   res.sendFile(path.join(__dirname, '../public/index.html')));
 
