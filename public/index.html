@@ -330,7 +330,7 @@
         <div class="view" id="view-roster"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
   <h2>Student Roster</h2>
   <button class="btn" onclick="generateHandoff()" style="display:flex;align-items:center;gap:6px">📋 Handoff Doc</button>
-</div><div class="filter-group"><button class="filter-btn active" onclick="renderRoster('all')">All</button><button class="filter-btn" onclick="renderRoster('t3')">Tier 3 Intensive</button><button class="filter-btn" onclick="renderRoster('t2')">Tier 2 Strategic</button><button class="filter-btn" onclick="renderRoster('t1')">Tier 1 Core</button></div><button class="btn primary" onclick="openAddStudent()" style="margin-bottom: 16px;">+ Add Student</button><div class="search-row"><input id="roster-search" class="search-input" placeholder="🔍 Search students…" oninput="S.searchQ=this.value;renderRoster()" autocomplete="off"></div><div class="g-aside"><div class="card"><table><thead><tr><th>Student</th><th>Tier</th><th>Reading Level</th><th>Fluency WPM</th><th>Comp %</th><th>Flags</th><th>Last Assessed</th><th style="width:90px">Trend</th><th style="width:44px"></th></tr></thead><tbody id="roster-tbody"></tbody></table></div><div id="detail-panel" class="detail-panel" style="display: none;"></div></div></div>
+</div><div class="filter-group"><button class="filter-btn active" onclick="renderRoster('all')">All</button><button class="filter-btn" onclick="renderRoster('t3')">Tier 3 Intensive</button><button class="filter-btn" onclick="renderRoster('t2')">Tier 2 Strategic</button><button class="filter-btn" onclick="renderRoster('t1')">Tier 1 Core</button></div><button class="btn primary" onclick="openAddStudent()" style="margin-bottom: 16px;">+ Add Student</button><div class="search-row"><input id="roster-search" class="search-input" placeholder="Search students..." oninput="S.searchQ=this.value;renderRoster()" autocomplete="off"></div><div class="g-aside"><div class="card"><table><thead><tr><th>Student</th><th>Tier</th><th>Reading Level</th><th>Fluency WPM</th><th>Comp %</th><th>Flags</th><th>Last Assessed</th><th style="width:90px">Trend</th><th style="width:44px"></th></tr></thead><tbody id="roster-tbody"></tbody></table></div><div id="detail-panel" class="detail-panel" style="display: none;"></div></div></div>
 
         <div class="view" id="view-domains">
   <h2 style="margin-bottom:16px">Skill Domains</h2>
@@ -651,16 +651,18 @@ function renderOverview() {
 <div class="card card-kpi" style="border-top:2px solid #f59e0b"><div class="kpi-label">OVERDUE ASSESSMENT</div><div class="kpi-value" style="color:#f59e0b">${kpiData.overdueCount}</div><div style="font-size:11px;color:var(--muted)">need follow-up</div></div>
 <div class="card card-kpi" style="border-top:2px solid #22c55e"><div class="kpi-label">AT BENCHMARK</div><div class="kpi-value" style="color:#22c55e">${kpiData.atBenchmarkPct}%</div><div style="font-size:11px;color:var(--muted)">Tier 1 students</div></div>
 `;
-  const heroHTML = `<div class="hero-banner"><div><h1>📚 LiteracyMap</h1><p>Reading Intervention Tracker — ${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</p></div><div class="hero-stats"><div class="hero-stat"><div class="hs-val" id="hero-total">—</div><div class="hs-label">Students</div></div><div class="hero-stat"><div class="hs-val" id="hero-t3" style="color:var(--t3)">—</div><div class="hs-label">Intensive</div></div><div class="hero-stat"><div class="hs-val" id="hero-t2" style="color:var(--t2)">—</div><div class="hs-label">Strategic</div></div><div class="hero-stat"><div class="hs-val" id="hero-bench" style="color:var(--t1)">—</div><div class="hs-label">At Benchmark</div></div></div></div>`;
+  const heroHTML = '<div class="hero-banner"><div><h2 style="font-family:var(--serif);font-size:1.5rem;font-weight:600;color:#fff;margin:0 0 .2rem">LiteracyMap</h2><p style="color:rgba(255,255,255,.6);font-size:.875rem;margin:0">Reading Intervention Tracker &mdash; ' + new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}) + '</p></div><div class="hero-stats"><div class="hero-stat"><div class="hs-val" id="hero-total">0</div><div class="hs-label">Students</div></div><div class="hero-stat"><div class="hs-val" id="hero-t3" style="color:var(--t3)">0</div><div class="hs-label">Intensive</div></div><div class="hero-stat"><div class="hs-val" id="hero-t2" style="color:var(--t2)">0</div><div class="hs-label">Strategic</div></div><div class="hero-stat"><div class="hs-val" id="hero-bench" style="color:var(--t1)">0</div><div class="hs-label">At Benchmark</div></div></div></div>';
   document.getElementById('kpi-container').innerHTML = heroHTML + kpiHTML;
-  requestAnimationFrame(()=>{
-    const el=id=>document.getElementById(id);
-    const anim=(el,val,suf='')=>{if(!el)return;let s=0;const step=()=>{s+=Math.ceil((val-s)/6)||1;el.textContent=s+suf;if(s<val)requestAnimationFrame(step);else el.textContent=val+suf;};step();};
-    anim(el('hero-total'),kpiData.totalStudents);
-    anim(el('hero-t3'),kpiData.tier3);
-    anim(el('hero-t2'),kpiData.tier2);
-    anim(el('hero-bench'),kpiData.atBenchmarkPct,'%');
-    document.querySelectorAll('.kpi-val').forEach((e,i)=>setTimeout(()=>{e.classList.add('animating');setTimeout(()=>e.classList.remove('animating'),500);},i*60));
+  requestAnimationFrame(function(){
+    function animNum(id,val,suf){
+      var el=document.getElementById(id);if(!el)return;
+      var s=0;(function step(){s+=Math.ceil((val-s)/6)||1;el.textContent=s+(suf||'');if(s<val)requestAnimationFrame(step);else el.textContent=val+(suf||'');})();
+    }
+    animNum('hero-total',kpiData.totalStudents,'');
+    animNum('hero-t3',kpiData.tier3,'');
+    animNum('hero-t2',kpiData.tier2,'');
+    animNum('hero-bench',kpiData.atBenchmarkPct,'%');
+    document.querySelectorAll('.kpi-val').forEach(function(e,i){setTimeout(function(){e.classList.add('animating');setTimeout(function(){e.classList.remove('animating');},500);},i*60);});
   });
   updateOverdueBadge();
   // Overdue assessment alert
@@ -694,7 +696,7 @@ function renderRoster(filter) {
   else if (filter === 't2') filtered = S.students.filter(s => s.tier === 't2');
   else if (filter === 't1') filtered = S.students.filter(s => s.tier === 't1');
   if (S.searchQ) { filtered = filtered.filter(s => `${s.firstName} ${s.lastName}`.toLowerCase().includes(S.searchQ.toLowerCase())); }
-  const rows = filtered.map(s => `<tr class="tier-${s.tier}" onclick="selStudent(${s.id})"><td><strong>${s.firstName} ${s.lastName}</strong></td><td><span class="tier-badge tier-${s.tier}">Tier ${s.tier[1]}</span></td><td>${s.readingLevel}</td><td>${s.fluencyWPM} WPM</td><td>${s.comprehension}%</td><td><div class="flags">${getFlagBadges(s)}</div></td><td style="font-size: 11px; color: var(--muted);">${(() => { if (!s.lastAssessed) return '<span style="color:var(--t3)">Never</span>'; const days = Math.floor((Date.now() - new Date(s.lastAssessed)) / 86400000); return days > 30 ? `<span style="color:var(--t3)" title="${days} days ago">⚠ ${s.lastAssessed}</span>` : s.lastAssessed; })()}</td><td><canvas id="spark-${s.id}" width="80" height="32" style="display:block"></canvas></td><td><button class='btn-quick' onclick='event.stopPropagation();openQuickAssess(${s.id})' title='Quick log'>⚡</button></td></tr>`).join('');
+  const rows = filtered.map(s => `<tr class="tier-${s.tier}" onclick="selStudent(${s.id})"><td><strong>${s.firstName} ${s.lastName}</strong></td><td><span class="tier-badge tier-${s.tier}">Tier ${s.tier[1]}</span></td><td>${s.readingLevel}</td><td>${s.fluencyWPM} WPM</td><td>${s.comprehension}%</td><td><div class="flags">${getFlagBadges(s)}</div></td><td style="font-size: 11px; color: var(--muted);">${(() => { if (!s.lastAssessed) return '<span style="color:var(--t3)">Never</span>'; const days = Math.floor((Date.now() - new Date(s.lastAssessed)) / 86400000); return days > 30 ? `<span style="color:var(--t3)" title="${days} days ago">⚠ ${s.lastAssessed}</span>` : s.lastAssessed; })()}</td><td><canvas id="spark-${s.id}" width="80" height="32" style="display:block"></canvas></td><td><button class='btn-quick' onclick='event.stopPropagation();openQuickAssess(${s.id})' title='Quick log'>&#9889;</button></td></tr>`).join('');
   document.getElementById('roster-tbody').innerHTML = rows.length ? rows : '<tr><td colspan="9" class="empty-state"><p>No students match your search.</p></td></tr>';
   initSparklines();
 }
@@ -723,46 +725,37 @@ function initSparklines() {
   });
 }
 
-
 function openQuickAssess(studentId) {
-  const s = S.students.find(x => x.id === studentId);
+  var s = S.students.find(function(x){return x.id===studentId;});
   if (!s) return;
   window._qaStudentId = studentId;
   document.getElementById('qa-title').textContent = 'Quick Assess — ' + s.firstName + ' ' + s.lastName;
-  ['qa-wpm','qa-comp','qa-phonics','qa-level','qa-notes'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.value = '';
-  });
+  ['qa-wpm','qa-comp','qa-phonics','qa-level','qa-notes'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('qa-modal').classList.add('open');
-  setTimeout(() => document.getElementById('qa-wpm').focus(), 50);
+  setTimeout(function(){var w=document.getElementById('qa-wpm');if(w)w.focus();},50);
 }
 function closeQuickAssess() {
   document.getElementById('qa-modal').classList.remove('open');
   window._qaStudentId = null;
 }
 function saveQuickAssess() {
-  const sid = window._qaStudentId; if (!sid) return;
-  const wpm = parseFloat(document.getElementById('qa-wpm').value) || null;
-  const comp = parseFloat(document.getElementById('qa-comp').value) || null;
-  const phonics = parseFloat(document.getElementById('qa-phonics').value) || null;
-  const level = document.getElementById('qa-level').value.trim() || null;
-  const notes = document.getElementById('qa-notes').value.trim();
+  var sid = window._qaStudentId; if (!sid) return;
+  var wpm = parseFloat(document.getElementById('qa-wpm').value)||null;
+  var comp = parseFloat(document.getElementById('qa-comp').value)||null;
+  var level = (document.getElementById('qa-level').value||'').trim()||null;
+  var notes = (document.getElementById('qa-notes').value||'').trim();
   if (!wpm && !comp) { showToast('Enter at least WPM or Comprehension.','error'); return; }
-  const assessment = { id:Date.now(), studentId:sid,
-    date:new Date().toISOString().split('T')[0],
-    fluencyWpm:wpm, comprehensionPct:comp, phonicsScore:phonics,
-    readingLevel:level, notes, type:'quick' };
-  mutate(() => {
+  var assessment = { id:Date.now(), studentId:sid, date:new Date().toISOString().split('T')[0],
+    fluencyWpm:wpm, comprehensionPct:comp, readingLevel:level, notes:notes, type:'quick' };
+  mutate(function(){
     S.assessments.push(assessment);
-    const student = S.students.find(x => x.id === sid);
-    if (student) {
-      if (wpm) student.fluencyWpm = wpm;
-      if (comp) student.comprehensionPct = comp;
-      if (level) student.readingLevel = level;
-      student.lastAssessed = assessment.date;
-    }
+    var student = S.students.find(function(x){return x.id===sid;});
+    if (student) { if (wpm) student.fluencyWpm=wpm; if (comp) student.comprehensionPct=comp;
+      if (level) student.readingLevel=level; student.lastAssessed=assessment.date; }
   });
   closeQuickAssess();
-  showToast('Assessment saved for ' + (S.students.find(x=>x.id===sid)||{}).firstName + '!','success');
+  var nm = S.students.find(function(x){return x.id===sid;})||{};
+  showToast('Assessment saved for '+(nm.firstName||'')+ '!','success');
   renderRoster();
 }
 function getFlagBadges(student) {
@@ -2114,44 +2107,7 @@ function saveAPIKey() {
 function printReport() {
   const text = document.getElementById('report-content').textContent;
   const win = window.open('', '_blank');
-  win.document.write('<html><head><title>LiteracyMap Report</title><style>body{font-family:monospace;font-size:12px;line-height:1.6;padding:24px;color:#000;background:#fff}pre{white-space:pre-wrap;word-wrap:break-word}</style></head><body><pre>' + text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</pre>
-  <!-- Quick-assess modal -->
-  <div id="qa-modal">
-    <div class="qa-backdrop" onclick="closeQuickAssess()"></div>
-    <div class="qa-card">
-      <div class="qa-header">
-        <h3 id="qa-title">Quick Assessment</h3>
-        <button class="qa-close" onclick="closeQuickAssess()">✕</button>
-      </div>
-      <div class="qa-fields">
-        <div>
-          <label class="qa-label">Fluency WPM</label>
-          <input id="qa-wpm" class="qa-input" type="number" min="0" max="300" placeholder="e.g. 85">
-        </div>
-        <div>
-          <label class="qa-label">Comprehension %</label>
-          <input id="qa-comp" class="qa-input" type="number" min="0" max="100" placeholder="e.g. 75">
-        </div>
-        <div>
-          <label class="qa-label">Phonics Score %</label>
-          <input id="qa-phonics" class="qa-input" type="number" min="0" max="100" placeholder="e.g. 60">
-        </div>
-        <div>
-          <label class="qa-label">Reading Level</label>
-          <input id="qa-level" class="qa-input" type="text" placeholder="e.g. 2.4">
-        </div>
-        <div class="qa-full">
-          <label class="qa-label">Notes</label>
-          <textarea id="qa-notes" class="qa-input" rows="2" placeholder="Observations…" style="resize:vertical"></textarea>
-        </div>
-      </div>
-      <div class="qa-actions">
-        <button class="btn btn-ghost" onclick="closeQuickAssess()">Cancel</button>
-        <button class="btn btn-primary" onclick="saveQuickAssess()">Save Assessment</button>
-      </div>
-    </div>
-  </div>
-</body></html>');
+  win.document.write('<html><head><title>LiteracyMap Report</title><style>body{font-family:monospace;font-size:12px;line-height:1.6;padding:24px;color:#000;background:#fff}pre{white-space:pre-wrap;word-wrap:break-word}</style></head><body><pre>' + text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</pre></body></html>');
   win.document.close(); win.print();
 }
 
@@ -2344,5 +2300,27 @@ function generateHandoff() {
   }
 })();
 </script>
+
+  <!-- Quick-assess modal -->
+  <div id="qa-modal">
+    <div class="qa-backdrop" onclick="closeQuickAssess()"></div>
+    <div class="qa-card">
+      <div class="qa-header">
+        <h3 id="qa-title">Quick Assessment</h3>
+        <button class="qa-close" onclick="closeQuickAssess()">&#10005;</button>
+      </div>
+      <div class="qa-fields">
+        <div><label class="qa-label">Fluency WPM</label><input id="qa-wpm" class="qa-input" type="number" min="0" max="300" placeholder="e.g. 85"></div>
+        <div><label class="qa-label">Comprehension %</label><input id="qa-comp" class="qa-input" type="number" min="0" max="100" placeholder="e.g. 75"></div>
+        <div><label class="qa-label">Phonics Score %</label><input id="qa-phonics" class="qa-input" type="number" min="0" max="100" placeholder="e.g. 60"></div>
+        <div><label class="qa-label">Reading Level</label><input id="qa-level" class="qa-input" type="text" placeholder="e.g. 2.4"></div>
+        <div class="qa-full"><label class="qa-label">Notes</label><textarea id="qa-notes" class="qa-input" rows="2" placeholder="Observations..." style="resize:vertical"></textarea></div>
+      </div>
+      <div class="qa-actions">
+        <button class="btn btn-ghost" onclick="closeQuickAssess()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveQuickAssess()">Save Assessment</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
