@@ -505,9 +505,8 @@ const strategies = [
 
 document.addEventListener('DOMContentLoaded', async () => { await boot(); });
 
-async 
 /* === INITIALIZATION === */
-function boot() {
+async function boot() {
   // Sprint 0: restore persisted student data on startup (mutates const array in-place)
   loadFromStorage();
 
@@ -1026,9 +1025,8 @@ function selectQualStudent(id) {
 
 function toggleObsTag(btn) { btn.classList.toggle('selected'); }
 
-async 
 /* === AI ANALYSIS === */
-function analyzeWithAI() {
+async function analyzeWithAI() {
   const text = document.getElementById('obs-text').value;
   if (!text) { toast('Write an observation first', 'var(--t3)'); return; }
   if (!S.apiKey) { toast('Add Anthropic API key in ⚙ Settings to use AI tagging', 'var(--t3)'); return; }
