@@ -766,6 +766,11 @@ async function saveNewStudent() {
   const el = document.getElementById('newStudentEL')?.checked || false;
   const iep = document.getElementById('newStudentIEP')?.checked || false;
   if (!first || !last || !grade || !tier) { toast('Please fill required fields', 'var(--t3)'); return; }
+  // Sprint 1: duplicate detection
+  const _dup = (first + ' ' + last).toLowerCase().trim();
+  if (S.students.some(s => ((s.firstName || '') + ' ' + (s.lastName || '')).toLowerCase().trim() === _dup)) {
+    if (!confirm(first + ' ' + last + ' already exists in the roster. Add anyway?')) return;
+  }
   const payload = { firstName: first, lastName: last, grade: parseInt(grade), tier, readingLevel, fluencyWPM, comprehension, phonics, fluency: fluencyWPM, vocabulary: comprehension, el, iep, flag504: false, gate: false, notes: '', lastAssessed: new Date().toISOString().split('T')[0] };
   try {
     const res = await fetch('/api/students', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
