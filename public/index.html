@@ -271,7 +271,7 @@
         <div class="view" id="view-roster"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
   <h2>Student Roster</h2>
   <button class="btn" onclick="generateHandoff()" style="display:flex;align-items:center;gap:6px">📋 Handoff Doc</button>
-</div><div class="filter-group"><button class="filter-btn active" onclick="renderRoster('all')">All</button><button class="filter-btn" onclick="renderRoster('t3')">Tier 3 Intensive</button><button class="filter-btn" onclick="renderRoster('t2')">Tier 2 Strategic</button><button class="filter-btn" onclick="renderRoster('t1')">Tier 1 Core</button></div><button class="btn primary" onclick="openAddStudent()" style="margin-bottom: 16px;">+ Add Student</button><div class="g-aside"><div class="card"><table><thead><tr><th>Student</th><th>Tier</th><th>Reading Level</th><th>Fluency WPM</th><th>Comp %</th><th>Flags</th><th>Last Assessed</th></tr></thead><tbody id="roster-tbody"></tbody></table></div><div id="detail-panel" class="detail-panel" style="display: none;"></div></div></div>
+</div><div class="filter-group"><button class="filter-btn active" onclick="renderRoster('all')">All</button><button class="filter-btn" onclick="renderRoster('t3')">Tier 3 Intensive</button><button class="filter-btn" onclick="renderRoster('t2')">Tier 2 Strategic</button><button class="filter-btn" onclick="renderRoster('t1')">Tier 1 Core</button></div><button class="btn primary" onclick="openAddStudent()" style="margin-bottom: 16px;">+ Add Student</button><div class="g-aside"><div class="card"><table><thead><tr><th>Student</th><th>Tier</th><th>Reading Level</th><th>Fluency WPM</th><th>Comp %</th><th>Flags</th><th>Last Assessed</th><th style="width:90px">Trend</th></tr></thead><tbody id="roster-tbody"></tbody></table></div><div id="detail-panel" class="detail-panel" style="display: none;"></div></div></div>
 
         <div class="view" id="view-domains">
   <h2 style="margin-bottom:16px">Skill Domains</h2>
@@ -583,12 +583,14 @@ function closeNav() {
 
 /* === OVERVIEW / DASHBOARD === */
 function renderOverview() {
-  const kpiData = { totalStudents: S.students.length, tier3: S.students.filter(s => s.tier === 't3').length, tier2: S.students.filter(s => s.tier === 't2').length, tier1: S.students.filter(s => s.tier === 't1').length };
+  const kpiData = { totalStudents: S.students.length, tier3: S.students.filter(s => s.tier === 't3').length, tier2: S.students.filter(s => s.tier === 't2').length, tier1: S.students.filter(s => s.tier === 't1').length, overdueCount: S.students.filter(s => !s.lastAssessed || Math.floor((Date.now() - new Date(s.lastAssessed)) / 86400000) > 30).length, atBenchmarkPct: Math.round(S.students.filter(s => s.tier === 't1').length / (S.students.length || 1) * 100) };
   const kpiHTML = `
   <div class="card card-kpi" style="border-top:2px solid var(--accent)"><div class="kpi-label">Total Students</div><div class="kpi-value" style="color:var(--text)">${kpiData.totalStudents}</div><div style="font-size:11px;color:var(--muted)">enrolled</div></div>
   <div class="card card-kpi" style="border-top:2px solid var(--t3)"><div class="kpi-label">Tier 3 · Intensive</div><div class="kpi-value" style="color:var(--t3)">${kpiData.tier3}</div><div style="font-size:11px;color:var(--muted)">significant gaps</div></div>
   <div class="card card-kpi" style="border-top:2px solid var(--t2)"><div class="kpi-label">Tier 2 · Strategic</div><div class="kpi-value" style="color:var(--t2)">${kpiData.tier2}</div><div style="font-size:11px;color:var(--muted)">targeted support</div></div>
   <div class="card card-kpi" style="border-top:2px solid var(--t1)"><div class="kpi-label">Tier 1 · Core</div><div class="kpi-value" style="color:var(--t1)">${kpiData.tier1}</div><div style="font-size:11px;color:var(--muted)">on track</div></div>
+<div class="card card-kpi" style="border-top:2px solid #f59e0b"><div class="kpi-label">OVERDUE ASSESSMENT</div><div class="kpi-value" style="color:#f59e0b">${kpiData.overdueCount}</div><div style="font-size:11px;color:var(--muted)">need follow-up</div></div>
+<div class="card card-kpi" style="border-top:2px solid #22c55e"><div class="kpi-label">AT BENCHMARK</div><div class="kpi-value" style="color:#22c55e">${kpiData.atBenchmarkPct}%</div><div style="font-size:11px;color:var(--muted)">Tier 1 students</div></div>
 `;
   document.getElementById('kpi-container').innerHTML = kpiHTML;
   updateOverdueBadge();
@@ -623,8 +625,33 @@ function renderRoster(filter) {
   else if (filter === 't2') filtered = S.students.filter(s => s.tier === 't2');
   else if (filter === 't1') filtered = S.students.filter(s => s.tier === 't1');
   if (S.searchQ) { filtered = filtered.filter(s => `${s.firstName} ${s.lastName}`.toLowerCase().includes(S.searchQ.toLowerCase())); }
-  const rows = filtered.map(s => `<tr onclick="selStudent(${s.id})"><td><strong>${s.firstName} ${s.lastName}</strong></td><td><span class="tier-badge tier-${s.tier}">Tier ${s.tier[1]}</span></td><td>${s.readingLevel}</td><td>${s.fluencyWPM} WPM</td><td>${s.comprehension}%</td><td><div class="flags">${getFlagBadges(s)}</div></td><td style="font-size: 11px; color: var(--muted);">${(() => { if (!s.lastAssessed) return '<span style="color:var(--t3)">Never</span>'; const days = Math.floor((Date.now() - new Date(s.lastAssessed)) / 86400000); return days > 30 ? `<span style="color:var(--t3)" title="${days} days ago">⚠ ${s.lastAssessed}</span>` : s.lastAssessed; })()}</td></tr>`).join('');
+  const rows = filtered.map(s => `<tr onclick="selStudent(${s.id})"><td><strong>${s.firstName} ${s.lastName}</strong></td><td><span class="tier-badge tier-${s.tier}">Tier ${s.tier[1]}</span></td><td>${s.readingLevel}</td><td>${s.fluencyWPM} WPM</td><td>${s.comprehension}%</td><td><div class="flags">${getFlagBadges(s)}</div></td><td style="font-size: 11px; color: var(--muted);">${(() => { if (!s.lastAssessed) return '<span style="color:var(--t3)">Never</span>'; const days = Math.floor((Date.now() - new Date(s.lastAssessed)) / 86400000); return days > 30 ? `<span style="color:var(--t3)" title="${days} days ago">⚠ ${s.lastAssessed}</span>` : s.lastAssessed; })()}</td><td><canvas id="spark-${s.id}" width="80" height="32" style="display:block"></canvas></td></tr>`).join('');
   document.getElementById('roster-tbody').innerHTML = rows;
+  initSparklines();
+}
+
+// Sprint 2: mini WPM trend sparklines per roster row
+function initSparklines() {
+  S.students.forEach(function(st) {
+    var canvas = document.getElementById('spark-' + st.id);
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var pts = S.assessments.filter(function(a) { return a.studentId === st.id && a.fluencyWPM; }).sort(function(a, b) { return new Date(a.date) - new Date(b.date); });
+    if (pts.length < 2) return;
+    var vals = pts.map(function(p) { return p.fluencyWPM; });
+    var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals), rng = mx - mn || 1;
+    var w = canvas.width, ht = canvas.height, pad = 3;
+    ctx.clearRect(0, 0, w, ht);
+    ctx.strokeStyle = vals[vals.length - 1] >= vals[0] ? '#22c55e' : '#ef4444';
+    ctx.lineWidth = 1.5; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    vals.forEach(function(v, i) {
+      var x = pad + (i / (vals.length - 1)) * (w - pad * 2);
+      var y = ht - pad - ((v - mn) / rng) * (ht - pad * 2);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  });
 }
 
 function getFlagBadges(student) {
@@ -1758,7 +1785,7 @@ function initCharts() {
     const avgFluency = S.students.reduce((a, s) => a + s.fluency, 0) / S.students.length || 0;
     const avgComp = S.students.reduce((a, s) => a + s.comprehension, 0) / S.students.length || 0;
     const avgVocab = S.students.reduce((a, s) => a + s.vocabulary, 0) / S.students.length || 0;
-    S.charts['gap'] = new Chart(gapCtx, { type: 'bar', data: { labels: ['Phonics', 'Fluency', 'Comprehension', 'Vocabulary'], datasets: [{ label: 'Class Average %', data: [avgPhonics, avgFluency, avgComp, avgVocab], backgroundColor: '#a78bfa', borderColor: 'rgba(167, 139, 250, 0.5)', borderWidth: 1 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+    S.charts['gap'] = new Chart(gapCtx, { type: 'bar', data: { labels: ['Phonics', 'Fluency', 'Comprehension', 'Vocabulary'], datasets: [{ label: 'Class Average %', data: [avgPhonics, avgFluency, avgComp, avgVocab], backgroundColor: [avgPhonics, avgFluency, avgComp, avgVocab].map(function(v) { return v >= 80 ? '#22c55e' : v >= 60 ? '#f59e0b' : '#ef4444'; }), borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }, { label: 'Benchmark', data: [80, 80, 80, 80], type: 'line', borderColor: '#f59e0b', borderDash: [5,3], borderWidth: 1.5, pointRadius: 0, fill: false }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
   }
   const tierCtx = document.getElementById('c-tier');
   if (tierCtx) {
