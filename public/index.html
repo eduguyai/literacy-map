@@ -214,6 +214,65 @@
       a { color: #000; text-decoration: none; }
       .toast { display: none !important; }
     }
+    /* ── Sprint 3 CSS ─────────────────────────────────── */
+    .search-row { display:flex; gap:.5rem; align-items:center; margin:.75rem 0; }
+    .search-input { flex:1; background:var(--bg2); border:1px solid var(--border);
+      border-radius:8px; padding:.45rem .75rem; color:var(--text); font-size:.875rem;
+      font-family:var(--sans); outline:none; transition:border-color .2s,box-shadow .2s; }
+    .search-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(91,141,238,.18); }
+    .search-input::placeholder { color:var(--dim); }
+    tr.tier-t3 td:first-child { border-left:3px solid var(--t3); }
+    tr.tier-t2 td:first-child { border-left:3px solid var(--t2); }
+    tr.tier-t1 td:first-child { border-left:3px solid var(--t1); }
+    .btn-quick { background:none; border:1px solid var(--border); border-radius:6px;
+      padding:.2rem .4rem; cursor:pointer; font-size:.85rem; color:var(--muted);
+      transition:background .15s,color .15s,border-color .15s; }
+    .btn-quick:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+    .card-kpi { transition:transform .2s,box-shadow .2s; }
+    .card-kpi:hover { transform:translateY(-3px); box-shadow:0 8px 28px rgba(0,0,0,.22); }
+    .hero-banner { background:linear-gradient(135deg,#1e2a4a 0%,#2d1f5e 55%,#1a3a4a 100%);
+      border-radius:14px; padding:1.5rem 1.75rem; margin-bottom:1.25rem;
+      position:relative; overflow:hidden; }
+    .hero-banner::before { content:''; position:absolute; inset:0;
+      background:radial-gradient(circle at 80% 50%,rgba(91,141,238,.25) 0%,transparent 65%); }
+    .hero-banner h1 { font-family:var(--serif); font-size:1.6rem; font-weight:600;
+      color:#fff; margin:0 0 .2rem; position:relative; }
+    .hero-banner p { color:rgba(255,255,255,.6); font-size:.875rem; margin:0; position:relative; }
+    .hero-stats { display:flex; gap:1.5rem; margin-top:1rem; position:relative; }
+    .hero-stat { text-align:center; }
+    .hero-stat .hs-val { font-size:1.75rem; font-weight:700; color:#fff;
+      font-family:var(--serif); line-height:1; }
+    .hero-stat .hs-label { font-size:.72rem; color:rgba(255,255,255,.55);
+      text-transform:uppercase; letter-spacing:.05em; margin-top:.2rem; }
+    .empty-state { text-align:center; padding:3rem 1rem; color:var(--dim); }
+    .empty-state p { font-size:.9rem; }
+    #qa-modal { display:none; position:fixed; inset:0; z-index:9999;
+      align-items:center; justify-content:center; }
+    #qa-modal.open { display:flex; }
+    #qa-modal .qa-backdrop { position:absolute; inset:0;
+      background:rgba(0,0,0,.55); backdrop-filter:blur(4px); }
+    #qa-modal .qa-card { position:relative; background:var(--bg2);
+      border:1px solid var(--bmed); border-radius:16px; padding:1.75rem;
+      width:min(440px,92vw); box-shadow:0 24px 80px rgba(0,0,0,.5);
+      animation:qa-in .25s ease; }
+    @keyframes qa-in { from{opacity:0;transform:scale(.94) translateY(8px)} to{opacity:1;transform:none} }
+    .qa-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; }
+    .qa-header h3 { font-family:var(--serif); font-size:1.1rem; margin:0; color:var(--text); }
+    .qa-close { background:none; border:none; color:var(--dim); cursor:pointer;
+      font-size:1.2rem; padding:.2rem .4rem; border-radius:6px; transition:background .15s; }
+    .qa-close:hover { background:var(--bg3); }
+    .qa-fields { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+    .qa-fields .qa-full { grid-column:1/-1; }
+    .qa-label { display:block; font-size:.75rem; color:var(--muted);
+      margin-bottom:.3rem; text-transform:uppercase; letter-spacing:.05em; }
+    .qa-input { width:100%; background:var(--bg3); border:1px solid var(--border);
+      border-radius:8px; padding:.5rem .7rem; color:var(--text); font-family:var(--sans);
+      font-size:.9rem; box-sizing:border-box; outline:none;
+      transition:border-color .2s,box-shadow .2s; }
+    .qa-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(91,141,238,.18); }
+    .qa-actions { display:flex; gap:.6rem; justify-content:flex-end; margin-top:1.25rem; }
+    @keyframes kpi-pop { 0%{transform:scale(.7);opacity:0} 70%{transform:scale(1.08)} 100%{transform:scale(1);opacity:1} }
+    .kpi-val.animating { animation:kpi-pop .45s ease forwards; }
   </style>
   <style id="lm-toast-styles">
   @keyframes lm-fadein { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
@@ -271,7 +330,7 @@
         <div class="view" id="view-roster"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
   <h2>Student Roster</h2>
   <button class="btn" onclick="generateHandoff()" style="display:flex;align-items:center;gap:6px">📋 Handoff Doc</button>
-</div><div class="filter-group"><button class="filter-btn active" onclick="renderRoster('all')">All</button><button class="filter-btn" onclick="renderRoster('t3')">Tier 3 Intensive</button><button class="filter-btn" onclick="renderRoster('t2')">Tier 2 Strategic</button><button class="filter-btn" onclick="renderRoster('t1')">Tier 1 Core</button></div><button class="btn primary" onclick="openAddStudent()" style="margin-bottom: 16px;">+ Add Student</button><div class="g-aside"><div class="card"><table><thead><tr><th>Student</th><th>Tier</th><th>Reading Level</th><th>Fluency WPM</th><th>Comp %</th><th>Flags</th><th>Last Assessed</th><th style="width:90px">Trend</th></tr></thead><tbody id="roster-tbody"></tbody></table></div><div id="detail-panel" class="detail-panel" style="display: none;"></div></div></div>
+</div><div class="filter-group"><button class="filter-btn active" onclick="renderRoster('all')">All</button><button class="filter-btn" onclick="renderRoster('t3')">Tier 3 Intensive</button><button class="filter-btn" onclick="renderRoster('t2')">Tier 2 Strategic</button><button class="filter-btn" onclick="renderRoster('t1')">Tier 1 Core</button></div><button class="btn primary" onclick="openAddStudent()" style="margin-bottom: 16px;">+ Add Student</button><div class="search-row"><input id="roster-search" class="search-input" placeholder="🔍 Search students…" oninput="S.searchQ=this.value;renderRoster()" autocomplete="off"></div><div class="g-aside"><div class="card"><table><thead><tr><th>Student</th><th>Tier</th><th>Reading Level</th><th>Fluency WPM</th><th>Comp %</th><th>Flags</th><th>Last Assessed</th><th style="width:90px">Trend</th><th style="width:44px"></th></tr></thead><tbody id="roster-tbody"></tbody></table></div><div id="detail-panel" class="detail-panel" style="display: none;"></div></div></div>
 
         <div class="view" id="view-domains">
   <h2 style="margin-bottom:16px">Skill Domains</h2>
@@ -592,7 +651,17 @@ function renderOverview() {
 <div class="card card-kpi" style="border-top:2px solid #f59e0b"><div class="kpi-label">OVERDUE ASSESSMENT</div><div class="kpi-value" style="color:#f59e0b">${kpiData.overdueCount}</div><div style="font-size:11px;color:var(--muted)">need follow-up</div></div>
 <div class="card card-kpi" style="border-top:2px solid #22c55e"><div class="kpi-label">AT BENCHMARK</div><div class="kpi-value" style="color:#22c55e">${kpiData.atBenchmarkPct}%</div><div style="font-size:11px;color:var(--muted)">Tier 1 students</div></div>
 `;
-  document.getElementById('kpi-container').innerHTML = kpiHTML;
+  const heroHTML = `<div class="hero-banner"><div><h1>📚 LiteracyMap</h1><p>Reading Intervention Tracker — ${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</p></div><div class="hero-stats"><div class="hero-stat"><div class="hs-val" id="hero-total">—</div><div class="hs-label">Students</div></div><div class="hero-stat"><div class="hs-val" id="hero-t3" style="color:var(--t3)">—</div><div class="hs-label">Intensive</div></div><div class="hero-stat"><div class="hs-val" id="hero-t2" style="color:var(--t2)">—</div><div class="hs-label">Strategic</div></div><div class="hero-stat"><div class="hs-val" id="hero-bench" style="color:var(--t1)">—</div><div class="hs-label">At Benchmark</div></div></div></div>`;
+  document.getElementById('kpi-container').innerHTML = heroHTML + kpiHTML;
+  requestAnimationFrame(()=>{
+    const el=id=>document.getElementById(id);
+    const anim=(el,val,suf='')=>{if(!el)return;let s=0;const step=()=>{s+=Math.ceil((val-s)/6)||1;el.textContent=s+suf;if(s<val)requestAnimationFrame(step);else el.textContent=val+suf;};step();};
+    anim(el('hero-total'),kpiData.totalStudents);
+    anim(el('hero-t3'),kpiData.tier3);
+    anim(el('hero-t2'),kpiData.tier2);
+    anim(el('hero-bench'),kpiData.atBenchmarkPct,'%');
+    document.querySelectorAll('.kpi-val').forEach((e,i)=>setTimeout(()=>{e.classList.add('animating');setTimeout(()=>e.classList.remove('animating'),500);},i*60));
+  });
   updateOverdueBadge();
   // Overdue assessment alert
   const overdue = S.students.filter(s => !s.lastAssessed || Math.floor((Date.now() - new Date(s.lastAssessed)) / 86400000) > 30);
@@ -625,8 +694,8 @@ function renderRoster(filter) {
   else if (filter === 't2') filtered = S.students.filter(s => s.tier === 't2');
   else if (filter === 't1') filtered = S.students.filter(s => s.tier === 't1');
   if (S.searchQ) { filtered = filtered.filter(s => `${s.firstName} ${s.lastName}`.toLowerCase().includes(S.searchQ.toLowerCase())); }
-  const rows = filtered.map(s => `<tr onclick="selStudent(${s.id})"><td><strong>${s.firstName} ${s.lastName}</strong></td><td><span class="tier-badge tier-${s.tier}">Tier ${s.tier[1]}</span></td><td>${s.readingLevel}</td><td>${s.fluencyWPM} WPM</td><td>${s.comprehension}%</td><td><div class="flags">${getFlagBadges(s)}</div></td><td style="font-size: 11px; color: var(--muted);">${(() => { if (!s.lastAssessed) return '<span style="color:var(--t3)">Never</span>'; const days = Math.floor((Date.now() - new Date(s.lastAssessed)) / 86400000); return days > 30 ? `<span style="color:var(--t3)" title="${days} days ago">⚠ ${s.lastAssessed}</span>` : s.lastAssessed; })()}</td><td><canvas id="spark-${s.id}" width="80" height="32" style="display:block"></canvas></td></tr>`).join('');
-  document.getElementById('roster-tbody').innerHTML = rows;
+  const rows = filtered.map(s => `<tr class="tier-${s.tier}" onclick="selStudent(${s.id})"><td><strong>${s.firstName} ${s.lastName}</strong></td><td><span class="tier-badge tier-${s.tier}">Tier ${s.tier[1]}</span></td><td>${s.readingLevel}</td><td>${s.fluencyWPM} WPM</td><td>${s.comprehension}%</td><td><div class="flags">${getFlagBadges(s)}</div></td><td style="font-size: 11px; color: var(--muted);">${(() => { if (!s.lastAssessed) return '<span style="color:var(--t3)">Never</span>'; const days = Math.floor((Date.now() - new Date(s.lastAssessed)) / 86400000); return days > 30 ? `<span style="color:var(--t3)" title="${days} days ago">⚠ ${s.lastAssessed}</span>` : s.lastAssessed; })()}</td><td><canvas id="spark-${s.id}" width="80" height="32" style="display:block"></canvas></td><td><button class='btn-quick' onclick='event.stopPropagation();openQuickAssess(${s.id})' title='Quick log'>⚡</button></td></tr>`).join('');
+  document.getElementById('roster-tbody').innerHTML = rows.length ? rows : '<tr><td colspan="9" class="empty-state"><p>No students match your search.</p></td></tr>';
   initSparklines();
 }
 
@@ -654,6 +723,48 @@ function initSparklines() {
   });
 }
 
+
+function openQuickAssess(studentId) {
+  const s = S.students.find(x => x.id === studentId);
+  if (!s) return;
+  window._qaStudentId = studentId;
+  document.getElementById('qa-title').textContent = 'Quick Assess — ' + s.firstName + ' ' + s.lastName;
+  ['qa-wpm','qa-comp','qa-phonics','qa-level','qa-notes'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('qa-modal').classList.add('open');
+  setTimeout(() => document.getElementById('qa-wpm').focus(), 50);
+}
+function closeQuickAssess() {
+  document.getElementById('qa-modal').classList.remove('open');
+  window._qaStudentId = null;
+}
+function saveQuickAssess() {
+  const sid = window._qaStudentId; if (!sid) return;
+  const wpm = parseFloat(document.getElementById('qa-wpm').value) || null;
+  const comp = parseFloat(document.getElementById('qa-comp').value) || null;
+  const phonics = parseFloat(document.getElementById('qa-phonics').value) || null;
+  const level = document.getElementById('qa-level').value.trim() || null;
+  const notes = document.getElementById('qa-notes').value.trim();
+  if (!wpm && !comp) { showToast('Enter at least WPM or Comprehension.','error'); return; }
+  const assessment = { id:Date.now(), studentId:sid,
+    date:new Date().toISOString().split('T')[0],
+    fluencyWpm:wpm, comprehensionPct:comp, phonicsScore:phonics,
+    readingLevel:level, notes, type:'quick' };
+  mutate(() => {
+    S.assessments.push(assessment);
+    const student = S.students.find(x => x.id === sid);
+    if (student) {
+      if (wpm) student.fluencyWpm = wpm;
+      if (comp) student.comprehensionPct = comp;
+      if (level) student.readingLevel = level;
+      student.lastAssessed = assessment.date;
+    }
+  });
+  closeQuickAssess();
+  showToast('Assessment saved for ' + (S.students.find(x=>x.id===sid)||{}).firstName + '!','success');
+  renderRoster();
+}
 function getFlagBadges(student) {
   const flags = [];
   if (student.el) flags.push('<span class="flag-badge">EL</span>');
@@ -2003,7 +2114,44 @@ function saveAPIKey() {
 function printReport() {
   const text = document.getElementById('report-content').textContent;
   const win = window.open('', '_blank');
-  win.document.write('<html><head><title>LiteracyMap Report</title><style>body{font-family:monospace;font-size:12px;line-height:1.6;padding:24px;color:#000;background:#fff}pre{white-space:pre-wrap;word-wrap:break-word}</style></head><body><pre>' + text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</pre></body></html>');
+  win.document.write('<html><head><title>LiteracyMap Report</title><style>body{font-family:monospace;font-size:12px;line-height:1.6;padding:24px;color:#000;background:#fff}pre{white-space:pre-wrap;word-wrap:break-word}</style></head><body><pre>' + text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</pre>
+  <!-- Quick-assess modal -->
+  <div id="qa-modal">
+    <div class="qa-backdrop" onclick="closeQuickAssess()"></div>
+    <div class="qa-card">
+      <div class="qa-header">
+        <h3 id="qa-title">Quick Assessment</h3>
+        <button class="qa-close" onclick="closeQuickAssess()">✕</button>
+      </div>
+      <div class="qa-fields">
+        <div>
+          <label class="qa-label">Fluency WPM</label>
+          <input id="qa-wpm" class="qa-input" type="number" min="0" max="300" placeholder="e.g. 85">
+        </div>
+        <div>
+          <label class="qa-label">Comprehension %</label>
+          <input id="qa-comp" class="qa-input" type="number" min="0" max="100" placeholder="e.g. 75">
+        </div>
+        <div>
+          <label class="qa-label">Phonics Score %</label>
+          <input id="qa-phonics" class="qa-input" type="number" min="0" max="100" placeholder="e.g. 60">
+        </div>
+        <div>
+          <label class="qa-label">Reading Level</label>
+          <input id="qa-level" class="qa-input" type="text" placeholder="e.g. 2.4">
+        </div>
+        <div class="qa-full">
+          <label class="qa-label">Notes</label>
+          <textarea id="qa-notes" class="qa-input" rows="2" placeholder="Observations…" style="resize:vertical"></textarea>
+        </div>
+      </div>
+      <div class="qa-actions">
+        <button class="btn btn-ghost" onclick="closeQuickAssess()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveQuickAssess()">Save Assessment</button>
+      </div>
+    </div>
+  </div>
+</body></html>');
   win.document.close(); win.print();
 }
 
