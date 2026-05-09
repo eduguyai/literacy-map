@@ -948,19 +948,21 @@ function openLogSession(sid){
   var typeOpts=types.map(function(t){return "<option>"+t+"</option>";}).join("");
   var today=new Date().toISOString().slice(0,10);
   var stars=[1,2,3,4,5].map(function(n){return '<button class="star-btn'+(n<=3?' lit':'')+'" onclick="setSessionRating('+n+')">' +(n<=3?"\u2605":"\u2606")+"</button>";}).join("");
-  var d=document.getElementById("modal-overlay");
-  d.innerHTML='<div class="modal-box" style="max-width:420px"><h3 style="margin:0 0 16px">Log Session \u2014 '+(st?st.name:"")+'</h3>'+
+  var existing=document.getElementById("session-log-modal");if(existing)existing.remove();
+  var m=document.createElement("div");
+  m.id="session-log-modal";m.className="modal active";
+  m.innerHTML='<div class="modal-content"><button class="modal-close" onclick="closeSessionModal()">✕</button>'+
+    '<h2>Log Session — '+(st?st.name:"")+'</h2>'+
     '<label>Date<input type="date" id="ls-date" value="'+today+'"></label>'+
     '<label>Type<select id="ls-type">'+typeOpts+'</select></label>'+
     '<label>Duration (min)<input type="number" id="ls-dur" value="20" min="1" max="180"></label>'+
     '<label>Notes<textarea id="ls-notes" rows="3" placeholder="Notes..."></textarea></label>'+
     '<div style="margin-top:8px">Outcome<div class="rating-row" id="ls-stars">'+stars+'</div></div>'+
     '<div style="display:flex;gap:8px;margin-top:16px"><button class="btn" style="flex:1;background:var(--accent);color:#fff" onclick="saveLogSession()">Save</button><button class="btn" style="flex:1" onclick="closeSessionModal()">Cancel</button></div></div>';
-  d.style.display="flex";
+  document.body.appendChild(m);
 }
 function closeSessionModal(){
-  var d=document.getElementById("modal-overlay");
-  if(d){d.style.display="none";d.innerHTML="";}
+  var m=document.getElementById("session-log-modal");if(m)m.remove();
 }
 function setSessionRating(n){
   _sessionRating=n;
