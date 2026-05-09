@@ -971,13 +971,13 @@ function setSessionRating(n){
 function saveLogSession(){
   var sid=window._logSid;if(!sid)return;
   var entry={id:Date.now(),studentId:sid,date:document.getElementById("ls-date").value,type:document.getElementById("ls-type").value,duration:parseInt(document.getElementById("ls-dur").value)||20,notes:document.getElementById("ls-notes").value.trim(),outcome:_sessionRating};
-  S.sessions=S.sessions||[];S.sessions.push(entry);save();closeSessionModal();
+  S.sessions=S.sessions||[];S.sessions.push(entry);saveAll();closeSessionModal();
   var el=document.getElementById("session-log-"+sid);if(el)el.innerHTML=renderSessionsForStudent(sid);
   updateOverdueBadge();renderFreqChart();
 }
 function deleteSession(id){
   var s=(S.sessions||[]).find(function(x){return x.id===id;});
-  S.sessions=(S.sessions||[]).filter(function(x){return x.id!==id;});save();
+  S.sessions=(S.sessions||[]).filter(function(x){return x.id!==id;});saveAll();
   if(s){var el=document.getElementById("session-log-"+s.studentId);if(el)el.innerHTML=renderSessionsForStudent(s.studentId);}
   updateOverdueBadge();renderFreqChart();
 }
