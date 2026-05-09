@@ -489,7 +489,7 @@
           <li>MTSS report generation</li>
         </ul>
         <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:8px;font-size:11px;font-family:var(--mono);color:var(--dim)">
-          Version 1.0 · Sprint 7 · Built for Ms. Rowe
+          Version 1.0 · Sprint 8 · Built for Ms. Rowe
         </div>
       </div>
       <div class="card" style="margin-bottom:16px">
@@ -743,7 +743,10 @@ async function boot() {
     const savedGroups = localStorage.getItem('lm_groups');
     if (savedGroups) S.groups = JSON.parse(savedGroups);
     updateSidebarFromSettings();
+    var _lt=localStorage.getItem('lm_theme');if(_lt){document.documentElement.setAttribute('data-theme',_lt);setTimeout(function(){var b=document.getElementById('themeToggleBtn');if(b)b.textContent=_lt==='light'?'☀️ Light Mode':'🌙 Dark Mode';},100);}
+    var _fg=localStorage.getItem('lm_filterGrade');if(_fg)S.filterGrade=_fg;
     renderAll();
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'){var m=document.querySelector('.modal.active');if(m)m.classList.remove('active');}});
   } catch (err) { console.error('Boot error:', err); toast('Failed to load data', 'var(--t3)'); }
 }
 
@@ -986,7 +989,7 @@ const panelHTML = `<img class="detail-img" src="https://images.unsplash.com/${ti
 }
 
 function setGradeFilter(btn,grade){
-  S.filterGrade=grade;
+  S.filterGrade=grade;localStorage.setItem('lm_filterGrade',grade);
   document.querySelectorAll('.grade-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   renderRoster();
@@ -1026,6 +1029,7 @@ function openLogSession(sid){
     '<label>Type<select id="ls-type">'+typeOpts+'</select></label>'+
     '<label>Duration (min)<input type="number" id="ls-dur" value="20" min="1" max="180"></label>'+
     '<label>Notes<textarea id="ls-notes" rows="3" placeholder="Notes..."></textarea></label>'+
+    '<label>Next Session<input type="date" id="ls-next"></label>'+
     '<div style="margin-top:8px">Outcome<div class="rating-row" id="ls-stars">'+stars+'</div></div>'+
     '<div style="display:flex;gap:8px;margin-top:16px"><button class="btn" style="flex:1;background:var(--accent);color:#fff" onclick="saveLogSession()">Save</button><button class="btn" style="flex:1" onclick="closeSessionModal()">Cancel</button></div></div>';
   document.body.appendChild(m);
@@ -1039,7 +1043,7 @@ function setSessionRating(n){
 }
 function saveLogSession(){
   var sid=window._logSid;if(!sid)return;
-  var entry={id:Date.now(),studentId:sid,date:document.getElementById("ls-date").value,type:document.getElementById("ls-type").value,duration:parseInt(document.getElementById("ls-dur").value)||20,notes:document.getElementById("ls-notes").value.trim(),outcome:_sessionRating};
+  var entry={id:Date.now(),studentId:sid,date:document.getElementById("ls-date").value,type:document.getElementById("ls-type").value,duration:parseInt(document.getElementById("ls-dur").value)||20,notes:document.getElementById("ls-notes").value.trim(),nextSession:document.getElementById("ls-next").value,outcome:_sessionRating};
   S.sessions=S.sessions||[];S.sessions.push(entry);saveAll();closeSessionModal();
   var el=document.getElementById("session-log-"+sid);if(el)el.innerHTML=renderSessionsForStudent(sid);
   updateOverdueBadge();renderFreqChart();
@@ -1179,7 +1183,7 @@ function openAddStudent() {
       <label style="display:flex;align-items:center;gap:6px;text-transform:none;font-size:13px"><input type="checkbox" id="newStudentIEP" style="width:auto;margin:0"> IEP</label>
     </div>
     <button class="btn primary" onclick="saveNewStudent()" style="width:100%;margin-top:12px;padding:10px">✓ Add Student</button>
-    <button class="btn" onclick="document.getElementById('detail-panel').style.display='none'" style="width:100%;margin-top:8px">Cancel</button>
+    <button class="btn" onclick="document.getElementById('detail-panel').style.display='none'" style="<label>WPM Goal<input type="number" id="newStudentWpmGoal" placeholder="e.g. 100" min="0" max="300"></label><button class="btn" onclick="document.getElementById('detail-panel').style.display='none'" style="width:100%;margin-top:8px">Cancel</button>
   `;
   const panel = document.getElementById('detail-panel');
   panel.innerHTML = form;
@@ -1202,7 +1206,7 @@ async function saveNewStudent() {
   if (S.students.some(s => ((s.firstName || '') + ' ' + (s.lastName || '')).toLowerCase().trim() === _dup)) {
     if (!confirm(first + ' ' + last + ' already exists in the roster. Add anyway?')) return;
   }
-  const payload = { firstName: first, lastName: last, grade: parseInt(grade), tier, readingLevel, fluencyWPM, comprehension, phonics, fluency: fluencyWPM, vocabulary: comprehension, el, iep, flag504: false, gate: false, notes: '', lastAssessed: new Date().toISOString().split('T')[0] };
+  const payload = { firstName: first, lastName: last, grade: parseInt(grade), tier, readingLevel, fluencyWPM, comprehension, phonics, fluency: fluencyWPM, vocabulary: comprehension, el, iep, flag504: false, gate: false, wpmGoal: parseInt(document.getElementById('newStudentWpmGoal')?.value)||0, notes: '', lastAssessed: new Date().toISOString().split('T')[0] };
   try {
     const res = await fetch('/api/students', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
     const saved = await res.json();
