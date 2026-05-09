@@ -285,7 +285,15 @@
     .detail-img { width:100%; height:74px; border-radius:8px; margin-bottom:12px;
       object-fit:cover; opacity:.55; filter:saturate(1.15); }
     .export-btn { display:flex; align-items:center; gap:5px; }
-    /* Sprint 5 */
+    /* Sprint 6: KPI tile images */
+  .card-kpi { position:relative; overflow:hidden; }
+  .kpi-bg { position:absolute; inset:0; background-size:cover; background-position:center; opacity:0.13; z-index:0; pointer-events:none; border-radius:inherit; }
+  .card-kpi .kpi-label, .card-kpi .kpi-val, .card-kpi .kpi-value, .card-kpi > div { position:relative; z-index:1; }
+  .assess-reminder { background:linear-gradient(135deg,#7c3aed22,#5b8dee22); border:1px solid #5b8dee44; border-radius:10px; padding:10px 16px; margin-bottom:16px; font-size:12px; color:var(--text); display:flex; align-items:center; gap:10px; }
+  .assess-reminder-icon { font-size:20px; flex-shrink:0; }
+  .bench-line { position:absolute; right:0; height:2px; background:rgba(251,146,60,0.7); z-index:2; pointer-events:none; }
+  .bench-label { position:absolute; right:4px; font-size:9px; color:#fb923c; font-weight:700; z-index:3; pointer-events:none; }
+  /* Sprint 5 */
   .log-session-btn { background:var(--t2); color:#000; border:none; }
   .session-entry { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:9px 12px; margin-bottom:6px; font-size:11px; }
   .session-entry-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:3px; }
@@ -580,7 +588,7 @@ function loadFromStorage() {
 }
 
 
-const S = { students: [], assessments: [], interventions: [], observations: {}, groups: [], sessions: [], sortField: null, sortDir: 1, qualObs: {}, selectedStudent: null, period: 'all', searchQ: '', filterGrade: '', charts: {}, importData: null, importHeaders: [], currentView: 'overview', apiKey: localStorage.getItem('lm_apikey') || null, _pendingAssessId: null };
+const S = { students: [], assessments: [], interventions: [], observations: {}, groups: [], sessions: [], sortField: null, sortDir: 1, benchmarkBands: {phonics:75,fluency:90,comprehension:80,vocab:75,writing:70}, screeningIntervalDays: 42, qualObs: {}, selectedStudent: null, period: 'all', searchQ: '', filterGrade: '', charts: {}, importData: null, importHeaders: [], currentView: 'overview', apiKey: localStorage.getItem('lm_apikey') || null, _pendingAssessId: null };
 const strategies = [
   { id: 'phonics-ogillingham', domain: 'phonics', title: 'Orton-Gillingham Phoneme Segmentation', objective: 'Students segment words into individual phonemes using multisensory techniques', time: '30 min', tier: 'T3', materials: 'Letter tiles, word cards', steps: ['1. Model phoneme segmentation with a CVC word (e.g., "cat")', '2. Have student repeat word, then hold up fingers for each phoneme', '3. Use letter tiles to show grapheme-phoneme correspondence', '4. Practice with 5-8 words, gradually increasing difficulty', '5. Student writes word while saying each phoneme'] },
   { id: 'phonics-wordbuilding', domain: 'phonics', title: 'Word Building with Magnetic Letters', objective: 'Build orthographic awareness by manipulating letter sequences', time: '20 min', tier: 'T2/T3', materials: 'Magnetic letters, board, word families list', steps: ['1. Start with known word (e.g., "at")', '2. Add initial consonants to create word family (cat, bat, mat, rat)', '3. Have student read each word aloud', '4. Remove a word, have student rebuild it', '5. Challenge: give word family, have student generate new words'] },
@@ -761,18 +769,34 @@ function closeNav() {
 
 
 /* === OVERVIEW / DASHBOARD === */
+function getBenchmarkBand(domain){
+  return (S.benchmarkBands||{})[domain.toLowerCase().replace(/[^a-z]/g,"")] || null;
+}
+
+function getAssessmentReminderHtml(){
+  var allDates=(S.assessments||[]).map(function(a){return new Date(a.date||a.createdAt||0);}).filter(Boolean);
+  if(!allDates.length)return '<div class="assess-reminder"><span class="assess-reminder-icon">\u{1F4CB}</span><div><strong>No assessments recorded yet.</strong> Start by recording your first assessment to enable progress tracking.</div></div>';
+  var latest=new Date(Math.max.apply(null,allDates));
+  var days=Math.floor((new Date()-latest)/864e5);
+  var interval=S.screeningIntervalDays||42;
+  if(days>=interval) return '<div class="assess-reminder"><span class="assess-reminder-icon">\u{23F0}</span><div><strong>Screening window approaching!</strong> Last assessment was '+days+' days ago. Consider scheduling your next screening round.</div></div>';
+  var remaining=interval-days;
+  if(remaining<=14) return '<div class="assess-reminder"><span class="assess-reminder-icon">\u{1F4C5}</span><div>Next screening in ~'+remaining+' days.</div></div>';
+  return '';
+}
+
 function renderOverview() {
   const kpiData = { totalStudents: S.students.length, tier3: S.students.filter(s => s.tier === 't3').length, tier2: S.students.filter(s => s.tier === 't2').length, tier1: S.students.filter(s => s.tier === 't1').length, overdueCount: S.students.filter(s => !s.lastAssessed || Math.floor((Date.now() - new Date(s.lastAssessed)) / 86400000) > 30).length, atBenchmarkPct: Math.round(S.students.filter(s => s.tier === 't1').length / (S.students.length || 1) * 100) };
   const kpiHTML = `
-  <div class="card card-kpi" style="border-top:2px solid var(--accent)"><div class="kpi-label">Total Students</div><div class="kpi-value" style="color:var(--text)">${kpiData.totalStudents}</div><div style="font-size:11px;color:var(--muted)">enrolled</div></div>
-  <div class="card card-kpi" style="border-top:2px solid var(--t3)"><div class="kpi-label">Tier 3 · Intensive</div><div class="kpi-value" style="color:var(--t3)">${kpiData.tier3}</div><div style="font-size:11px;color:var(--muted)">significant gaps</div></div>
-  <div class="card card-kpi" style="border-top:2px solid var(--t2)"><div class="kpi-label">Tier 2 · Strategic</div><div class="kpi-value" style="color:var(--t2)">${kpiData.tier2}</div><div style="font-size:11px;color:var(--muted)">targeted support</div></div>
-  <div class="card card-kpi" style="border-top:2px solid var(--t1)"><div class="kpi-label">Tier 1 · Core</div><div class="kpi-value" style="color:var(--t1)">${kpiData.tier1}</div><div style="font-size:11px;color:var(--muted)">on track</div></div>
-<div class="card card-kpi" style="border-top:2px solid #f59e0b"><div class="kpi-label">OVERDUE ASSESSMENT</div><div class="kpi-value" style="color:#f59e0b">${kpiData.overdueCount}</div><div style="font-size:11px;color:var(--muted)">need follow-up</div></div>
-<div class="card card-kpi" style="border-top:2px solid #22c55e"><div class="kpi-label">AT BENCHMARK</div><div class="kpi-value" style="color:#22c55e">${kpiData.atBenchmarkPct}%</div><div style="font-size:11px;color:var(--muted)">Tier 1 students</div></div>
+  <div class="card card-kpi" style="border-top:2px solid var(--accent)"><div class="kpi-bg" style="background-image:url(https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=400&q=50)"></div><div class="kpi-label">Total Students</div><div class="kpi-value" style="color:var(--text)">${kpiData.totalStudents}</div><div style="font-size:11px;color:var(--muted)">enrolled</div></div>
+  <div class="card card-kpi" style="border-top:2px solid var(--t3)"><div class="kpi-bg" style="background-image:url(https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&q=50)"></div><div class="kpi-label">Tier 3 · Intensive</div><div class="kpi-value" style="color:var(--t3)">${kpiData.tier3}</div><div style="font-size:11px;color:var(--muted)">significant gaps</div></div>
+  <div class="card card-kpi" style="border-top:2px solid var(--t2)"><div class="kpi-bg" style="background-image:url(https://images.unsplash.com/photo-1529390079861-591de354faf5?w=400&q=50)"></div><div class="kpi-label">Tier 2 · Strategic</div><div class="kpi-value" style="color:var(--t2)">${kpiData.tier2}</div><div style="font-size:11px;color:var(--muted)">targeted support</div></div>
+  <div class="card card-kpi" style="border-top:2px solid var(--t1)"><div class="kpi-bg" style="background-image:url(https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&q=50)"></div><div class="kpi-label">Tier 1 · Core</div><div class="kpi-value" style="color:var(--t1)">${kpiData.tier1}</div><div style="font-size:11px;color:var(--muted)">on track</div></div>
+<div class="card card-kpi" style="border-top:2px solid #f59e0b"><div class="kpi-bg" style="background-image:url(https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&q=50)"></div><div class="kpi-label">OVERDUE ASSESSMENT</div><div class="kpi-value" style="color:#f59e0b">${kpiData.overdueCount}</div><div style="font-size:11px;color:var(--muted)">need follow-up</div></div>
+<div class="card card-kpi" style="border-top:2px solid #22c55e"><div class="kpi-bg" style="background-image:url(https://images.unsplash.com/photo-1571210862729-78a52d3779a2?w=400&q=50)"></div><div class="kpi-label">AT BENCHMARK</div><div class="kpi-value" style="color:#22c55e">${kpiData.atBenchmarkPct}%</div><div style="font-size:11px;color:var(--muted)">Tier 1 students</div></div>
 `;
   const heroHTML = '<div class="hero-banner"><div><h2 style="font-family:var(--serif);font-size:1.5rem;font-weight:600;color:#fff;margin:0 0 .2rem">LiteracyMap</h2><p style="color:rgba(255,255,255,.6);font-size:.875rem;margin:0">Reading Intervention Tracker &mdash; ' + new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}) + '</p></div><div class="hero-stats"><div class="hero-stat"><div class="hs-val" id="hero-total">0</div><div class="hs-label">Students</div></div><div class="hero-stat"><div class="hs-val" id="hero-t3" style="color:var(--t3)">0</div><div class="hs-label">Intensive</div></div><div class="hero-stat"><div class="hs-val" id="hero-t2" style="color:var(--t2)">0</div><div class="hs-label">Strategic</div></div><div class="hero-stat"><div class="hs-val" id="hero-bench" style="color:var(--t1)">0</div><div class="hs-label">At Benchmark</div></div></div></div>';
-  document.getElementById('kpi-container').innerHTML = heroHTML + kpiHTML;
+  document.getElementById('kpi-container').innerHTML = heroHTML + getAssessmentReminderHtml() + kpiHTML;
   requestAnimationFrame(function(){
     function animNum(id,val,suf){
       var el=document.getElementById(id);if(!el)return;
@@ -2548,7 +2572,7 @@ function generateHandoff() {
         <div><label class="qa-label">Reading Level</label><input id="qa-level" class="qa-input" type="text" placeholder="e.g. 2.4"></div>
         <div class="qa-full"><label class="qa-label">Notes</label><textarea id="qa-notes" class="qa-input" rows="2" placeholder="Observations..." style="resize:vertical"></textarea></div>
       </div>
-      <div class="qa-actions">
+      <div style="margin:8px 16px 0"><label class="qa-label">Percentile Rank <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="number" id="qa-percentile" class="qa-input" min="1" max="99" placeholder="e.g. 35"></div><div class="qa-actions">
         <button class="btn btn-ghost" onclick="closeQuickAssess()">Cancel</button>
         <button class="btn btn-primary" onclick="saveQuickAssess()">Save Assessment</button>
       </div>
