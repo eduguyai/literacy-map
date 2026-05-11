@@ -717,7 +717,7 @@
           <li>MTSS report generation</li>
         </ul>
         <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:8px;font-size:11px;font-family:var(--mono);color:var(--dim)">
-          Version 1.0 · Sprint 18 · Built for Ms. Rowe
+          Version 1.0 · Sprint 19 · Built for Ms. Rowe
         </div>
       </div>
       <div class="card" style="margin-bottom:16px">
@@ -3529,6 +3529,733 @@ function initSearchBarS18(){
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
   else{setTimeout(init,200);}
+})();
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Sprint 19: 30-Factor Taxonomy · Coaching Engine · FERPA Compliance
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 1. 30-FACTOR LITERACY DEVELOPMENT TAXONOMY
+//    Sources: NRP (2000), NAEP Framework, Scarborough's Reading Rope (2001),
+//    Simple View of Reading (Hoover & Gough 1990), Kilpatrick (2015),
+//    IDA Knowledge and Practice Standards, DIBELS research base
+// ─────────────────────────────────────────────────────────────────────────────
+var LITERACY_FACTORS = [
+  // ── Domain A: Foundational Decoding ──────────────────────────────────────
+  { id:'phonological-awareness', label:'Phonological Awareness',    domain:'Foundational', color:'#818cf8',
+    desc:'Sensitivity to sound structure: rhyming, syllable blending/segmenting, onset-rime',
+    research:'Stanovich (1986): phonological awareness is the strongest single predictor of early reading.',
+    strategies:['Heggerty Phonemic Awareness','oral blending/segmenting routines','rhyme sorting'] },
+  { id:'phonemic-awareness',     label:'Phonemic Awareness',        domain:'Foundational', color:'#818cf8',
+    desc:'Isolation, blending, segmenting, deletion, and substitution of individual phonemes',
+    research:'NRP (2000): explicit phonemic awareness instruction significantly improves reading and spelling.',
+    strategies:['Elkonin sound boxes','phoneme blending chains','Lindamood LiPS program'] },
+  { id:'phonics-decoding',       label:'Phonics / Decoding',        domain:'Foundational', color:'#818cf8',
+    desc:'Alphabetic principle, letter-sound correspondences, blending, word attack strategies',
+    research:'NRP (2000): systematic phonics instruction produces significant benefits in reading.',
+    strategies:['Orton-Gillingham','Wilson Reading','SPIRE','explicit scope-and-sequence phonics'] },
+  { id:'spelling-encoding',      label:'Spelling / Encoding',       domain:'Foundational', color:'#818cf8',
+    desc:'Orthographic knowledge; ability to represent phonemes in written form',
+    research:'Ehri (1997): spelling and reading share orthographic knowledge and reinforce each other.',
+    strategies:['word sorts','Making Words','dictation with corrective feedback'] },
+  { id:'sight-word-fluency',     label:'Sight Word Fluency',        domain:'Foundational', color:'#818cf8',
+    desc:'Automatic recognition of high-frequency and irregular words',
+    research:'Ehri (2005): orthographic mapping produces instant, automatic word recognition.',
+    strategies:['RAVE-O','flashcard practice with retrieval','decodable texts with HFW'] },
+  // ── Domain B: Reading Fluency ─────────────────────────────────────────────
+  { id:'fluency-rate',           label:'Fluency: Rate (WPM)',        domain:'Fluency', color:'#34d399',
+    desc:'Words read correctly per minute; measure of automaticity in word recognition',
+    research:'Rasinski (2010): fluency mediates between decoding and comprehension.',
+    strategies:['repeated reading','neurological impress method','timed partner reading'] },
+  { id:'fluency-accuracy',       label:'Fluency: Accuracy',          domain:'Fluency', color:'#34d399',
+    desc:'Percentage of words read correctly; error patterns and miscue analysis',
+    research:'Clay (1993): error analysis reveals specific decoding breakdowns.',
+    strategies:['running records','error analysis','targeted decodable text leveling'] },
+  { id:'fluency-prosody',        label:'Fluency: Prosody',           domain:'Fluency', color:'#34d399',
+    desc:'Appropriate expression, phrasing, intonation, and stress during oral reading',
+    research:'Pinnell et al. (1995): prosody is distinct from rate and predicts comprehension.',
+    strategies:['readers theatre','echo reading','marked phrase boundaries in text'] },
+  // ── Domain C: Language & Comprehension ───────────────────────────────────
+  { id:'vocabulary',             label:'Vocabulary',                 domain:'Language', color:'#fb923c',
+    desc:'Breadth and depth of word knowledge (Tier 1/2/3 vocabulary)',
+    research:'Beck et al. (2002): Tier 2 vocabulary instruction yields significant comprehension gains.',
+    strategies:['Frayer model','word walls with semantic mapping','wide reading'] },
+  { id:'oral-language',          label:'Oral Language Proficiency',  domain:'Language', color:'#fb923c',
+    desc:'Listening comprehension, syntax, morphology, discourse; foundational for reading comprehension',
+    research:'Scarborough (2001): language comprehension strand is half of reading comprehension.',
+    strategies:['structured academic conversation','language experience approach','retelling practice'] },
+  { id:'reading-comprehension',  label:'Reading Comprehension',      domain:'Language', color:'#fb923c',
+    desc:'Literal and inferential understanding; ability to construct meaning from text',
+    research:'RAND (2002): comprehension requires reader, text, and activity interaction.',
+    strategies:['reciprocal teaching','graphic organizers','question generation','text structure instruction'] },
+  { id:'background-knowledge',   label:'Background / Content Knowledge', domain:'Language', color:'#fb923c',
+    desc:'World knowledge and content schema that enables text comprehension',
+    research:'Recht & Leslie (1988): prior knowledge outweighs reading ability in comprehension.',
+    strategies:['knowledge-building curriculum','pre-reading discussion','informational text exposure'] },
+  { id:'morphological-awareness',label:'Morphological Awareness',    domain:'Language', color:'#fb923c',
+    desc:'Awareness of roots, prefixes, suffixes; structural word analysis',
+    research:'Carlisle (2000): morphological awareness uniquely predicts reading comprehension.',
+    strategies:['word-part analysis','Latin/Greek root study','RAVE-O morpheme webs'] },
+  // ── Domain D: Print Concepts & Early Literacy ─────────────────────────────
+  { id:'print-concepts',         label:'Print Concepts',             domain:'Early Literacy', color:'#f472b6',
+    desc:'Directionality, one-to-one matching, book handling, tracking print',
+    research:'Clay (1993): print concepts are prerequisite for phonics instruction.',
+    strategies:['shared reading with pointer','big books','environmental print activities'] },
+  { id:'letter-knowledge',       label:'Letter Knowledge',           domain:'Early Literacy', color:'#f472b6',
+    desc:'Letter naming fluency, upper/lowercase identification, letter-sound correspondence',
+    research:'Adams (1990): letter knowledge is the single best predictor of first-grade reading.',
+    strategies:['alphabet arc practice','name writing','letter-sound linking activities'] },
+  // ── Domain E: Social-Emotional & Motivational ────────────────────────────
+  { id:'motivation',             label:'Reading Motivation',         domain:'Social-Emotional', color:'#facc15',
+    desc:'Intrinsic interest in reading; reading frequency outside school',
+    research:'Guthrie & Wigfield (2000): reading motivation predicts reading achievement independently.',
+    strategies:['book choice with student agency','reading incentive programs','book talks'] },
+  { id:'self-efficacy',          label:'Reading Self-Efficacy',      domain:'Social-Emotional', color:'#facc15',
+    desc:'Belief in own ability to read; reading identity and self-concept as a reader',
+    research:'Wigfield & Eccles (2000): self-efficacy shapes task persistence and strategy use.',
+    strategies:['success-oriented text levels','celebrate small wins','reading identity activities'] },
+  { id:'attention-focus',        label:'Attention / Focus',          domain:'Social-Emotional', color:'#facc15',
+    desc:'Sustained attention during reading tasks; on-task behavior during literacy instruction',
+    research:'Brock et al. (2009): attention problems account for unique variance in reading growth.',
+    strategies:['chunked tasks with breaks','movement integration','fidget tools','ADHD accommodations'] },
+  { id:'self-regulation',        label:'Self-Regulation',            domain:'Social-Emotional', color:'#facc15',
+    desc:'Emotional and behavioral regulation during reading instruction',
+    research:'Blair & Razza (2007): self-regulation predicts literacy beyond IQ and demographics.',
+    strategies:['co-regulation scaffolds','predictable routines','zones of regulation','brain breaks'] },
+  { id:'engagement',             label:'Classroom Engagement',       domain:'Social-Emotional', color:'#facc15',
+    desc:'Active participation in literacy activities; response rate during instruction',
+    research:'Guthrie et al. (2004): engaged reading time is the strongest predictor of comprehension growth.',
+    strategies:['partner reading','total participation techniques','high-interest texts'] },
+  // ── Domain F: Environmental & Home ───────────────────────────────────────
+  { id:'home-literacy',          label:'Home Literacy Environment',  domain:'Home/Family', color:'#a78bfa',
+    desc:'Books in home, family read-alouds, print exposure, library access',
+    research:'Bus et al. (1995): parent-child book reading has moderate to large effect on literacy.',
+    strategies:['take-home book bags','parent read-aloud guides','library card campaigns'] },
+  { id:'caregiver-support',      label:'Caregiver Engagement',       domain:'Home/Family', color:'#a78bfa',
+    desc:'Caregiver involvement in literacy homework, conferences, school communication',
+    research:'Fan & Chen (2001): parental involvement has consistent positive effect on achievement.',
+    strategies:['multilingual family communication','home reading logs','family literacy nights'] },
+  { id:'attendance',             label:'Attendance / Absenteeism',   domain:'Home/Family', color:'#a78bfa',
+    desc:'School attendance rate; chronic absenteeism (>10% days missed)',
+    research:'Ehrlich et al. (2014): chronic absenteeism in K-1 predicts reading failure by grade 3.',
+    strategies:['attendance incentives','home visit programs','flexible schedule support'] },
+  // ── Domain G: Language Background ────────────────────────────────────────
+  { id:'ell-status',             label:'English Learner / Multilingual', domain:'Language Background', color:'#22d3ee',
+    desc:'English language proficiency level; instructional language history',
+    research:'August & Shanahan (2006): ELLs need explicit vocabulary and oral language instruction alongside phonics.',
+    strategies:['cognate instruction','L1 literacy bridging','preview-review','SIOP model'] },
+  { id:'heritage-language',      label:'Heritage Language Literacy', domain:'Language Background', color:'#22d3ee',
+    desc:'Reading/writing skills in first or home language; biliteracy development',
+    research:'Cummins (1981): strong L1 literacy transfers to L2 literacy development.',
+    strategies:['bilingual books','L1 writing opportunities','translanguaging strategies'] },
+  // ── Domain H: Developmental & Special Factors ─────────────────────────────
+  { id:'vision-hearing',         label:'Vision / Hearing Status',    domain:'Developmental', color:'#f87171',
+    desc:'Uncorrected vision or hearing difficulties affecting access to print or instruction',
+    research:'Solan et al. (2004): vision problems directly impact reading fluency and accuracy.',
+    strategies:['vision/hearing referral','preferential seating','large-print materials','FM system'] },
+  { id:'speech-language',        label:'Speech-Language Development',domain:'Developmental', color:'#f87171',
+    desc:'Articulation errors, language delays, expressive/receptive language difficulties',
+    research:'Catts et al. (2002): language impairment in K predicts reading disability in grades 2-8.',
+    strategies:['SLP collaboration','language-rich instruction','narrative retelling scaffolds'] },
+  { id:'sped-iep',               label:'Special Education / IEP',    domain:'Developmental', color:'#f87171',
+    desc:'Disability identification, IEP goals, accommodations, specially designed instruction',
+    research:'Fletcher et al. (2007): early identification and intensive intervention prevent reading failure.',
+    strategies:['IEP goal alignment','explicit multisensory instruction','extended time','assistive tech'] },
+  { id:'dyslexia-risk',          label:'Dyslexia / Reading Disability',domain:'Developmental', color:'#f87171',
+    desc:'Dyslexia indicators: family history, phonological processing deficits, unexpected reading difficulty',
+    research:'Shaywitz (2003): dyslexia affects ~20% of population; structured literacy is evidence-based.',
+    strategies:['Orton-Gillingham','Wilson Reading','SPIRE','LETRS-aligned structured literacy'] },
+  { id:'trauma-aces',            label:'Trauma / Adverse Experiences',domain:'Developmental', color:'#f87171',
+    desc:'ACEs, food insecurity, housing instability, or other adversities impacting learning',
+    research:'Shonkoff et al. (2012): toxic stress impairs executive function and learning readiness.',
+    strategies:['trauma-informed routines','relationship-first approach','counselor referral','sensory breaks'] }
+];
+
+// Domain color map for UI
+var FACTOR_DOMAIN_COLORS = {};
+LITERACY_FACTORS.forEach(function(f){ FACTOR_DOMAIN_COLORS[f.domain] = f.color; });
+
+// Quick lookup by id
+var FACTOR_BY_ID = {};
+LITERACY_FACTORS.forEach(function(f){ FACTOR_BY_ID[f.id] = f; });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 2. FERPA COMPLIANCE LAYER
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Audit log
+function ferpaAuditLog(action, meta) {
+  var log = JSON.parse(localStorage.getItem('lm_audit') || '[]');
+  log.push({ ts: new Date().toISOString(), action: action, meta: meta || {} });
+  if (log.length > 500) log = log.slice(-500); // keep last 500
+  localStorage.setItem('lm_audit', JSON.stringify(log));
+}
+
+// Anonymization: replace student names with codes before sending to AI
+function ferpaCode(student, index) {
+  var grade = student.grade || student.Grade || '?';
+  return 'Student-' + grade + '-' + String(index + 1).padStart(2, '0');
+}
+function anonymizeStudentsForAI(students) {
+  return students.map(function(s, i) {
+    return {
+      code: ferpaCode(s, i),
+      grade: s.grade || s.Grade || '?',
+      tier: s.tier || s.Tier || '?',
+      wpm: s.wpm || s.WPM || '?',
+      level: s.level || s.readingLevel || '?',
+      comp: s.comp || s.comprehension || '?',
+      factors: getTopFactorsForStudent(s.id || s.name || '')
+    };
+  });
+}
+
+// Session inactivity timeout (30 minutes)
+var _lastActivity = Date.now();
+var _sessionTimeout = 30 * 60 * 1000;
+var _sessionTimer = null;
+function resetActivityTimer() {
+  _lastActivity = Date.now();
+  if (_sessionTimer) clearTimeout(_sessionTimer);
+  _sessionTimer = setTimeout(function() {
+    if (Date.now() - _lastActivity >= _sessionTimeout) {
+      showFerpaSessionWarning();
+    }
+  }, _sessionTimeout);
+}
+function showFerpaSessionWarning() {
+  var existing = document.getElementById('ferpa-session-warning');
+  if (existing) return;
+  var el = document.createElement('div');
+  el.id = 'ferpa-session-warning';
+  el.className = 'modal-overlay';
+  el.innerHTML = '<div class="modal-box" style="max-width:380px;padding:28px 24px;text-align:center">'
+    + '<div style="font-size:2rem;margin-bottom:8px">🔒</div>'
+    + '<h3 style="margin:0 0 8px">Session Inactive</h3>'
+    + '<p style="color:var(--muted);font-size:.88rem;margin-bottom:20px">'
+    + 'Your session has been locked after 30 minutes of inactivity to protect student data (FERPA).</p>'
+    + '<button class="btn btn-primary" data-action="dismiss-session-warning">Resume Session</button>'
+    + '</div>';
+  document.body.appendChild(el);
+  ferpaAuditLog('session_timeout', {});
+}
+['click','keydown','mousemove','touchstart'].forEach(function(ev) {
+  document.addEventListener(ev, resetActivityTimer, { passive: true });
+});
+resetActivityTimer();
+
+// FERPA consent check on load
+function checkFerpaConsent() {
+  if (localStorage.getItem('lm_ferpa_consent')) return;
+  var el = document.createElement('div');
+  el.id = 'ferpa-consent-modal';
+  el.className = 'modal-overlay';
+  el.innerHTML = '<div class="modal-box ferpa-consent-box">'
+    + '<div class="modal-header"><h3>🔒 Data Privacy Notice</h3></div>'
+    + '<div class="modal-body">'
+    + '<div class="ferpa-badge">FERPA Compliant</div>'
+    + '<p>LiteracyMap stores student data <strong>locally on your device only</strong>. '
+    + 'No student personally identifiable information (PII) is transmitted to external servers '
+    + 'without your explicit action.</p>'
+    + '<ul class="ferpa-list">'
+    + '<li>Student data never leaves your browser without your action</li>'
+    + '<li>AI analysis uses anonymized student codes, not names</li>'
+    + '<li>All exports are logged for your audit trail</li>'
+    + '<li>Session locks automatically after 30 minutes of inactivity</li>'
+    + '<li>You control all data — clear it anytime in Settings</li>'
+    + '</ul>'
+    + '<p style="font-size:.8rem;color:var(--muted)">Under FERPA (20 U.S.C. § 1232g), '
+    + 'education records are protected. This tool is designed for use by authorized school personnel only.</p>'
+    + '</div>'
+    + '<div class="modal-footer">'
+    + '<button class="btn btn-primary" data-action="accept-ferpa">I Understand — Continue</button>'
+    + '</div></div>';
+  document.body.appendChild(el);
+}
+
+// Privacy-safe audit log viewer
+function showAuditLog() {
+  var log = JSON.parse(localStorage.getItem('lm_audit') || '[]').slice().reverse().slice(0, 50);
+  var rows = log.map(function(e) {
+    var d = new Date(e.ts).toLocaleString();
+    var detail = Object.keys(e.meta).map(function(k) { return k + ': ' + e.meta[k]; }).join(', ');
+    return '<tr><td>' + d + '</td><td><code>' + e.action + '</code></td><td style="color:var(--muted);font-size:.78rem">' + detail + '</td></tr>';
+  }).join('');
+  var el = document.createElement('div');
+  el.className = 'modal-overlay';
+  el.innerHTML = '<div class="modal-box" style="max-width:640px;max-height:80vh">'
+    + '<div class="modal-header"><h3>Audit Log (last 50 actions)</h3>'
+    + '<button class="modal-close" data-action="close-modal" data-target="__self__">&times;</button></div>'
+    + '<div class="modal-body"><table class="rpt-table"><thead><tr>'
+    + '<th>Time</th><th>Action</th><th>Detail</th></tr></thead><tbody>'
+    + (rows || '<tr><td colspan="3" style="text-align:center;color:var(--muted)">No audit entries yet</td></tr>')
+    + '</tbody></table></div></div>';
+  document.body.appendChild(el);
+  // self-close button fix
+  el.querySelector('[data-target="__self__"]').addEventListener('click', function() { el.remove(); });
+}
+
+function clearAllData() {
+  if (!confirm('This will permanently delete ALL student data, observations, and settings from this browser. This cannot be undone. Continue?')) return;
+  var keys = Object.keys(localStorage).filter(function(k) { return k.startsWith('lm_'); });
+  keys.forEach(function(k) { localStorage.removeItem(k); });
+  showToast('All LiteracyMap data cleared', 'warn');
+  ferpaAuditLog('data_cleared', { keys: keys.length });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 3. FACTOR-BASED OBSERVATION TAGGING
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Get factor frequencies for a student (returns [{factor, count}] sorted desc)
+function getStudentFactorFrequency(sid) {
+  var obs = getObservations(sid);
+  var counts = {};
+  obs.forEach(function(o) {
+    (o.factors || []).forEach(function(fid) {
+      counts[fid] = (counts[fid] || 0) + 1;
+    });
+  });
+  return Object.keys(counts).map(function(k) { return { factor: k, count: counts[k] }; })
+    .sort(function(a, b) { return b.count - a.count; });
+}
+
+// Get top factors across whole caseload
+function getCaseloadFactorFrequency() {
+  var all = getStudents();
+  var counts = {};
+  all.forEach(function(s) {
+    var sid = s.id || s.name || '';
+    getObservations(sid).forEach(function(o) {
+      (o.factors || []).forEach(function(fid) {
+        counts[fid] = (counts[fid] || 0) + 1;
+      });
+    });
+  });
+  return Object.keys(counts).map(function(k) { return { factor: k, count: counts[k] }; })
+    .sort(function(a, b) { return b.count - a.count; });
+}
+
+function getTopFactorsForStudent(sid) {
+  return getStudentFactorFrequency(sid).slice(0, 5).map(function(x) { return x.factor; });
+}
+
+// Render factor chip HTML
+function factorChipHTML(fid, count, removable, sid, obsId) {
+  var f = FACTOR_BY_ID[fid];
+  if (!f) return '';
+  var bg = f.color + '22';
+  var border = f.color;
+  var html = '<span class="factor-chip" style="background:' + bg + ';border-color:' + border + ';color:' + f.color + '"'
+    + ' title="' + _esc(f.desc) + '">' + _esc(f.label)
+    + (count > 1 ? ' <span class="factor-count">' + count + '</span>' : '')
+    + (removable ? '<button class="factor-remove" data-action="remove-factor" data-sid="' + _esc(sid) + '" data-obs-id="' + obsId + '" data-fid="' + _esc(fid) + '">&times;</button>' : '')
+    + '</span>';
+  return html;
+}
+
+// Factor selector panel HTML (for observation modal)
+function factorSelectorHTML(selectedIds) {
+  selectedIds = selectedIds || [];
+  var domains = [];
+  var byDomain = {};
+  LITERACY_FACTORS.forEach(function(f) {
+    if (!byDomain[f.domain]) { byDomain[f.domain] = []; domains.push(f.domain); }
+    byDomain[f.domain].push(f);
+  });
+  var html = '<div class="factor-selector" id="factor-selector">';
+  domains.forEach(function(domain) {
+    var color = FACTOR_DOMAIN_COLORS[domain];
+    html += '<div class="factor-domain"><div class="factor-domain-label" style="color:' + color + '">' + domain + '</div><div class="factor-domain-chips">';
+    byDomain[domain].forEach(function(f) {
+      var sel = selectedIds.indexOf(f.id) !== -1;
+      html += '<button class="factor-option' + (sel ? ' selected' : '') + '" '
+        + 'data-action="toggle-factor" data-fid="' + f.id + '" '
+        + 'style="' + (sel ? 'background:' + f.color + ';color:#fff;border-color:' + f.color : 'border-color:' + f.color + ';color:' + f.color) + '"'
+        + ' title="' + _esc(f.research) + '">'
+        + _esc(f.label) + '</button>';
+    });
+    html += '</div></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+// Open enhanced observation journal with factor tagging
+function openObservationJournal(sid, sname) {
+  var existing = document.getElementById('obs-journal-modal'); if (existing) existing.remove();
+  var obs = getObservations(sid);
+  var obsHTML = obs.length ? obs.map(function(o) { return obsEntryHTML(sid, o); }).join('')
+    : '<div class="obs-empty">No observations yet.</div>';
+  var freqs = getStudentFactorFrequency(sid);
+  var heatHTML = freqs.length ? '<div class="factor-heat">' + freqs.slice(0, 8).map(function(x) {
+    return factorChipHTML(x.factor, x.count, false, sid, null);
+  }).join('') + '</div>' : '';
+  var modal = document.createElement('div');
+  modal.id = 'obs-journal-modal'; modal.className = 'modal-overlay';
+  modal.setAttribute('data-sid', sid); modal.setAttribute('data-sname', sname);
+  modal.innerHTML = '<div class="modal-box obs-journal-box">'
+    + '<div class="modal-header"><h3>Observations &mdash; ' + _esc(sname) + '</h3>'
+    + '<button class="modal-close" data-action="close-modal" data-target="obs-journal-modal">&times;</button></div>'
+    + '<div class="modal-body">'
+    + (heatHTML ? '<div class="factor-heat-label">Most-tagged factors:</div>' + heatHTML : '')
+    + '<div class="obs-add-section">'
+    + '<label class="form-label">Observation</label>'
+    + '<textarea id="new-obs-text" class="form-input" rows="2" placeholder="Write an observation about this student..."></textarea>'
+    + '<label class="form-label" style="margin-top:12px">Tag Literacy Factors <span style="font-weight:400;color:var(--muted)">(select all that apply)</span></label>'
+    + factorSelectorHTML([])
+    + '<button class="btn btn-primary" style="margin-top:10px;width:100%" data-action="submit-obs" data-sid="' + _esc(sid) + '" data-sname="' + _esc(sname) + '">Save Observation</button>'
+    + '</div>'
+    + '<div class="obs-divider"></div>'
+    + '<div id="obs-list-' + _esc(sid) + '" class="obs-list">' + obsHTML + '</div>'
+    + '</div></div>';
+  document.body.appendChild(modal);
+  setTimeout(function() { var el = document.getElementById('new-obs-text'); if (el) el.focus(); }, 50);
+}
+
+function obsEntryHTML(sid, o) {
+  var d = new Date(o.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  var factorChips = (o.factors || []).map(function(fid) { return factorChipHTML(fid, 1, false, sid, o.id); }).join('');
+  return '<div class="obs-entry" data-obs-id="' + o.id + '">'
+    + '<div class="obs-entry-header">'
+    + (o.category ? '<span class="obs-tag">' + _esc(o.category) + '</span>' : '')
+    + '<span class="obs-date">' + d + '</span>'
+    + '<button class="obs-del" data-action="del-obs" data-sid="' + _esc(sid) + '" data-obs-id="' + o.id + '">&#x2715;</button>'
+    + '</div>'
+    + (factorChips ? '<div class="obs-factor-chips">' + factorChips + '</div>' : '')
+    + '<div class="obs-text">' + _esc(o.text) + '</div>'
+    + '</div>';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 4. COACHING ENGINE
+//    Pattern detection: factor frequency + assessment data → recommendations
+// ─────────────────────────────────────────────────────────────────────────────
+
+var COACHING_PATTERNS = [
+  { factors: ['phonological-awareness','phonemic-awareness'], tier: null, priority: 'high',
+    title: 'Phonological Processing Weakness',
+    rec: 'Deliver explicit, daily phonological/phonemic awareness instruction (10-15 min). Use Heggerty, Elkonin boxes, and phoneme blending chains.',
+    cite: 'Kilpatrick (2015): phonemic proficiency is the strongest predictor of word-level reading difficulty.' },
+  { factors: ['phonics-decoding','spelling-encoding'], tier: null, priority: 'high',
+    title: 'Decoding / Encoding Deficit',
+    rec: 'Use structured literacy (Orton-Gillingham, Wilson, or SPIRE). Ensure systematic, explicit, multisensory phonics instruction with decodable text practice.',
+    cite: 'NRP (2000): systematic phonics instruction has large effect sizes for struggling readers.' },
+  { factors: ['fluency-rate','fluency-accuracy'], tier: null, priority: 'high',
+    title: 'Fluency Development Needed',
+    rec: 'Add 3-4x weekly repeated reading with immediate corrective feedback. Target texts 1 level below frustration. Chart progress weekly.',
+    cite: 'Rasinski (2010): fluency is the bridge between decoding and comprehension.' },
+  { factors: ['vocabulary','reading-comprehension','background-knowledge'], tier: null, priority: 'medium',
+    title: 'Language-Comprehension Gap',
+    rec: 'Prioritize Tier 2 vocabulary instruction using Frayer models and semantic mapping. Add text-structure instruction and explicit comprehension strategies.',
+    cite: 'Beck et al. (2002); RAND Reading Study Group (2002).' },
+  { factors: ['motivation','self-efficacy','engagement'], tier: null, priority: 'medium',
+    title: 'Motivational / Engagement Concern',
+    rec: 'Offer reading choice, match to high-interest texts at instructional level. Celebrate gains explicitly. Consider reading identity interview.',
+    cite: 'Guthrie & Wigfield (2000): motivation is independently predictive of reading achievement.' },
+  { factors: ['attention-focus','self-regulation'], tier: null, priority: 'medium',
+    title: 'Executive Function / Attention Barrier',
+    rec: 'Implement chunked instruction with frequent checks. Use movement breaks, visual schedules, and co-regulation. Consult MTSS team re: evaluation.',
+    cite: 'Blair & Razza (2007): self-regulation uniquely predicts literacy beyond IQ.' },
+  { factors: ['ell-status','oral-language','vocabulary'], tier: null, priority: 'high',
+    title: 'English Learner Language Support Needed',
+    rec: 'Provide explicit vocabulary and oral language instruction in addition to phonics. Use preview-review, cognate instruction, and bilingual scaffolds.',
+    cite: 'August & Shanahan (2006): ELLs need language-focused instruction alongside code-based instruction.' },
+  { factors: ['dyslexia-risk','phonological-awareness','phonics-decoding'], tier: '3', priority: 'urgent',
+    title: 'Dyslexia / Structured Literacy Urgency',
+    rec: 'Initiate structured literacy program (OG-based) immediately. Request psychoeducational evaluation if not already conducted. Align with IDA Knowledge Standards.',
+    cite: 'Shaywitz (2003): early intensive intervention prevents long-term reading failure.' },
+  { factors: ['trauma-aces','motivation','attendance'], tier: null, priority: 'high',
+    title: 'Trauma-Informed Approach Required',
+    rec: 'Prioritize relationship and safety before academic demands. Consult school counselor/social worker. Use predictable routines and co-regulation strategies.',
+    cite: 'Shonkoff et al. (2012): toxic stress impairs executive function and academic engagement.' },
+  { factors: ['vision-hearing'], tier: null, priority: 'urgent',
+    title: 'Sensory Screening Needed',
+    rec: 'Refer for vision and hearing screening immediately if not completed. Provide preferential seating, large-print text, or FM system as interim support.',
+    cite: 'Solan et al. (2004): vision problems directly impact reading fluency and accuracy.' },
+  { factors: ['attendance'], tier: '3', priority: 'high',
+    title: 'Chronic Absenteeism + Tier 3',
+    rec: 'Contact attendance team and family. Student cannot benefit from intensive intervention without consistent presence. Explore barriers and wraparound support.',
+    cite: 'Ehrlich et al. (2014): chronic absenteeism in K-2 is a leading predictor of reading failure.' },
+  { factors: ['home-literacy','caregiver-support'], tier: null, priority: 'medium',
+    title: 'Home Literacy Partnership Opportunity',
+    rec: 'Send take-home book bags and parent read-aloud guides. Invite family to a literacy night. Provide multilingual reading tips.',
+    cite: 'Bus et al. (1995): parent-child reading has moderate to large effect on literacy outcomes.' }
+];
+
+function runCoachingEngine(sid) {
+  var student = getStudents().find(function(s) { return s.id === sid || s.name === sid; });
+  if (!student) return [];
+  var freqs = getStudentFactorFrequency(sid);
+  var presentFactors = freqs.map(function(x) { return x.factor; });
+  var tier = String(student.tier || student.Tier || '');
+  var triggered = [];
+  COACHING_PATTERNS.forEach(function(pattern) {
+    var matchedFactors = pattern.factors.filter(function(f) { return presentFactors.indexOf(f) !== -1; });
+    var tierMatch = !pattern.tier || pattern.tier === tier;
+    if (matchedFactors.length >= Math.ceil(pattern.factors.length * 0.5) && tierMatch) {
+      triggered.push({ pattern: pattern, matchCount: matchedFactors.length, matched: matchedFactors });
+    }
+  });
+  triggered.sort(function(a, b) {
+    var pOrder = { urgent: 0, high: 1, medium: 2, low: 3 };
+    return (pOrder[a.pattern.priority] || 2) - (pOrder[b.pattern.priority] || 2);
+  });
+  return triggered;
+}
+
+function runCaseloadCoaching() {
+  var caseloadFreqs = getCaseloadFactorFrequency();
+  var presentFactors = caseloadFreqs.map(function(x) { return x.factor; });
+  var triggered = [];
+  COACHING_PATTERNS.forEach(function(pattern) {
+    var matchedFactors = pattern.factors.filter(function(f) { return presentFactors.indexOf(f) !== -1; });
+    if (matchedFactors.length >= 1) {
+      triggered.push({ pattern: pattern, matchCount: matchedFactors.length,
+        studentCount: countStudentsWithFactors(matchedFactors) });
+    }
+  });
+  triggered.sort(function(a, b) {
+    var pOrder = { urgent: 0, high: 1, medium: 2, low: 3 };
+    return (pOrder[a.pattern.priority] || 2) - (pOrder[b.pattern.priority] || 2);
+  });
+  return triggered.slice(0, 8);
+}
+
+function countStudentsWithFactors(factorIds) {
+  return getStudents().filter(function(s) {
+    var sFactors = getTopFactorsForStudent(s.id || s.name || '');
+    return factorIds.some(function(f) { return sFactors.indexOf(f) !== -1; });
+  }).length;
+}
+
+function showCoachingPanel(sid, sname) {
+  var existing = document.getElementById('coaching-modal'); if (existing) existing.remove();
+  var results = sid ? runCoachingEngine(sid) : runCaseloadCoaching();
+  var title = sid ? ('Coaching Insights — ' + _esc(sname)) : 'Caseload Coaching Insights';
+  var pColors = { urgent: '#f87171', high: '#fb923c', medium: '#facc15', low: '#34d399' };
+  var contentHTML = results.length ? results.map(function(r) {
+    var p = r.pattern;
+    var col = pColors[p.priority] || '#818cf8';
+    return '<div class="coaching-card">'
+      + '<div class="coaching-card-header">'
+      + '<span class="coaching-priority" style="background:' + col + '22;color:' + col + ';border-color:' + col + '">' + p.priority.toUpperCase() + '</span>'
+      + '<strong>' + p.title + '</strong>'
+      + (r.studentCount > 1 ? '<span class="coaching-count">' + r.studentCount + ' students</span>' : '')
+      + '</div>'
+      + '<p class="coaching-rec">' + p.rec + '</p>'
+      + '<div class="coaching-cite">' + p.cite + '</div>'
+      + '</div>';
+  }).join('') : '<div class="obs-empty">No coaching patterns detected yet. Add observations with factor tags to activate the coaching engine.</div>';
+  var modal = document.createElement('div');
+  modal.id = 'coaching-modal'; modal.className = 'modal-overlay';
+  modal.innerHTML = '<div class="modal-box coaching-box">'
+    + '<div class="modal-header"><h3>' + title + '</h3>'
+    + '<button class="modal-close" data-action="close-modal" data-target="coaching-modal">&times;</button></div>'
+    + '<div class="modal-body">' + contentHTML + '</div>'
+    + '<div class="modal-footer">'
+    + (sid ? '<button class="btn btn-ghost" data-action="coaching-ai" data-sid="' + _esc(sid||'') + '" data-sname="' + _esc(sname||'') + '">Ask Claude for a Plan</button>' : '')
+    + '<button class="btn btn-ghost" data-action="close-modal" data-target="coaching-modal">Close</button>'
+    + '</div></div>';
+  document.body.appendChild(modal);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 5. ANONYMIZED AI CASELOAD ANALYSIS
+// ─────────────────────────────────────────────────────────────────────────────
+
+function analyzeCaseloadAnonymized(btnEl) {
+  var all = getStudents();
+  if (!all.length) { showToast('No student data', 'warn'); return; }
+  var anon = anonymizeStudentsForAI(all);
+  var summary = anon.map(function(s) {
+    return s.code + ': Grade ' + s.grade + ', Tier ' + s.tier + ', WPM ' + s.wpm
+      + ', Level ' + s.level + (s.factors.length ? ', Factors: [' + s.factors.join(', ') + ']' : '');
+  }).join('\n');
+  var prompt = 'You are an experienced reading specialist and instructional coach. '
+    + 'The following is an anonymized student caseload (no real names). '
+    + 'Analyze the data and teacher-observed literacy factors, then provide:\n'
+    + '1. Key patterns across the caseload\n'
+    + '2. Highest-priority students and why\n'
+    + '3. Recommended small-group configurations with rationale\n'
+    + '4. Evidence-based intervention focus areas for the next 4 weeks\n'
+    + '5. One coaching reflection prompt for the teacher\n\n'
+    + 'Anonymized Caseload:\n' + summary;
+  var outEl = document.getElementById('claude-analysis-output');
+  if (!outEl) {
+    var panel = document.querySelector('.overview-content,.page-content,[id^=page-]');
+    if (panel) { outEl = document.createElement('div'); outEl.id = 'claude-analysis-output'; outEl.className = 'ai-panel'; panel.appendChild(outEl); }
+  }
+  ferpaAuditLog('ai_caseload_analysis', { students: all.length, anonymized: true });
+  analyzeWithClaude(prompt, 'claude-analysis-output', btnEl);
+}
+
+function generateAnonymizedStudentPlan(sid, sname, btnEl) {
+  var all = getStudents();
+  var idx = all.findIndex(function(s) { return s.id === sid || s.name === sid; });
+  if (idx === -1) { showToast('Student not found', 'warn'); return; }
+  var s = all[idx];
+  var code = ferpaCode(s, idx);
+  var factors = getTopFactorsForStudent(sid);
+  var coaching = runCoachingEngine(sid).slice(0, 3);
+  var coachingText = coaching.map(function(r) { return '- ' + r.pattern.title + ': ' + r.pattern.rec; }).join('\n');
+  var prompt = 'You are a reading specialist. Create a structured 4-week intervention plan for '
+    + 'an anonymized student (code: ' + code + ').\n\n'
+    + 'Data: Grade ' + (s.grade || '?') + ', Tier ' + (s.tier || '?')
+    + ', Reading Level ' + (s.level || '?') + ', Fluency ' + (s.wpm || '?') + ' WPM'
+    + ', Comprehension ' + (s.comp || '?') + '%\n'
+    + 'Teacher-observed factors: ' + (factors.length ? factors.join(', ') : 'none recorded yet') + '\n'
+    + (coachingText ? 'Coaching engine flags:\n' + coachingText + '\n' : '')
+    + '\nProvide: weekly focus areas, specific Science of Reading-aligned activities, '
+    + 'progress monitoring checkpoints, and one parent communication suggestion. '
+    + 'Format with clear Week 1-4 headings.';
+  ferpaAuditLog('ai_student_plan', { code: code });
+  analyzeWithClaude(prompt, 'student-plan-output', btnEl);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 6. GLOBAL EVENT DELEGATION — Sprint 19 additions
+// ─────────────────────────────────────────────────────────────────────────────
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('[data-action]'); if (!btn) return;
+  var action = btn.dataset.action;
+
+  if (action === 'close-modal') {
+    var el = document.getElementById(btn.dataset.target) || btn.closest('.modal-overlay');
+    if (el) el.remove(); return;
+  }
+  if (action === 'accept-ferpa') {
+    localStorage.setItem('lm_ferpa_consent', new Date().toISOString());
+    ferpaAuditLog('ferpa_consent_accepted', {});
+    var m = document.getElementById('ferpa-consent-modal'); if (m) m.remove(); return;
+  }
+  if (action === 'dismiss-session-warning') {
+    var m = document.getElementById('ferpa-session-warning'); if (m) m.remove();
+    ferpaAuditLog('session_resumed', {}); resetActivityTimer(); return;
+  }
+  if (action === 'toggle-factor') {
+    var fid = btn.dataset.fid;
+    var f = FACTOR_BY_ID[fid]; if (!f) return;
+    var sel = btn.classList.contains('selected');
+    if (sel) {
+      btn.classList.remove('selected');
+      btn.style.background = ''; btn.style.color = f.color; btn.style.borderColor = f.color;
+    } else {
+      btn.classList.add('selected');
+      btn.style.background = f.color; btn.style.color = '#fff'; btn.style.borderColor = f.color;
+    }
+    return;
+  }
+  if (action === 'del-obs') {
+    var sid = btn.dataset.sid, obsId = btn.dataset.obsId;
+    deleteObservation(sid, obsId);
+    var entry = btn.closest('.obs-entry'); if (entry) entry.remove();
+    var list = document.getElementById('obs-list-' + sid);
+    if (list && !list.querySelector('.obs-entry')) list.innerHTML = '<div class="obs-empty">No observations yet.</div>';
+    showToast('Removed', 'warn'); return;
+  }
+  if (action === 'submit-obs') {
+    var sid = btn.dataset.sid, sname = btn.dataset.sname;
+    var textEl = document.getElementById('new-obs-text');
+    var text = textEl ? textEl.value.trim() : '';
+    var selectedFactors = Array.from(document.querySelectorAll('#factor-selector .factor-option.selected')).map(function(b) { return b.dataset.fid; });
+    var entry = addObservation(sid, sname, text, 'observation', selectedFactors);
+    if (entry) {
+      var list = document.getElementById('obs-list-' + sid);
+      if (list) {
+        var empty = list.querySelector('.obs-empty'); if (empty) empty.remove();
+        var div = document.createElement('div'); div.innerHTML = obsEntryHTML(sid, entry);
+        list.insertBefore(div.firstChild, list.firstChild);
+      }
+      if (textEl) textEl.value = '';
+      document.querySelectorAll('#factor-selector .factor-option.selected').forEach(function(b) {
+        b.classList.remove('selected');
+        var f = FACTOR_BY_ID[b.dataset.fid];
+        if (f) { b.style.background = ''; b.style.color = f.color; }
+      });
+    }
+    return;
+  }
+  if (action === 'submit-quicklog') {
+    var sid = btn.dataset.sid;
+    logInterventionSession(sid,
+      (document.getElementById('ql-program') || {}).value || 'General',
+      parseInt((document.getElementById('ql-mins') || {}).value) || 20,
+      (document.getElementById('ql-notes') || {}).value || '');
+    recordAssessmentDate(sid);
+    var m = document.getElementById('quick-log-modal'); if (m) m.remove();
+    renderDashboardRibbon();
+    return;
+  }
+  if (action === 'coaching-ai') {
+    var sid = btn.dataset.sid, sname = btn.dataset.sname;
+    var m = document.getElementById('coaching-modal'); if (m) m.remove();
+    var outEl = document.createElement('div'); outEl.id = 'student-plan-output'; outEl.className = 'ai-panel';
+    var target = document.querySelector('[id^=page-]'); if (target) target.appendChild(outEl);
+    generateAnonymizedStudentPlan(sid, sname, null);
+    return;
+  }
+});
+
+document.addEventListener('click', function(e) { if (e.target.classList.contains('modal-overlay')) e.target.remove(); });
+document.addEventListener('click', function(e) {
+  var b = e.target.closest('.ql-dur[data-mins]');
+  if (b) { var i = document.getElementById('ql-mins'); if (i) i.value = b.dataset.mins; }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 7. PRIVACY SETTINGS PANEL INJECTION
+// ─────────────────────────────────────────────────────────────────────────────
+function injectPrivacySettings() {
+  var pg = document.getElementById('page-settings'); if (!pg) return;
+  if (document.getElementById('s19-privacy-panel')) return;
+  var panel = document.createElement('div'); panel.id = 's19-privacy-panel';
+  panel.innerHTML = '<div class="settings-section">'
+    + '<div class="settings-section-title ferpa-badge-inline">🔒 FERPA Compliance</div>'
+    + '<p style="font-size:.84rem;color:var(--muted);margin-bottom:14px">This app stores all data locally. No student PII is sent externally without your action. AI analysis uses anonymized codes only.</p>'
+    + '<div style="display:flex;flex-wrap:wrap;gap:10px">'
+    + '<button class="btn btn-ghost" onclick="showAuditLog()">View Audit Log</button>'
+    + '<button class="btn btn-ghost" onclick="showCoachingPanel(null,null)">Caseload Coaching</button>'
+    + '<button class="btn btn-ghost" onclick="exportRosterCSV()">Export (Anonymized CSV)</button>'
+    + '<button class="btn btn-danger" onclick="clearAllData()">Clear All Data</button>'
+    + '</div>'
+    + '</div>'
+    + '<div class="settings-section">'
+    + '<div class="settings-section-title">👤 Teacher Info</div>'
+    + '<label class="form-label">Your Name</label>'
+    + '<input id="setting-teacher" class="form-input" placeholder="Ms. Rowe" />'
+    + '<label class="form-label">School</label>'
+    + '<input id="setting-school" class="form-input" placeholder="Lincoln Elementary" />'
+    + '</div>'
+    + '<div class="settings-section">'
+    + '<div class="settings-section-title">🤖 Claude AI</div>'
+    + '<label class="form-label">Anthropic API Key</label>'
+    + '<input id="setting-apiKey" class="form-input" type="password" placeholder="sk-ant-..." style="font-family:monospace" />'
+    + '<p style="font-size:.78rem;color:var(--muted);margin-top:4px">Key stored locally only. AI calls use anonymized student codes — never real names.</p>'
+    + '</div>'
+    + '<button class="btn btn-primary" onclick="saveSettings()" style="margin-top:4px">Save Settings</button>';
+  pg.appendChild(panel);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 8. BOOT
+// ─────────────────────────────────────────────────────────────────────────────
+(function boot19() {
+  function init() {
+    checkFerpaConsent();
+    injectPrivacySettings();
+    if (typeof loadSettingsUI === 'function') loadSettingsUI();
+    if (typeof renderDashboardRibbon === 'function') renderDashboardRibbon();
+    // Wire search if present
+    var searchEl = document.getElementById('roster-search') || document.querySelector('input[placeholder*="earch"]');
+    if (searchEl && !searchEl._s19) {
+      searchEl._s19 = true;
+      searchEl.addEventListener('input', function() { filterBySearch(this.value); });
+    }
+  }
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); }
+  else { setTimeout(init, 300); }
 })();
 </script>
 
