@@ -891,7 +891,7 @@
           <li>MTSS report generation</li>
         </ul>
         <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:8px;font-size:11px;font-family:var(--mono);color:var(--dim)">
-          Version 1.0 · Sprint 23 · Built for Ms. Rowe
+          Version 1.0 · Sprint 24 · Built for Ms. Rowe
         </div>
       </div>
       <div class="card" style="margin-bottom:16px">
@@ -3222,7 +3222,196 @@ function downloadReportHTML() {
     +'</title><style>body{font-family:sans-serif;padding:24px;color:#111}'
     +'.rpt-table{width:100%;border-collapse:collapse}.rpt-table th,.rpt-table td{border:1px solid #ccc;padding:6px 10px}'
     +'.rpt-table thead{background:#f0f0f0}.rpt-stat{display:inline-block;padding:8px 16px;border:1px solid #ccc;margin:4px;border-radius:6px}'
-    +'</style></head><body>'+window._lastReportHTML+'</body></html>'], {type:'text/html'});
+    +'
+/* ══════════════════════════════════════════════════════════════════════════
+   Sprint 24: Literary Background Imagery   (id: s24-literary-imagery)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Unsplash image URLs (CDN-cached, free to display) ─────────────────── */
+:root {
+  --img-library-hall:    url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1400&q=80&auto=format&fit=crop');
+  --img-books-stacked:   url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1400&q=80&auto=format&fit=crop');
+  --img-open-book:       url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1400&q=80&auto=format&fit=crop');
+  --img-child-reading:   url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1400&q=80&auto=format&fit=crop');
+  --img-alphabet:        url('https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=1400&q=80&auto=format&fit=crop');
+  --img-light-rays:      url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=1400&q=80&auto=format&fit=crop');
+  --img-teacher-student: url('https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=1400&q=80&auto=format&fit=crop');
+  --img-group-read:      url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1400&q=80&auto=format&fit=crop');
+  --img-tutoring:        url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1400&q=80&auto=format&fit=crop');
+  --img-pencil-paper:    url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=80&auto=format&fit=crop');
+  --img-data-reports:    url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1400&q=80&auto=format&fit=crop');
+  --img-card-catalogue:  url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1400&q=80&auto=format&fit=crop');
+  --img-bookshelves:     url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1400&q=80&auto=format&fit=crop');
+  --img-vintage-library: url('https://images.unsplash.com/photo-1568667256549-094345857637?w=1400&q=80&auto=format&fit=crop');
+  --img-reading-chair:   url('https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1400&q=80&auto=format&fit=crop');
+  --img-ink-pen:         url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=900&q=80&auto=format&fit=crop');
+}
+
+/* ── Hero card base (the top-left summary card on overview) ─────────────── */
+.s20-hero {
+  background-image: var(--img-library-hall) !important;
+  background-size: cover !important;
+  background-position: center 30% !important;
+}
+
+/* ── Per-page S21 hero backgrounds ──────────────────────────────────────── */
+.s21-hero-roster   { background-image: var(--img-child-reading)   !important; background-position: center 40% !important; }
+.s21-hero-bm       { background-image: var(--img-open-book)        !important; background-position: center 50% !important; }
+.s21-hero-reports  { background-image: var(--img-data-reports)     !important; background-position: center 40% !important; }
+.s21-hero-groups   { background-image: var(--img-group-read)       !important; background-position: center 35% !important; }
+.s21-hero-settings { background-image: var(--img-bookshelves)      !important; background-position: center 60% !important; }
+.s21-hero-observations { background-image: var(--img-teacher-student) !important; background-position: center 30% !important; }
+.s21-hero-overview { background-image: var(--img-library-hall)     !important; background-position: center 30% !important; }
+.s21-hero-skills   { background-image: var(--img-alphabet)         !important; background-position: center 50% !important; }
+.s21-hero-progress { background-image: var(--img-light-rays)       !important; background-position: center 50% !important; }
+.s21-hero-import   { background-image: var(--img-card-catalogue)   !important; background-position: center 40% !important; }
+.s21-hero-strategies { background-image: var(--img-bookshelves)    !important; background-position: center 50% !important; }
+.s21-hero-interventions { background-image: var(--img-tutoring)    !important; background-position: center 30% !important; }
+.s21-hero-assess   { background-image: var(--img-pencil-paper)     !important; background-position: center 50% !important; }
+
+/* All S21 heroes share these base styles */
+[class^="s21-hero-"], [class*=" s21-hero-"] {
+  background-size: cover !important;
+  position: relative;
+}
+
+/* ── Literary Mosaic Strip ───────────────────────────────────────────────── */
+.s24-mosaic {
+  display: flex;
+  gap: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  height: 160px;
+  margin: 18px 0 4px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  position: relative;
+}
+.s24-mosaic::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom,
+    rgba(15,15,26,0.18) 0%,
+    rgba(15,15,26,0.0)  40%,
+    rgba(15,15,26,0.55) 100%);
+  pointer-events: none;
+  border-radius: 14px;
+}
+.s24-mosaic-panel {
+  flex: 1;
+  background-size: cover;
+  background-position: center;
+  transition: flex 0.45s cubic-bezier(.4,0,.2,1), filter 0.3s;
+  position: relative;
+  cursor: pointer;
+  filter: saturate(0.85) brightness(0.88);
+  min-width: 0;
+}
+.s24-mosaic-panel:hover {
+  flex: 2.6;
+  filter: saturate(1.1) brightness(1.05);
+  z-index: 2;
+}
+.s24-mosaic-panel::after {
+  content: attr(data-caption);
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  right: 10px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.s24-mosaic-panel:hover::after { opacity: 1; }
+
+/* Mosaic panel image assignments */
+.s24-mosaic-panel:nth-child(1)  { background-image: var(--img-library-hall);    }
+.s24-mosaic-panel:nth-child(2)  { background-image: var(--img-vintage-library);  }
+.s24-mosaic-panel:nth-child(3)  { background-image: var(--img-bookshelves);      }
+.s24-mosaic-panel:nth-child(4)  { background-image: var(--img-open-book);        background-position: center 30%; }
+.s24-mosaic-panel:nth-child(5)  { background-image: var(--img-child-reading);    background-position: center 20%; }
+.s24-mosaic-panel:nth-child(6)  { background-image: var(--img-books-stacked);    }
+.s24-mosaic-panel:nth-child(7)  { background-image: var(--img-ink-pen);          background-position: center 60%; }
+
+/* ── Book-spine accent bars at bottom of stat cards ─────────────────────── */
+.s24-book-spines {
+  display: flex;
+  height: 6px;
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.s24-spine { flex: 1; }
+
+/* ── Floating literary watermark behind sidebar ──────────────────────────── */
+.s24-sidebar-watermark {
+  position: fixed;
+  bottom: 60px;
+  left: 0;
+  width: 220px;
+  height: 200px;
+  opacity: 0.04;
+  background-image: var(--img-books-stacked);
+  background-size: cover;
+  background-position: center;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 0 0 0 0;
+}
+
+/* ── Reading quote banner ────────────────────────────────────────────────── */
+.s24-quote-banner {
+  margin: 10px 0 18px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(168,85,247,0.10));
+  border-left: 3px solid #818cf8;
+  position: relative;
+  overflow: hidden;
+}
+.s24-quote-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--img-reading-chair);
+  background-size: cover;
+  background-position: center 30%;
+  opacity: 0.08;
+  pointer-events: none;
+}
+.s24-quote-text {
+  font-size: 13px;
+  font-style: italic;
+  color: #c7d2fe;
+  line-height: 1.55;
+  position: relative;
+  z-index: 1;
+}
+.s24-quote-attr {
+  font-size: 11px;
+  color: #818cf8;
+  margin-top: 5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes s24QuoteSlide {
+  0%,92%  { opacity: 1; transform: translateY(0); }
+  96%     { opacity: 0; transform: translateY(-8px); }
+  100%    { opacity: 0; transform: translateY(8px); }
+}
+</style></head><body>'+window._lastReportHTML+'</body></html>'], {type:'text/html'});
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = (window._lastReportTitle||'report').replace(/[^a-z0-9]/gi,'_')+'.html';
@@ -5196,6 +5385,197 @@ function s21InitAllPages() {
   } else {
     boot();
   }
+})();
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Sprint 24: Literary Background Imagery  (id: s24-literary-imagery)
+// ══════════════════════════════════════════════════════════════════════════════
+(function() {
+  'use strict';
+
+  // ── Reading quotes carousel ───────────────────────────────────────────────
+  var QUOTES = [
+    { q: "Once you learn to read, you will be forever free.",           a: "Frederick Douglass" },
+    { q: "A reader lives a thousand lives before he dies.",             a: "George R.R. Martin" },
+    { q: "Not all readers are leaders, but all leaders are readers.",   a: "Harry S. Truman" },
+    { q: "Reading is to the mind what exercise is to the body.",        a: "Joseph Addison" },
+    { q: "There is no friend as loyal as a book.",                      a: "Ernest Hemingway" },
+    { q: "The more that you read, the more things you will know.",      a: "Dr. Seuss" },
+    { q: "Today a reader, tomorrow a leader.",                          a: "Margaret Fuller" },
+    { q: "Reading is a passport to countless adventures.",              a: "Mary Pope Osborne" },
+    { q: "A book is a dream you hold in your hands.",                   a: "Neil Gaiman" },
+    { q: "Literacy is a bridge from misery to hope.",                   a: "Kofi Annan" },
+    { q: "Every child deserves a champion who believes they can read.", a: "Rita Pierson (adapted)" },
+    { q: "Teaching kids to read is the most important thing we do.",    a: "George W. Bush" }
+  ];
+
+  var _quoteIdx  = Math.floor(Math.random() * QUOTES.length);
+  var _quoteTimer = null;
+
+  function buildQuoteBanner() {
+    var el = document.createElement('div');
+    el.className = 's24-quote-banner';
+    el.id = 's24-quote-banner';
+    var q = QUOTES[_quoteIdx];
+    el.innerHTML =
+      '<div class="s24-quote-text">“' + q.q + '”</div>' +
+      '<div class="s24-quote-attr">— ' + q.a + '</div>';
+    return el;
+  }
+
+  function rotateQuote() {
+    var banner = document.getElementById('s24-quote-banner');
+    if (!banner) return;
+    _quoteIdx = (_quoteIdx + 1) % QUOTES.length;
+    var q = QUOTES[_quoteIdx];
+    banner.style.transition = 'opacity 0.5s';
+    banner.style.opacity = '0';
+    setTimeout(function() {
+      banner.querySelector('.s24-quote-text').textContent = '“' + q.q + '”';
+      banner.querySelector('.s24-quote-attr').textContent = '— ' + q.a;
+      banner.style.opacity = '1';
+    }, 500);
+  }
+
+  // ── Mosaic strip ──────────────────────────────────────────────────────────
+  var MOSAIC_PANELS = [
+    { caption: 'Grand Library Hall' },
+    { caption: 'Vintage Library' },
+    { caption: 'Curated Bookshelves' },
+    { caption: 'Open Book' },
+    { caption: 'Children Reading' },
+    { caption: 'Books Stacked' },
+    { caption: 'Pen & Craft' }
+  ];
+
+  function buildMosaic() {
+    var wrap = document.createElement('div');
+    wrap.className = 's24-mosaic';
+    wrap.id = 's24-mosaic';
+    MOSAIC_PANELS.forEach(function(p) {
+      var panel = document.createElement('div');
+      panel.className = 's24-mosaic-panel';
+      panel.setAttribute('data-caption', p.caption);
+      wrap.appendChild(panel);
+    });
+    return wrap;
+  }
+
+  // ── Book-spine bars ───────────────────────────────────────────────────────
+  var SPINE_PALETTES = [
+    ['#f87171','#fb923c','#fbbf24','#4ade80','#60a5fa','#a78bfa','#f472b6'],
+    ['#818cf8','#38bdf8','#34d399','#fbbf24','#f87171'],
+    ['#c084fc','#e879f9','#fb7185','#fdba74','#86efac','#67e8f9'],
+    ['#fde68a','#fca5a5','#a5f3fc','#bbf7d0','#ddd6fe'],
+    ['#f9a8d4','#c4b5fd','#93c5fd','#6ee7b7','#fcd34d'],
+    ['#ef4444','#f97316','#eab308','#22c55e','#3b82f6'],
+  ];
+
+  function addBookSpines(card, paletteIdx) {
+    if (card.querySelector('.s24-book-spines')) return;
+    var palette = SPINE_PALETTES[paletteIdx % SPINE_PALETTES.length];
+    var bar = document.createElement('div');
+    bar.className = 's24-book-spines';
+    palette.forEach(function(c) {
+      var s = document.createElement('div');
+      s.className = 's24-spine';
+      s.style.background = c;
+      bar.appendChild(s);
+    });
+    card.appendChild(bar);
+  }
+
+  // ── Sidebar literary watermark ────────────────────────────────────────────
+  function addSidebarWatermark() {
+    if (document.getElementById('s24-sidebar-wm')) return;
+    var wm = document.createElement('div');
+    wm.id = 's24-sidebar-wm';
+    wm.className = 's24-sidebar-watermark';
+    document.body.appendChild(wm);
+  }
+
+  // ── Enhance S21 hero images with better overlays ──────────────────────────
+  function enhanceHeroes() {
+    // Make sure all S21 hero classes are assigned (in case JS built the hero)
+    var pageImageMap = {
+      'page-overview':     's21-hero-overview',
+      'page-roster':       's21-hero-roster',
+      'page-bm':           's21-hero-bm',
+      'page-benchmark':    's21-hero-bm',
+      'page-reports':      's21-hero-reports',
+      'page-groups':       's21-hero-groups',
+      'page-settings':     's21-hero-settings',
+      'page-observations': 's21-hero-observations',
+      'page-skills':       's21-hero-skills',
+      'page-progress':     's21-hero-progress',
+      'page-import':       's21-hero-import',
+      'page-strategies':   's21-hero-strategies',
+      'page-interventions':'s21-hero-interventions',
+      'page-assess':       's21-hero-assess',
+    };
+
+    Object.keys(pageImageMap).forEach(function(pageId) {
+      var page = document.getElementById(pageId);
+      if (!page) return;
+      var hero = page.querySelector('.s21-hero, [class*="s21-hero"]');
+      if (hero && !hero.className.match(/s21-hero-\w/)) {
+        hero.classList.add(pageImageMap[pageId]);
+      }
+    });
+  }
+
+  // ── Inject into Overview page ─────────────────────────────────────────────
+  function injectOverviewExtras() {
+    var overviewEl = document.getElementById('page-overview') ||
+                     document.querySelector('[id*="overview"]');
+    if (!overviewEl) return;
+    if (overviewEl.querySelector('#s24-mosaic')) return;
+
+    // Find the stat grid or any container to append after
+    var grid = overviewEl.querySelector('.s20-grid, [class*="grid"], .stat-grid');
+    var target = grid || overviewEl;
+
+    // Quote banner first
+    if (!overviewEl.querySelector('#s24-quote-banner')) {
+      var banner = buildQuoteBanner();
+      target.insertAdjacentElement('afterend', banner);
+      // Rotate every 8 seconds
+      clearInterval(_quoteTimer);
+      _quoteTimer = setInterval(rotateQuote, 8000);
+
+      // Mosaic after quote
+      banner.insertAdjacentElement('afterend', buildMosaic());
+    }
+
+    // Add book spines to all stat cards
+    var cards = overviewEl.querySelectorAll('.s20-stat-card, [class*="stat-card"], [class*="stat_card"]');
+    cards.forEach(function(card, i) { addBookSpines(card, i); });
+  }
+
+  // ── Main init ─────────────────────────────────────────────────────────────
+  function init() {
+    addSidebarWatermark();
+    enhanceHeroes();
+    injectOverviewExtras();
+  }
+
+  // Re-run on page navigation
+  var _origShowPage = window.showPage;
+  window.showPage = function(pageId) {
+    if (typeof _origShowPage === 'function') _origShowPage.apply(this, arguments);
+    setTimeout(function() {
+      enhanceHeroes();
+      if (pageId === 'overview' || !pageId) injectOverviewExtras();
+    }, 250);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+  // Retry once after dynamic content settles
+  setTimeout(init, 1200);
 })();
 </script>
 
