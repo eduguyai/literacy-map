@@ -734,20 +734,20 @@
       <div style="flex: 1; overflow-y: auto;">
         <div class="sidebar-section">
           <div class="sidebar-section-title">Analysis</div>
-          <div class="sidebar-item active" data-view="overview" onclick="go('overview', this)">◈ Overview</div>
-          <div class="sidebar-item" data-view="roster" onclick="go('roster', this)" style="justify-content:space-between">◫ Student Roster <span id="roster-badge" style="display:none;background:var(--t3);color:#fff;font-size:9px;font-weight:700;border-radius:10px;padding:2px 6px;line-height:1.4;flex-shrink:0"></span></div>
-          <div class="sidebar-item" data-view="domains" onclick="go('domains', this)">◎ Skill Domains</div>
-          <div class="sidebar-item" data-view="growth" onclick="go('growth', this)">◷ Growth Trends</div>
-          <div class="sidebar-item" data-view="qualdata" onclick="go('qualdata', this)">◑ Qualitative Data</div>
+          <div class="sidebar-item active" data-view="overview" onclick="go('overview', this)">🏠 Overview</div>
+          <div class="sidebar-item" data-view="roster" onclick="go('roster', this)" style="justify-content:space-between">👥 Student Roster <span id="roster-badge" style="display:none;background:var(--t3);color:#fff;font-size:9px;font-weight:700;border-radius:10px;padding:2px 6px;line-height:1.4;flex-shrink:0"></span></div>
+          <div class="sidebar-item" data-view="domains" onclick="go('domains', this)">🧠 Skill Domains</div>
+          <div class="sidebar-item" data-view="growth" onclick="go('growth', this)">📈 Growth Trends</div>
+          <div class="sidebar-item" data-view="qualdata" onclick="go('qualdata', this)">🔍 Qualitative Data</div>
         </div>
         <div class="sidebar-section">
           <div class="sidebar-section-title">Planning</div>
-          <div class="sidebar-item" data-view="groups" onclick="go('groups', this)">⊞ Group Builder</div>
-          <div class="sidebar-item" data-view="interventions" onclick="go('interventions', this)">◌ Interventions</div>
-          <div class="sidebar-item" data-view="assess" onclick="go('assess', this)">📊 Record Assessment</div>
-          <div class="sidebar-item" data-view="reports" onclick="go('reports', this)">◻ Reports</div>
-          <div class="sidebar-item" data-view="import" onclick="go('import', this)">⬆ Import Data</div>
-          <div class="sidebar-item" data-view="strategies" onclick="go('strategies', this)">📝 Strategies</div>
+          <div class="sidebar-item" data-view="groups" onclick="go('groups', this)">🧩 Group Builder</div>
+          <div class="sidebar-item" data-view="interventions" onclick="go('interventions', this)">🎯 Interventions</div>
+          <div class="sidebar-item" data-view="assess" onclick="go('assess', this)">✏️ Record Assessment</div>
+          <div class="sidebar-item" data-view="reports" onclick="go('reports', this)">📑 Reports</div>
+          <div class="sidebar-item" data-view="import" onclick="go('import', this)">📥 Import Data</div>
+          <div class="sidebar-item" data-view="strategies" onclick="go('strategies', this)">💡 Strategies</div>
           <div class="sidebar-item" data-view="settings" onclick="go('settings', this)">⚙ Settings</div>
         </div>
       </div>
@@ -891,7 +891,7 @@
           <li>MTSS report generation</li>
         </ul>
         <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:8px;font-size:11px;font-family:var(--mono);color:var(--dim)">
-          Version 1.0 · Sprint 21 · Built for Ms. Rowe
+          Version 1.0 · Sprint 22 · Built for Ms. Rowe
         </div>
       </div>
       <div class="card" style="margin-bottom:16px">
@@ -2581,7 +2581,7 @@ function openPlan(studentId) {
     <div style="font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">Active Interventions</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:16px">${activeInts.length ? activeInts.map(i=>`• ${i.programName||i.name} — Week ${i.weekNumber}/${i.totalWeeks} (${i.status})`).join('<br>') : 'No active interventions assigned.'}</p>
     <div style="display:flex;gap:8px">
-      <button class="btn primary" onclick="S._pendingAssessId=${studentId};go('assess',document.querySelector('[data-view=assess]'));closeModal('planModal')" style="flex:1">📊 Record Assessment</button>
+      <button class="btn primary" onclick="S._pendingAssessId=${studentId};go('assess',document.querySelector('[data-view=assess]'));closeModal('planModal')" style="flex:1">✏️ Record Assessment</button>
       <button class="btn" onclick="go('qualdata',document.querySelector('[data-view=qualdata]'));S.selectedStudent=S.students.find(s=>s.id==${studentId});renderQualdata();closeModal('planModal')" style="flex:1">◑ Add Observation</button>
     </div>
     <div style="display:flex;gap:8px;margin-top:8px">
@@ -4830,6 +4830,103 @@ function s21InitAllPages() {
     document.addEventListener('DOMContentLoaded', function() { setTimeout(s21InitAllPages, 500); });
   } else {
     setTimeout(s21InitAllPages, 500);
+  }
+})();
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Sprint 22: Semantic Nav Icons  (id: s22-nav-icons)
+// Walks the live DOM and replaces nav icons that regex missed.
+// ══════════════════════════════════════════════════════════════════════════════
+(function() {
+  var NAV_MAP = {
+    'Overview':          '🏠',
+    'Student Roster':    '👥',
+    'Skill Domains':     '🧠',
+    'Growth Trends':     '📈',
+    'Qualitative Data':  '🔍',
+    'Group Builder':     '🧩',
+    'Interventions':     '🎯',
+    'Record Assessment': '✏️',
+    'Reports':           '📑',
+    'Import Data':       '📥',
+    'Strategies':        '💡'
+  };
+
+  function applyNavIcons() {
+    // Selectors that typically cover nav items
+    var selectors = [
+      '.nav-link', '.sidebar-link', '.nav-item',
+      '[onclick*="showPage"]', '[data-page]',
+      'nav a', 'nav button', 'nav li',
+      '.sidebar a', '.sidebar button', '.sidebar li'
+    ];
+    var seen = new Set();
+
+    selectors.forEach(function(sel) {
+      document.querySelectorAll(sel).forEach(function(el) {
+        if (seen.has(el)) return;
+        var rawText = el.textContent || '';
+
+        Object.keys(NAV_MAP).forEach(function(label) {
+          // Only process if the label text is present
+          if (rawText.indexOf(label) === -1) return;
+
+          var newIcon = NAV_MAP[label];
+
+          // Case 1: element contains an SVG icon → remove SVGs, prepend emoji
+          var svgs = el.querySelectorAll('svg');
+          if (svgs.length) {
+            svgs.forEach(function(s) { s.remove(); });
+            // Find or create a text node for the label
+            var labelNode = null;
+            el.childNodes.forEach(function(n) {
+              if (n.nodeType === 3 && n.textContent.indexOf(label) !== -1) labelNode = n;
+            });
+            if (labelNode) {
+              labelNode.textContent = ' ' + label;
+              el.insertBefore(document.createTextNode(newIcon), el.firstChild);
+            } else {
+              el.insertBefore(document.createTextNode(newIcon + ' '), el.firstChild);
+            }
+            seen.add(el);
+            return;
+          }
+
+          // Case 2: element has icon characters before the label in text nodes
+          el.childNodes.forEach(function(node) {
+            if (node.nodeType !== 3) return;
+            var t = node.textContent;
+            // If this text node contains the label, strip any leading non-word chars
+            if (t.indexOf(label) !== -1) {
+              // Replace everything before the label (icons, symbols, spaces) with emoji + space
+              node.textContent = t.replace(/^[\s\S]*?(?=\w)/, newIcon + ' ');
+              seen.add(el);
+            }
+          });
+
+          // Case 3: icon is in a child span/i element
+          el.querySelectorAll('span,i').forEach(function(child) {
+            var ct = child.textContent.trim();
+            // If child has only symbol/icon chars (not the label itself)
+            if (ct && ct.indexOf(label) === -1 && ct.length <= 4) {
+              child.textContent = newIcon;
+              seen.add(el);
+            }
+          });
+        });
+      });
+    });
+  }
+
+  // Run on load and after a short delay (for apps that build nav dynamically)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      applyNavIcons();
+      setTimeout(applyNavIcons, 600);
+    });
+  } else {
+    applyNavIcons();
+    setTimeout(applyNavIcons, 600);
   }
 })();
 </script>
