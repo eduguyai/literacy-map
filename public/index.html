@@ -373,6 +373,99 @@
       .rpt-table th{background:#f0f0f0!important;color:#111!important;}
       .rpt-table td{border-bottom:1px solid #ccc!important;}
     }
+
+    /* ── Sprint 15: Button Visuals ───────────────────────────────────────── */
+    .btn{transition:all .15s ease;letter-spacing:.02em;font-weight:500;}
+    .btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.25);}
+    .btn:active{transform:translateY(0);box-shadow:none;}
+    .btn-primary{background:linear-gradient(135deg,var(--accent),#7ca4f4);border:none;color:#fff;}
+    .btn-primary:hover{background:linear-gradient(135deg,#6b9df4,#8db4f7);}
+    .btn-ghost{background:transparent;border:1px solid var(--bmed);color:var(--text);}
+    .btn-ghost:hover{background:var(--bg4);border-color:var(--accent);color:var(--accent);}
+    .btn-danger{background:var(--t3b);border:1px solid var(--t3);color:var(--t3);}
+    .btn-danger:hover{background:var(--t3);color:#fff;}
+    .grade-btn{border-radius:20px;padding:4px 14px;transition:all .15s;font-size:.82rem;font-weight:600;}
+    .grade-btn.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(91,141,238,.4);}
+    .grade-btn:not(.active):hover{background:var(--bg4);}
+    .filter-btn{border-radius:20px;padding:5px 14px;transition:all .15s;}
+    .filter-btn.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(91,141,238,.3);}
+    .filter-btn:not(.active):hover{background:var(--bg4);}
+    .filter-btn[data-tier="3"].active{background:var(--t3);box-shadow:0 2px 8px rgba(248,113,113,.3);}
+    .filter-btn[data-tier="2"].active{background:var(--t2);box-shadow:0 2px 8px rgba(251,146,60,.3);}
+    .filter-btn[data-tier="1"].active{background:var(--t1);color:#0f1117;}
+    .bm-grade-target{font-size:.72rem;padding:1px 6px;border-radius:10px;
+      background:var(--bg4);color:var(--muted);margin-left:4px;}
+    .bm-grade-target.tier-1{background:var(--t1b);color:var(--t1);}
+    .bm-grade-target.tier-2{background:var(--t2b);color:var(--t2);}
+    .bm-grade-target.tier-3{background:var(--t3b);color:var(--t3);}
+    .nav-link{transition:all .12s ease;}
+    .nav-link:hover{background:var(--bg3);}
+
+    /* ── Sprint 16+17 ─────────────────────────────────────────────────────── */
+
+    /* Reports */
+    .report-toolbar{display:flex;flex-wrap:wrap;gap:8px;padding:12px 0 16px;
+      border-bottom:1px solid var(--border);margin-bottom:16px;}
+    .report-output{min-height:200px;background:var(--bg2);border-radius:10px;padding:20px;}
+    .report-placeholder{text-align:center;padding:48px 0;color:var(--muted);}
+    .mtss-report{color:var(--text);font-family:var(--sans);}
+    .rpt-header h1{font-family:var(--serif);font-size:1.3rem;margin-bottom:4px;}
+    .rpt-meta{font-size:.82rem;color:var(--muted);margin-bottom:16px;}
+    .rpt-summary-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+    .rpt-stat{flex:1;min-width:80px;text-align:center;padding:12px 8px;
+      background:var(--bg3);border-radius:8px;border:1px solid var(--border);}
+    .rpt-stat-n{font-size:1.7rem;font-weight:700;}
+    .rpt-stat.t3-bg{background:var(--t3b);border-color:var(--t3d);}
+    .rpt-stat.t2-bg{background:var(--t2b);border-color:var(--t2d);}
+    .rpt-stat.t1-bg{background:var(--t1b);border-color:var(--t1d);}
+    .rpt-table{width:100%;border-collapse:collapse;font-size:.85rem;}
+    .rpt-table th{background:var(--bg4);padding:8px 12px;text-align:left;
+      font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;}
+    .rpt-table td{padding:7px 12px;border-bottom:1px solid var(--border);}
+    .rpt-table tr:hover td{background:var(--bg3);}
+    .rpt-footer{margin-top:20px;font-size:.72rem;color:var(--dim);text-align:right;}
+
+    /* Group cards */
+    .group-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+      padding:14px 16px;margin-bottom:10px;}
+    .group-card-header{font-weight:700;font-size:.9rem;margin-bottom:8px;}
+    .group-card-members{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;}
+    .group-chip{background:var(--bg4);border-radius:14px;padding:3px 10px;font-size:.8rem;}
+    .group-card-meta{font-size:.76rem;color:var(--muted);}
+
+    /* Toasts */
+    .toast{position:fixed;bottom:24px;right:24px;z-index:9999;padding:11px 18px;
+      border-radius:8px;font-size:.875rem;font-weight:500;background:var(--bg3);
+      color:var(--text);border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,.3);
+      transform:translateY(20px);opacity:0;transition:all .25s ease;pointer-events:none;}
+    .toast.toast-show{transform:translateY(0);opacity:1;}
+    .toast.toast-success{background:var(--t1b);border-color:var(--t1d);color:var(--t1);}
+    .toast.toast-error{background:var(--t3b);border-color:var(--t3d);color:var(--t3);}
+    .toast.toast-warn{background:var(--t2b);border-color:var(--t2d);color:var(--t2);}
+
+    /* AI panels */
+    .ai-panel{background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+      padding:16px;margin-top:16px;}
+    .ai-result{line-height:1.7;color:var(--text);white-space:pre-wrap;font-size:.88rem;}
+    .obs-tag{display:inline-block;background:var(--accent);color:#fff;border-radius:12px;
+      padding:2px 9px;font-size:.75rem;margin:2px;}
+    .obs-summary{font-size:.8rem;color:var(--muted);margin-top:6px;font-style:italic;}
+
+    /* Growth chart extras */
+    .mover-row{display:flex;align-items:center;gap:8px;padding:6px 0;
+      border-bottom:1px solid var(--border);}
+    .mover-name{flex:1;font-size:.88rem;}
+    .mover-wpm{font-weight:600;color:var(--accent);font-size:.88rem;}
+
+    /* Intervention summary */
+    .int-summary{font-size:.8rem;color:var(--muted);padding:4px 0;}
+
+    /* Print */
+    @media print{
+      .sidebar,.nav-sidebar,.toolbar,.report-toolbar,button,.toast{display:none!important;}
+      .report-output,.mtss-report{background:#fff!important;color:#111!important;}
+      .rpt-table th{background:#f0f0f0!important;color:#111!important;}
+    }
 </style>
   <style id="lm-toast-styles">
   @keyframes lm-fadein { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
@@ -546,7 +639,7 @@
           <li>MTSS report generation</li>
         </ul>
         <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:8px;font-size:11px;font-family:var(--mono);color:var(--dim)">
-          Version 1.0 · Sprint 16 · Built for Ms. Rowe
+          Version 1.0 · Sprint 17 · Built for Ms. Rowe
         </div>
       </div>
       <div class="card" style="margin-bottom:16px">
@@ -2708,7 +2801,20 @@ function generateHandoff() {
       return result;
     };
   });
-  // Load persisted data if app hasn't already populated students
+  
+// ── DIBELS 8 Benchmark WPM Targets ──────────────────────────────────────────
+var DIBELS8={K:{bom:0,mom:20,eoy:40},1:{bom:0,mom:23,eoy:53},2:{bom:51,mom:72,eoy:89},
+3:{bom:79,mom:93,eoy:107},4:{bom:99,mom:112,eoy:123},5:{bom:109,mom:124,eoy:139},
+6:{bom:120,mom:133,eoy:150}};
+function getDibelsTarget(grade,period){period=period||'eoy';
+var k=isNaN(parseInt(grade))?String(grade):parseInt(grade);
+return(DIBELS8[k]||{})[period]||null;}
+function dibelsColor(wpm,grade){var t=getDibelsTarget(grade,'eoy');
+if(!t||!wpm)return'';var r=wpm/t;return r>=1?'tier-1':r>=0.85?'tier-2':'tier-3';}
+function bmGradeTargetBadge(wpm,grade){var t=getDibelsTarget(grade,'eoy');if(!t)return'';
+var p=wpm?Math.round(wpm/t*100):0;var c=dibelsColor(wpm,grade);
+return'<span class="bm-grade-target '+c+'">'+(wpm?p+'% of '+t+' wpm target':t+' wpm target')+'</span>';}
+// Load persisted data if app hasn't already populated students
   if (typeof students !== 'undefined' && students.length === 0) {
     loadFromStorage();
   }
