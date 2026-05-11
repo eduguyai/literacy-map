@@ -403,7 +403,7 @@
 
     /* ── Sprint 16+17 ─────────────────────────────────────────────────────── */
 
-    /* Reports */
+    /* MTSS Reports */
     .report-toolbar{display:flex;flex-wrap:wrap;gap:8px;padding:12px 0 16px;
       border-bottom:1px solid var(--border);margin-bottom:16px;}
     .report-output{min-height:200px;background:var(--bg2);border-radius:10px;padding:20px;}
@@ -734,20 +734,20 @@
       <div style="flex: 1; overflow-y: auto;">
         <div class="sidebar-section">
           <div class="sidebar-section-title">Analysis</div>
-          <div class="sidebar-item active" data-view="overview" onclick="go('overview', this)">🏠 Overview</div>
-          <div class="sidebar-item" data-view="roster" onclick="go('roster', this)" style="justify-content:space-between">👥 Student Roster <span id="roster-badge" style="display:none;background:var(--t3);color:#fff;font-size:9px;font-weight:700;border-radius:10px;padding:2px 6px;line-height:1.4;flex-shrink:0"></span></div>
-          <div class="sidebar-item" data-view="domains" onclick="go('domains', this)">🧠 Skill Domains</div>
-          <div class="sidebar-item" data-view="growth" onclick="go('growth', this)">📈 Growth Trends</div>
-          <div class="sidebar-item" data-view="qualdata" onclick="go('qualdata', this)">🔍 Qualitative Data</div>
+          <div class="sidebar-item active" data-view="overview" onclick="go('overview', this)">◈ My Caseload</div>
+          <div class="sidebar-item" data-view="roster" onclick="go('roster', this)" style="justify-content:space-between">◫ Students <span id="roster-badge" style="display:none;background:var(--t3);color:#fff;font-size:9px;font-weight:700;border-radius:10px;padding:2px 6px;line-height:1.4;flex-shrink:0"></span></div>
+          <div class="sidebar-item" data-view="domains" onclick="go('domains', this)">◎ Reading Skills</div>
+          <div class="sidebar-item" data-view="growth" onclick="go('growth', this)">◷ Progress</div>
+          <div class="sidebar-item" data-view="qualdata" onclick="go('qualdata', this)">◑ Observations</div>
         </div>
         <div class="sidebar-section">
           <div class="sidebar-section-title">Planning</div>
-          <div class="sidebar-item" data-view="groups" onclick="go('groups', this)">🧩 Group Builder</div>
-          <div class="sidebar-item" data-view="interventions" onclick="go('interventions', this)">🎯 Interventions</div>
-          <div class="sidebar-item" data-view="assess" onclick="go('assess', this)">✏️ Record Assessment</div>
-          <div class="sidebar-item" data-view="reports" onclick="go('reports', this)">📑 Reports</div>
-          <div class="sidebar-item" data-view="import" onclick="go('import', this)">📥 Import Data</div>
-          <div class="sidebar-item" data-view="strategies" onclick="go('strategies', this)">💡 Strategies</div>
+          <div class="sidebar-item" data-view="groups" onclick="go('groups', this)">⊞ Small Groups</div>
+          <div class="sidebar-item" data-view="interventions" onclick="go('interventions', this)">◌ Intervention Log</div>
+          <div class="sidebar-item" data-view="assess" onclick="go('assess', this)">📊 Record Assessment</div>
+          <div class="sidebar-item" data-view="reports" onclick="go('reports', this)">◻ MTSS Reports</div>
+          <div class="sidebar-item" data-view="import" onclick="go('import', this)">⬆ Import</div>
+          <div class="sidebar-item" data-view="strategies" onclick="go('strategies', this)">📝 Strategy Bank</div>
           <div class="sidebar-item" data-view="settings" onclick="go('settings', this)">⚙ Settings</div>
         </div>
       </div>
@@ -770,15 +770,15 @@
       </div>
 
       <div class="content" id="contentArea">
-        <div class="view active" id="view-overview"><h2 style="margin-bottom: 24px;">Overview</h2><div id="demo-banner" style="display:none;margin-bottom:16px;padding:12px 16px;background:rgba(91,141,238,0.1);border:1px solid rgba(91,141,238,0.3);border-radius:8px;font-size:13px;color:var(--text)">📚 <strong>You're viewing demo data.</strong> Add your own students via the Roster or <a href="#" onclick="go('import',document.querySelector('[data-view=import]'));event.preventDefault()" style="color:var(--accent);text-decoration:underline">import a class list</a> to get started. <button onclick="this.parentElement.style.display='none'" style="float:right;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">✕</button></div><div id="overdue-alert" style="display:none;margin-bottom:16px;padding:12px 16px;background:var(--t3b);border:1px solid var(--t3d);border-radius:8px;font-size:13px;color:var(--t3)"></div><div class="g4" id="kpi-container"></div><div style="margin-bottom:16px;display:flex;justify-content:flex-end"><button class="btn secondary" onclick="aiCaseloadInsights()" style="padding:8px 16px">🤖 Analyze My Caseload (Claude)</button></div><div id="ai-caseload-result" style="display:none;margin-bottom:16px;padding:16px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:13px;line-height:1.8;border-left:3px solid var(--accent2)"></div><div class="g2"><div class="card"><h3>Reading Level Distribution</h3><div class="chart-container"><canvas id="c-dist"></canvas></div></div><div class="card"><h3>Skill Gaps by Domain</h3><div class="chart-container"><canvas id="c-gap"></canvas></div></div></div><div class="card"><h3>Tier Distribution</h3><div class="chart-container-wide"><canvas id="c-tier"></canvas></div></div></div>
+        <div class="view active" id="view-overview"><h2 style="margin-bottom: 24px;">My Caseload</h2><div id="demo-banner" style="display:none;margin-bottom:16px;padding:12px 16px;background:rgba(91,141,238,0.1);border:1px solid rgba(91,141,238,0.3);border-radius:8px;font-size:13px;color:var(--text)">📚 <strong>You're viewing demo data.</strong> Add your own students via the Roster or <a href="#" onclick="go('import',document.querySelector('[data-view=import]'));event.preventDefault()" style="color:var(--accent);text-decoration:underline">import a class list</a> to get started. <button onclick="this.parentElement.style.display='none'" style="float:right;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">✕</button></div><div id="overdue-alert" style="display:none;margin-bottom:16px;padding:12px 16px;background:var(--t3b);border:1px solid var(--t3d);border-radius:8px;font-size:13px;color:var(--t3)"></div><div class="g4" id="kpi-container"></div><div style="margin-bottom:16px;display:flex;justify-content:flex-end"><button class="btn secondary" onclick="aiCaseloadInsights()" style="padding:8px 16px">🤖 Analyze My Caseload (Claude)</button></div><div id="ai-caseload-result" style="display:none;margin-bottom:16px;padding:16px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:13px;line-height:1.8;border-left:3px solid var(--accent2)"></div><div class="g2"><div class="card"><h3>Reading Level Distribution</h3><div class="chart-container"><canvas id="c-dist"></canvas></div></div><div class="card"><h3>Skill Gaps by Domain</h3><div class="chart-container"><canvas id="c-gap"></canvas></div></div></div><div class="card"><h3>Tier Distribution</h3><div class="chart-container-wide"><canvas id="c-tier"></canvas></div></div></div>
 
         <div class="view" id="view-roster"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-  <h2>Student Roster</h2>
+  <h2>Students</h2>
   <button class="btn" onclick="generateHandoff()" style="display:flex;align-items:center;gap:6px">📋 Handoff Doc</button>
 </div><div class="filter-group grade-filter-row"><span style="font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap;align-self:center">GRADE:</span><button class="filter-btn grade-btn active" onclick="setGradeFilter(this,'')">All</button><button class="filter-btn grade-btn" onclick="setGradeFilter(this,1)">1st</button><button class="filter-btn grade-btn" onclick="setGradeFilter(this,2)">2nd</button><button class="filter-btn grade-btn" onclick="setGradeFilter(this,3)">3rd</button><button class="filter-btn grade-btn" onclick="setGradeFilter(this,4)">4th</button><button class="filter-btn grade-btn" onclick="setGradeFilter(this,5)">5th</button></div><div class="filter-group"><button class="filter-btn active" onclick="renderRoster('all')">All</button><button class="filter-btn" onclick="renderRoster('t3')">Tier 3 Intensive</button><button class="filter-btn" onclick="renderRoster('t2')">Tier 2 Strategic</button><button class="filter-btn" onclick="renderRoster('t1')">Tier 1 Core</button></div><button class="btn primary" onclick="openAddStudent()" style="margin-bottom: 16px;">+ Add Student</button><button class="btn export-btn" onclick="exportCSV()" style="margin-bottom:16px;margin-left:8px" title="Download roster as CSV">&#11015; Export CSV</button><button class="btn" onclick="printRoster()" style="margin-bottom:16px;margin-left:8px" title="Print roster">🖨 Print Roster</button><button class="btn" onclick="showCaseloadSummary()" style="margin-bottom:16px;margin-left:8px" title="Copy caseload summary">&#128203; Caseload Summary</button><div id="roster-stats"></div><div class="grade-filter-row" id="grade-filter-row"><span style="font-size:11px;color:var(--muted)">Grade:</span><button class="btn grade-btn" id="gf-all" onclick="setGradeFilter('')">All</button><button class="btn grade-btn" id="gf-K" onclick="setGradeFilter('K')">K</button><button class="btn grade-btn" id="gf-1" onclick="setGradeFilter('1')">1</button><button class="btn grade-btn" id="gf-2" onclick="setGradeFilter('2')">2</button><button class="btn grade-btn" id="gf-3" onclick="setGradeFilter('3')">3</button><button class="btn grade-btn" id="gf-4" onclick="setGradeFilter('4')">4</button><button class="btn grade-btn" id="gf-5" onclick="setGradeFilter('5')">5</button><button class="btn grade-btn" id="gf-6" onclick="setGradeFilter('6')">6+</button></div><div class="search-row"><input id="roster-search" class="search-input" placeholder="Search students..." oninput="S.searchQ=this.value;renderRoster()" autocomplete="off"></div><div class="g-aside"><div class="card"><table><thead><tr><th onclick="sortRoster('name')" style="cursor:pointer">Student <span id="sort-name"></span></th><th onclick="sortRoster('tier')" style="cursor:pointer">Tier <span id="sort-tier"></span></th><th>Reading Level</th><th onclick="sortRoster('fluencyWPM')" style="cursor:pointer">WPM <span id="sort-fluencyWPM"></span></th><th onclick="sortRoster('comprehension')" style="cursor:pointer">Comp % <span id="sort-comprehension"></span></th><th>Flags</th><th>Last Assessed</th><th style="width:90px">Trend</th><th style="width:44px"></th></tr></thead><tbody id="roster-tbody"></tbody></table></div><div id="detail-panel" class="detail-panel" style="display: none;"></div></div></div>
 
         <div class="view" id="view-domains">
-  <h2 style="margin-bottom:16px">Skill Domains</h2>
+  <h2 style="margin-bottom:16px">Reading Skills</h2>
   <div style="background:linear-gradient(135deg,rgba(91,141,238,0.08),rgba(167,139,250,0.08));border:1px solid rgba(91,141,238,0.2);border-radius:10px;padding:16px 20px;margin-bottom:20px">
     <div style="display:flex;align-items:start;gap:14px">
       <div style="font-size:28px;flex-shrink:0">🧠</div>
@@ -798,18 +798,18 @@
   <div class="card" id="domain-priorities-card"></div>
 </div>
 
-        <div class="view" id="view-growth"><h2 style="margin-bottom: 24px;">Growth Trends</h2><div class="g4" id="growth-kpi-container"></div><div class="g2"><div class="card"><h3>Trajectory by Tier</h3><div class="chart-container"><canvas id="c-growth"></canvas></div></div><div class="card"><h3>Top Fluency Movers</h3><div class="chart-container"><canvas id="c-movers"></canvas></div></div></div><div class="card"><h3>Growth vs. Starting Level</h3><div class="chart-container-wide"><canvas id="c-scatter"></canvas></div></div></div>
+        <div class="view" id="view-growth"><h2 style="margin-bottom: 24px;">Progress</h2><div class="g4" id="growth-kpi-container"></div><div class="g2"><div class="card"><h3>Trajectory by Tier</h3><div class="chart-container"><canvas id="c-growth"></canvas></div></div><div class="card"><h3>Top Fluency Movers</h3><div class="chart-container"><canvas id="c-movers"></canvas></div></div></div><div class="card"><h3>Growth vs. Starting Level</h3><div class="chart-container-wide"><canvas id="c-scatter"></canvas></div></div></div>
 
-        <div class="view" id="view-qualdata"><h2 style="margin-bottom: 24px;">Qualitative Data</h2><div class="g2"><div><div class="card"><label>Select Student</label><input type="text" placeholder="Search students..." id="qualdata-search" oninput="filterStudentList()"><div style="max-height: 300px; overflow-y: auto; margin-top: 8px;" id="student-list"></div></div><div class="observation-entry"><label>Add Observation</label><textarea id="obs-text" class="obs-textarea" placeholder="Document classroom observation..."></textarea><label style="margin-top: 12px;">Context</label><div class="obs-tags"><button class="obs-tag-btn" data-context="Classroom obs" onclick="toggleObsTag(this)">Classroom obs</button><button class="obs-tag-btn" data-context="Student interview" onclick="toggleObsTag(this)">Student interview</button><button class="obs-tag-btn" data-context="Parent call" onclick="toggleObsTag(this)">Parent call</button><button class="obs-tag-btn" data-context="Small group" onclick="toggleObsTag(this)">Small group</button><button class="obs-tag-btn" data-context="Assessment review" onclick="toggleObsTag(this)">Assessment review</button><button class="obs-tag-btn" data-context="Counselor note" onclick="toggleObsTag(this)">Counselor note</button></div><button class="btn primary" onclick="analyzeWithAI()" style="width: 100%; margin-top: 12px;">✨ Analyze & Tag</button><button class="btn" onclick="submitObservation()" style="width: 100%; margin-top: 8px;">📝 Add Observation</button></div></div><div><div class="card"><h3>Observation Log</h3><div class="obs-log" id="obs-log" style="min-height: 300px;"></div></div><button class="btn" onclick="exportObsLog()" style="width: 100%; margin-top: 12px;">⬇ Export Log</button></div></div></div>
+        <div class="view" id="view-qualdata"><h2 style="margin-bottom: 24px;">Observations</h2><div class="g2"><div><div class="card"><label>Select Student</label><input type="text" placeholder="Search students..." id="qualdata-search" oninput="filterStudentList()"><div style="max-height: 300px; overflow-y: auto; margin-top: 8px;" id="student-list"></div></div><div class="observation-entry"><label>Add Observation</label><textarea id="obs-text" class="obs-textarea" placeholder="Document classroom observation..."></textarea><label style="margin-top: 12px;">Context</label><div class="obs-tags"><button class="obs-tag-btn" data-context="Classroom obs" onclick="toggleObsTag(this)">Classroom obs</button><button class="obs-tag-btn" data-context="Student interview" onclick="toggleObsTag(this)">Student interview</button><button class="obs-tag-btn" data-context="Parent call" onclick="toggleObsTag(this)">Parent call</button><button class="obs-tag-btn" data-context="Small group" onclick="toggleObsTag(this)">Small group</button><button class="obs-tag-btn" data-context="Assessment review" onclick="toggleObsTag(this)">Assessment review</button><button class="obs-tag-btn" data-context="Counselor note" onclick="toggleObsTag(this)">Counselor note</button></div><button class="btn primary" onclick="analyzeWithAI()" style="width: 100%; margin-top: 12px;">✨ Analyze & Tag</button><button class="btn" onclick="submitObservation()" style="width: 100%; margin-top: 8px;">📝 Add Observation</button></div></div><div><div class="card"><h3>Observation Log</h3><div class="obs-log" id="obs-log" style="min-height: 300px;"></div></div><button class="btn" onclick="exportObsLog()" style="width: 100%; margin-top: 12px;">⬇ Export Log</button></div></div></div>
 
-        <div class="view" id="view-groups"><h2 style="margin-bottom: 16px;">Group Builder</h2><div style="display: flex; gap: 12px; margin-bottom: 16px;"><button class="btn primary" onclick="autoGenerateGroups()">🤖 Auto-Generate</button><button class="btn" onclick="exportGroups()">⬇ Export Groups</button><button class="btn danger" onclick="resetGroups()">↻ Reset</button></div><div class="g3" id="groups-container"></div></div>
+        <div class="view" id="view-groups"><h2 style="margin-bottom: 16px;">Small Groups</h2><div style="display: flex; gap: 12px; margin-bottom: 16px;"><button class="btn primary" onclick="autoGenerateGroups()">🤖 Auto-Generate</button><button class="btn" onclick="exportGroups()">⬇ Export Groups</button><button class="btn danger" onclick="resetGroups()">↻ Reset</button></div><div class="g3" id="groups-container"></div></div>
 
-        <div class="view" id="view-interventions"><h2 style="margin-bottom: 24px;">Interventions</h2><div class="g4" id="intervention-kpi-container"></div><button class="btn primary" onclick="openNewIntervention()" style="margin-bottom: 16px;">+ New Intervention</button><div id="freq-chart-section" class="freq-chart-wrap"><div style="font-weight:700;font-size:13px;margin-bottom:10px;color:var(--text)">Sessions This Month by Type</div><canvas id="freq-chart" height="180"></canvas></div>
+        <div class="view" id="view-interventions"><h2 style="margin-bottom: 24px;">Intervention Log</h2><div class="g4" id="intervention-kpi-container"></div><button class="btn primary" onclick="openNewIntervention()" style="margin-bottom: 16px;">+ New Intervention</button><div id="freq-chart-section" class="freq-chart-wrap"><div style="font-weight:700;font-size:13px;margin-bottom:10px;color:var(--text)">Sessions This Month by Type</div><canvas id="freq-chart" height="180"></canvas></div>
     <div id="interventions-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px;"></div></div>
 
-        <div class="view" id="view-reports"><h2 style="margin-bottom: 24px;">Reports</h2><div class="g2" id="reports-container"></div></div>
+        <div class="view" id="view-reports"><h2 style="margin-bottom: 24px;">MTSS Reports</h2><div class="g2" id="reports-container"></div></div>
 
-        <div class="view" id="view-import"><h2 style="margin-bottom: 24px;">Import Data</h2><div class="g2"><div><div class="card"><h3>Import Students</h3><div class="import-zone" id="import-zone" onclick="document.getElementById('file-input').click()"><div class="import-zone-text">📁 Drop CSV or Excel file here</div><div class="import-zone-hint">or click to browse</div></div><input type="file" id="file-input" accept=".csv,.xlsx,.xls" onchange="handleImportFile(this.files[0])" style="display: none;"><div id="preview-container" style="display: none; margin-top: 16px;"><label>Preview (first 5 rows)</label><table style="font-size: 11px;"><thead id="preview-head"></thead><tbody id="preview-body"></tbody></table></div><button class="btn primary" id="import-btn" onclick="applyImport()" style="width: 100%; margin-top: 16px; display: none;">✓ Import Students</button></div></div><div><div class="card"><h3>Column Mapper</h3><table id="mapper-table" style="display: none;"><thead><tr><th>File Column</th><th>Maps To</th></tr></thead><tbody id="mapper-body"></tbody></table><p id="no-file" style="color: var(--muted); font-size: 12px;">Load a file to configure column mappings</p><h3 style="margin-top: 24px;">Session Management</h3><button class="btn" onclick="downloadTemplate()" style="width: 100%; margin-bottom: 8px;">📄 Download Template</button><button class="btn" onclick="exportSessionJSON()" style="width: 100%; margin-bottom: 8px;">💾 Export JSON</button><button class="btn" onclick="importSessionJSON()" style="width: 100%; margin-bottom: 8px;">📂 Load JSON</button><button class="btn danger" onclick="hardReset()" style="width: 100%;">🗑 Hard Reset</button></div></div></div></div>
+        <div class="view" id="view-import"><h2 style="margin-bottom: 24px;">Import</h2><div class="g2"><div><div class="card"><h3>Import Students</h3><div class="import-zone" id="import-zone" onclick="document.getElementById('file-input').click()"><div class="import-zone-text">📁 Drop CSV or Excel file here</div><div class="import-zone-hint">or click to browse</div></div><input type="file" id="file-input" accept=".csv,.xlsx,.xls" onchange="handleImportFile(this.files[0])" style="display: none;"><div id="preview-container" style="display: none; margin-top: 16px;"><label>Preview (first 5 rows)</label><table style="font-size: 11px;"><thead id="preview-head"></thead><tbody id="preview-body"></tbody></table></div><button class="btn primary" id="import-btn" onclick="applyImport()" style="width: 100%; margin-top: 16px; display: none;">✓ Import Students</button></div></div><div><div class="card"><h3>Column Mapper</h3><table id="mapper-table" style="display: none;"><thead><tr><th>File Column</th><th>Maps To</th></tr></thead><tbody id="mapper-body"></tbody></table><p id="no-file" style="color: var(--muted); font-size: 12px;">Load a file to configure column mappings</p><h3 style="margin-top: 24px;">Session Management</h3><button class="btn" onclick="downloadTemplate()" style="width: 100%; margin-bottom: 8px;">📄 Download Template</button><button class="btn" onclick="exportSessionJSON()" style="width: 100%; margin-bottom: 8px;">💾 Export JSON</button><button class="btn" onclick="importSessionJSON()" style="width: 100%; margin-bottom: 8px;">📂 Load JSON</button><button class="btn danger" onclick="hardReset()" style="width: 100%;">🗑 Hard Reset</button></div></div></div></div>
 
             <div class="view" id="view-assess">
       <h2 style="margin-bottom:24px;">Record Assessment</h2>
@@ -843,7 +843,7 @@
       </div>
     </div>
 
-<div class="view" id="view-strategies"><h2 style="margin-bottom: 16px;">Strategies & Lessons</h2><div class="filter-group"><button class="filter-btn active" onclick="filterStrategies('all')">All</button><button class="filter-btn" onclick="filterStrategies('phonics')">Phonics</button><button class="filter-btn" onclick="filterStrategies('fluency')">Fluency</button><button class="filter-btn" onclick="filterStrategies('comprehension')">Comprehension</button><button class="filter-btn" onclick="filterStrategies('vocabulary')">Vocabulary</button></div><div id="strategies-container" class="g2"></div></div>
+<div class="view" id="view-strategies"><h2 style="margin-bottom: 16px;">Strategy Bank & Lessons</h2><div class="filter-group"><button class="filter-btn active" onclick="filterStrategies('all')">All</button><button class="filter-btn" onclick="filterStrategies('phonics')">Phonics</button><button class="filter-btn" onclick="filterStrategies('fluency')">Fluency</button><button class="filter-btn" onclick="filterStrategies('comprehension')">Comprehension</button><button class="filter-btn" onclick="filterStrategies('vocabulary')">Vocabulary</button></div><div id="strategies-container" class="g2"></div></div>
 
 <div class="view" id="view-settings">
   <h2 style="margin-bottom:24px;">Settings</h2>
@@ -891,7 +891,7 @@
           <li>MTSS report generation</li>
         </ul>
         <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:8px;font-size:11px;font-family:var(--mono);color:var(--dim)">
-          Version 1.0 · Sprint 22 · Built for Ms. Rowe
+          Version 1.0 · Sprint 23 · Built for Ms. Rowe
         </div>
       </div>
       <div class="card" style="margin-bottom:16px">
@@ -1228,11 +1228,11 @@ function printStudentCard(id){
   [['Reading Level',s.readingLevel||'-'],['Fluency WPM',s.fluencyWPM||'-'],['Comprehension',(s.comprehension||'-')+'%'],['Sessions Logged',sess]].forEach(function(d){
     win.document.write('<div class="cell"><div class="lbl">'+d[0]+'</div><div class="val">'+d[1]+'</div></div>');
   });
-  win.document.write('</div><h2>Skill Domains</h2>');
+  win.document.write('</div><h2>Reading Skills</h2>');
   [['Phonics',s.phonics||0],['Comprehension',s.comprehension||0],['Vocabulary',s.vocabulary||0]].forEach(function(d){
     win.document.write('<div class="br"><span style="width:100px;font-size:12px">'+d[0]+'</span><div class="bb"><div class="bf" style="width:'+Math.min(+d[1]||0,100)+'%"></div></div><span style="font-size:12px;min-width:32px;text-align:right">'+d[1]+'%</span></div>');
   });
-  if(ivs.length){win.document.write('<h2>Active Interventions</h2><ul>');ivs.forEach(function(iv){win.document.write('<li>'+iv.type+(iv.program?' — '+iv.program:'')+'</li>');});win.document.write('</ul>');}
+  if(ivs.length){win.document.write('<h2>Active Intervention Log</h2><ul>');ivs.forEach(function(iv){win.document.write('<li>'+iv.type+(iv.program?' — '+iv.program:'')+'</li>');});win.document.write('</ul>');}
   win.document.write('<div class="foot">LiteracyMap &bull; '+new Date().toLocaleDateString()+'</div></body></html>');
   win.document.close();win.print();
 }
@@ -1434,7 +1434,7 @@ function selStudent(id) {
   const bmColor = bmPct>=85?'var(--t1)':bmPct>=60?'var(--t2)':'var(--t3)';
   const bmSection = `<div class="detail-section"><div class="detail-section-title" style="display:flex;justify-content:space-between;align-items:center">Fluency vs. Benchmark<span style="font-size:11px;color:var(--muted);font-weight:400">Gr${student.grade} target: ${bm} WPM</span></div><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px"><span>${student.fluencyWPM} WPM</span><span style="color:var(--muted)">Target: ${bm} WPM</span></div><div class="score-bar"><div class="score-bar-fill" style="width:${bmPct}%;background:${bmColor}"></div></div><div style="font-size:11px;color:${bmColor};margin-top:4px;font-weight:600">${bmPct}% of grade ${student.grade} benchmark</div></div>`;
   var tierImgId=student.tier==='t3'?'photo-1503676260728-1c00da094a0b':student.tier==='t2'?'photo-1456513080510-7bf3a84b82f8':'photo-1481627834876-b7833e8f5570';
-const panelHTML = `<img class="detail-img" src="https://images.unsplash.com/${tierImgId}?auto=format&fit=crop&w=400&q=70" alt="" loading="lazy"><div class="detail-header" style="display:flex;align-items:flex-start;gap:12px"><div style="width:46px;height:46px;border-radius:50%;background:var(--t1);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;flex-shrink:0;margin-top:2px">${(student.firstName[0]||"")+(student.lastName[0]||"")}</div><div><h2 style="margin:0">${student.firstName} ${student.lastName}</h2><div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Grade ${student.grade}</div></div><div style="margin-top: 8px;"><span class="tier-badge tier-${student.tier}">Tier ${student.tier[1]}</span></div></div>${bmSection}${flagsHTML ? `<div class="detail-section"><div class="detail-section-title">Flags</div>${flagsHTML}</div>` : ''}<div class="detail-section"><div class="detail-section-title">Domain Scores</div>${domainsHTML}</div><div class="detail-section"><div class="detail-section-title">Reading Data</div><div style="font-size: 12px;"><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>Level:</span> <strong>${student.readingLevel}</strong></div><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>WPM:</span> <strong>${student.fluencyWPM}</strong></div></div></div></div></div><div class="detail-section"><div class="detail-section-title">WPM Goal Progress</div>${(()=>{var goal=student.wpmGoal||0;if(!goal)return '<div style="font-size:11px;color:var(--muted)">No WPM goal set — edit student to add one.</div>';var pct=Math.min(Math.round(student.fluencyWPM/goal*100),100);var col=pct>=100?'var(--t1)':pct>=70?'var(--t2)':'var(--t3)';return `<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px"><span>${student.fluencyWPM} WPM</span><span style="color:var(--muted)">Goal: ${goal} WPM (${pct}%)</span></div><div class="score-bar"><div class="score-bar-fill" style="width:${pct}%;background:${col}"></div></div>${(function(){var pts=S.assessments.filter(function(a){return a.studentId===student.id&&a.fluencyWPM;}).slice(-8);if(pts.length<2)return "";var wvs=pts.map(function(a){return a.fluencyWPM;});var mn=Math.min.apply(null,wvs),mx=Math.max.apply(null,wvs)||1;var W=160,H=40,pad=4;var coords=wvs.map(function(v,i){return (i/(wvs.length-1)*(W-pad*2)+pad)+","+(H-pad-(v-mn)/(mx-mn||1)*(H-pad*2));}).join(" ");return '<div style="padding:4px 0 8px"><svg width="'+W+'" height="'+H+'" style="display:block"><polyline points="'+coords+'" fill="none" stroke="var(--t1)" stroke-width="2" stroke-linejoin="round"/></svg><div style="font-size:10px;color:var(--muted);text-align:right">WPM trend (last '+wvs.length+' assessments)</div></div>';})()}`;})()}<div class="detail-section"><div class="detail-section-title">Suggested Interventions</div><div id="iv-panel-current"></div></div><div class="detail-section"><div class="detail-section-title">Notes</div><textarea id="notes-${student.id}" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;font-size:11px;resize:vertical;min-height:50px" onblur="saveStudentNotes(${student.id},this.value)">${student.notes||''}</textarea></div><div class="detail-section"><div class="detail-section-title">Recent Assessments</div><div id="assess-hist-${student.id}">${(function(){var aList=S.assessments.filter(function(a){return a.studentId===student.id;}).slice(-3).reverse();if(!aList.length)return'<em style="opacity:.6">No assessments logged.</em>';return aList.map(function(a){return'<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>'+a.date+'</span><span>WPM:'+(a.fluencyWPM||'–')+' | Comp:'+(a.comprehension||'–')+ '%</span></div>';}).join('');})()}</div></div></div><div class="detail-section"><div class="detail-section-title" style="display:flex;justify-content:space-between;align-items:center">Session Log <div style="display:flex;gap:5px"><button class="btn log-session-btn" style="font-size:11px;padding:4px 10px" onclick="openLogSession('${student.id}')">+ Log Session</button><button class="btn" style="font-size:11px;padding:4px 10px" onclick="exportStudentSessionLog('${student.id}')">&#8595; Export</button></div></div><div id="session-log-${student.id}">${renderSessionsForStudent(student.id)}</div></div><div class="detail-section"><button class="btn primary" onclick="openPlan(${student.id})" style="width: 100%; padding: 10px; margin-bottom: 8px;">📋 View Full Profile</button><button class="btn" onclick="editStudent(${student.id})" style="width: 100%; padding: 10px; margin-bottom: 8px;">✏ Edit Student</button><button class="btn" onclick="printStudentCard(${student.id})" style="width:100%;padding:10px;margin-bottom:8px;">🖨 Print Report</button><button class="btn danger" onclick="deleteStudent(${student.id})" style="width: 100%; padding: 10px;">🗑 Remove from Caseload</button></div>`;
+const panelHTML = `<img class="detail-img" src="https://images.unsplash.com/${tierImgId}?auto=format&fit=crop&w=400&q=70" alt="" loading="lazy"><div class="detail-header" style="display:flex;align-items:flex-start;gap:12px"><div style="width:46px;height:46px;border-radius:50%;background:var(--t1);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;flex-shrink:0;margin-top:2px">${(student.firstName[0]||"")+(student.lastName[0]||"")}</div><div><h2 style="margin:0">${student.firstName} ${student.lastName}</h2><div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Grade ${student.grade}</div></div><div style="margin-top: 8px;"><span class="tier-badge tier-${student.tier}">Tier ${student.tier[1]}</span></div></div>${bmSection}${flagsHTML ? `<div class="detail-section"><div class="detail-section-title">Flags</div>${flagsHTML}</div>` : ''}<div class="detail-section"><div class="detail-section-title">Domain Scores</div>${domainsHTML}</div><div class="detail-section"><div class="detail-section-title">Reading Data</div><div style="font-size: 12px;"><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>Level:</span> <strong>${student.readingLevel}</strong></div><div style="display: flex; justify-content: space-between; margin: 4px 0;"><span>WPM:</span> <strong>${student.fluencyWPM}</strong></div></div></div></div></div><div class="detail-section"><div class="detail-section-title">WPM Goal Progress</div>${(()=>{var goal=student.wpmGoal||0;if(!goal)return '<div style="font-size:11px;color:var(--muted)">No WPM goal set — edit student to add one.</div>';var pct=Math.min(Math.round(student.fluencyWPM/goal*100),100);var col=pct>=100?'var(--t1)':pct>=70?'var(--t2)':'var(--t3)';return `<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px"><span>${student.fluencyWPM} WPM</span><span style="color:var(--muted)">Goal: ${goal} WPM (${pct}%)</span></div><div class="score-bar"><div class="score-bar-fill" style="width:${pct}%;background:${col}"></div></div>${(function(){var pts=S.assessments.filter(function(a){return a.studentId===student.id&&a.fluencyWPM;}).slice(-8);if(pts.length<2)return "";var wvs=pts.map(function(a){return a.fluencyWPM;});var mn=Math.min.apply(null,wvs),mx=Math.max.apply(null,wvs)||1;var W=160,H=40,pad=4;var coords=wvs.map(function(v,i){return (i/(wvs.length-1)*(W-pad*2)+pad)+","+(H-pad-(v-mn)/(mx-mn||1)*(H-pad*2));}).join(" ");return '<div style="padding:4px 0 8px"><svg width="'+W+'" height="'+H+'" style="display:block"><polyline points="'+coords+'" fill="none" stroke="var(--t1)" stroke-width="2" stroke-linejoin="round"/></svg><div style="font-size:10px;color:var(--muted);text-align:right">WPM trend (last '+wvs.length+' assessments)</div></div>';})()}`;})()}<div class="detail-section"><div class="detail-section-title">Suggested Intervention Log</div><div id="iv-panel-current"></div></div><div class="detail-section"><div class="detail-section-title">Notes</div><textarea id="notes-${student.id}" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px;font-size:11px;resize:vertical;min-height:50px" onblur="saveStudentNotes(${student.id},this.value)">${student.notes||''}</textarea></div><div class="detail-section"><div class="detail-section-title">Recent Assessments</div><div id="assess-hist-${student.id}">${(function(){var aList=S.assessments.filter(function(a){return a.studentId===student.id;}).slice(-3).reverse();if(!aList.length)return'<em style="opacity:.6">No assessments logged.</em>';return aList.map(function(a){return'<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>'+a.date+'</span><span>WPM:'+(a.fluencyWPM||'–')+' | Comp:'+(a.comprehension||'–')+ '%</span></div>';}).join('');})()}</div></div></div><div class="detail-section"><div class="detail-section-title" style="display:flex;justify-content:space-between;align-items:center">Session Log <div style="display:flex;gap:5px"><button class="btn log-session-btn" style="font-size:11px;padding:4px 10px" onclick="openLogSession('${student.id}')">+ Log Session</button><button class="btn" style="font-size:11px;padding:4px 10px" onclick="exportStudentSessionLog('${student.id}')">&#8595; Export</button></div></div><div id="session-log-${student.id}">${renderSessionsForStudent(student.id)}</div></div><div class="detail-section"><button class="btn primary" onclick="openPlan(${student.id})" style="width: 100%; padding: 10px; margin-bottom: 8px;">📋 View Full Profile</button><button class="btn" onclick="editStudent(${student.id})" style="width: 100%; padding: 10px; margin-bottom: 8px;">✏ Edit Student</button><button class="btn" onclick="printStudentCard(${student.id})" style="width:100%;padding:10px;margin-bottom:8px;">🖨 Print Report</button><button class="btn danger" onclick="deleteStudent(${student.id})" style="width: 100%; padding: 10px;">🗑 Remove from Caseload</button></div>`;
   panel.innerHTML = panelHTML;
   panel.style.display = 'block';
   var ivP = document.getElementById('iv-panel-current');
@@ -1919,7 +1919,7 @@ function selectQualStudent(id) {
 
 function toggleObsTag(btn) { btn.classList.toggle('selected'); }
 
-/* === AI ANALYSIS === */
+/* === AI MY STUDENTS === */
 async function analyzeWithAI() {
   const text = document.getElementById('obs-text').value;
   if (!text) { toast('Write an observation first', 'var(--t3)'); return; }
@@ -2058,7 +2058,7 @@ function renderInterventions() {
   const activeInts = S.interventions.filter(i => i.status === 'Active');
   const studentsServed = new Set(S.groups.filter(g => activeInts.some(i => i.groupName === g.name)).flatMap(g => g.students)).size || (S.students.filter(s=>s.tier==='t3').length + S.students.filter(s=>s.tier==='t2').length);
   const weeksLeft = activeInts.reduce((sum,i) => sum + Math.max(0, i.totalWeeks - i.weekNumber), 0);
-  const kpiHTML = `<div class="card card-kpi"><div class="kpi-label">Active Interventions</div><div class="kpi-value">${activeInts.length}</div></div><div class="card card-kpi"><div class="kpi-label">Students Served</div><div class="kpi-value" style="color:var(--accent2)">${studentsServed}</div></div><div class="card card-kpi"><div class="kpi-label">Tier 3 Intensive</div><div class="kpi-value" style="color:var(--t3)">${S.students.filter(s=>s.tier==='t3').length}</div></div><div class="card card-kpi"><div class="kpi-label">Weeks Remaining</div><div class="kpi-value" style="color:var(--t2)">${weeksLeft||'—'}</div></div>`;
+  const kpiHTML = `<div class="card card-kpi"><div class="kpi-label">Active Intervention Log</div><div class="kpi-value">${activeInts.length}</div></div><div class="card card-kpi"><div class="kpi-label">Students Served</div><div class="kpi-value" style="color:var(--accent2)">${studentsServed}</div></div><div class="card card-kpi"><div class="kpi-label">Tier 3 Intensive</div><div class="kpi-value" style="color:var(--t3)">${S.students.filter(s=>s.tier==='t3').length}</div></div><div class="card card-kpi"><div class="kpi-label">Weeks Remaining</div><div class="kpi-value" style="color:var(--t2)">${weeksLeft||'—'}</div></div>`;
   document.getElementById('intervention-kpi-container').innerHTML = kpiHTML;
   const interventionCards = (S.interventions || []).map(i => {
     const progress = Math.floor((i.weekNumber / i.totalWeeks) * 100);
@@ -2122,7 +2122,7 @@ function viewIntervention(id) {
     <div style="font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:6px">Progress Bar</div>
     <div class="score-bar" style="height:8px;margin-bottom:16px"><div class="score-bar-fill" style="width:${progress}%;background:var(--t1)"></div></div>
     <div style="font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:8px">Students in Group</div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">${students.length ? students.map(s => `<div style="padding:6px 10px;background:var(--bg3);border-radius:6px;font-size:12px"><strong>${s.firstName} ${s.lastName}</strong> <span class="tier-badge tier-${s.tier}" style="margin-left:4px">T${s.tier[1]}</span></div>`).join('') : '<span style="color:var(--muted);font-size:12px">No students linked — create a group in Group Builder and assign it here.</span>'}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">${students.length ? students.map(s => `<div style="padding:6px 10px;background:var(--bg3);border-radius:6px;font-size:12px"><strong>${s.firstName} ${s.lastName}</strong> <span class="tier-badge tier-${s.tier}" style="margin-left:4px">T${s.tier[1]}</span></div>`).join('') : '<span style="color:var(--muted);font-size:12px">No students linked — create a group in Small Groups and assign it here.</span>'}</div>
     ${inv.weekNumber < inv.totalWeeks
       ? `<button class="btn primary" onclick="updateProgress(${id});closeModal('planModal')" style="width:100%;padding:10px">⚡ Advance to Week ${inv.weekNumber + 1}</button>`
       : `<div style="text-align:center;padding:12px;background:var(--t1b);border-radius:8px;color:var(--t1);font-weight:600">✓ Intervention Complete — ${inv.totalWeeks} weeks</div>`}
@@ -2195,7 +2195,7 @@ function generateReport(type) {
       text += '\n';
     });
   } else if (type === 'skillgap') {
-    text = `SKILL GAP ANALYSIS\n${header}`;
+    text = `SKILL GAP MY STUDENTS\n${header}`;
     const domains = ['phonics','fluency','comprehension','vocabulary'];
     const labels = { phonics:'Phonics & Decoding', fluency:'Reading Fluency', comprehension:'Comprehension', vocabulary:'Vocabulary' };
     text += `CLASS-WIDE AVERAGES\n`;
@@ -2578,10 +2578,10 @@ function openPlan(studentId) {
     </div>` : `<div style="padding:12px;background:var(--bg3);border-radius:8px;font-size:12px;color:var(--muted);margin-bottom:16px;text-align:center">📊 Record 2+ assessments to see progress charts</div>`}
     <div style="font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)">Assessment History</div>
     <table style="font-size:12px;margin-bottom:16px"><thead><tr><th>Date</th><th>Level</th><th>WPM</th><th>Comp%</th><th>Phonics%</th></tr></thead><tbody>${assessTableRows}</tbody></table>
-    <div style="font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">Active Interventions</div>
+    <div style="font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">Active Intervention Log</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:16px">${activeInts.length ? activeInts.map(i=>`• ${i.programName||i.name} — Week ${i.weekNumber}/${i.totalWeeks} (${i.status})`).join('<br>') : 'No active interventions assigned.'}</p>
     <div style="display:flex;gap:8px">
-      <button class="btn primary" onclick="S._pendingAssessId=${studentId};go('assess',document.querySelector('[data-view=assess]'));closeModal('planModal')" style="flex:1">✏️ Record Assessment</button>
+      <button class="btn primary" onclick="S._pendingAssessId=${studentId};go('assess',document.querySelector('[data-view=assess]'));closeModal('planModal')" style="flex:1">📊 Assess</button>
       <button class="btn" onclick="go('qualdata',document.querySelector('[data-view=qualdata]'));S.selectedStudent=S.students.find(s=>s.id==${studentId});renderQualdata();closeModal('planModal')" style="flex:1">◑ Add Observation</button>
     </div>
     <div style="display:flex;gap:8px;margin-top:8px">
@@ -3179,7 +3179,7 @@ function generateHandoffDoc(studentId) {
     +'<tr><td><b>Tier</b></td><td>Tier '+(s.tier||'—')+'</td><td><b>Reading Level</b></td><td>'+(s.level||s.readingLevel||'—')+'</td></tr>'
     +'<tr><td><b>Fluency (WPM)</b></td><td>'+(s.wpm||s.fluencyWPM||'—')+'</td><td><b>Comprehension</b></td><td>'+(s.comp||s.comprehension||'—')+'%</td></tr>'
     +'</table>'
-    +'<h3 style="margin-top:20px">Current Interventions</h3>'
+    +'<h3 style="margin-top:20px">Current Intervention Log</h3>'
     +'<p>'+(s.interventions||s.notes||'No interventions recorded.')+'</p>'
     +'<h3>Recommendations for Receiving Teacher</h3>'
     +'<ul><li>Continue current '+(s.tier==3?'intensive':'strategic')+' intervention support</li>'
@@ -4236,7 +4236,7 @@ function showCoachingPanel(sid, sname) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 5. ANONYMIZED AI CASELOAD ANALYSIS
+// 5. ANONYMIZED AI CASELOAD MY STUDENTS
 // ─────────────────────────────────────────────────────────────────────────────
 
 function analyzeCaseloadAnonymized(btnEl) {
@@ -4834,100 +4834,144 @@ function s21InitAllPages() {
 })();
 
 // ══════════════════════════════════════════════════════════════════════════════
-// Sprint 22: Semantic Nav Icons  (id: s22-nav-icons)
-// Walks the live DOM and replaces nav icons that regex missed.
+// Sprint 23: Nav Page Renames  (id: s23-renames)
+// DOM-level renaming for dynamically built nav items.
 // ══════════════════════════════════════════════════════════════════════════════
 (function() {
-  var NAV_MAP = {
-    'Overview':          '🏠',
-    'Student Roster':    '👥',
-    'Skill Domains':     '🧠',
-    'Growth Trends':     '📈',
-    'Qualitative Data':  '🔍',
-    'Group Builder':     '🧩',
-    'Interventions':     '🎯',
-    'Record Assessment': '✏️',
-    'Reports':           '📑',
-    'Import Data':       '📥',
-    'Strategies':        '💡'
+  var RENAMES = {
+    'Overview':          'My Caseload',
+    'Student Roster':    'Students',
+    'Skill Domains':     'Reading Skills',
+    'Growth Trends':     'Progress',
+    'Qualitative Data':  'Observations',
+    'Group Builder':     'Small Groups',
+    'Interventions':     'Intervention Log',
+    'Record Assessment': 'Assess',
+    'Reports':           'MTSS Reports',
+    'Import Data':       'Import',
+    'Strategies':        'Strategy Bank'
   };
 
-  function applyNavIcons() {
-    // Selectors that typically cover nav items
-    var selectors = [
-      '.nav-link', '.sidebar-link', '.nav-item',
-      '[onclick*="showPage"]', '[data-page]',
-      'nav a', 'nav button', 'nav li',
-      '.sidebar a', '.sidebar button', '.sidebar li'
+  var SECTION_RENAMES = {
+    'ANALYSIS': 'MY STUDENTS',
+    'PLANNING': 'TAKE ACTION'
+  };
+
+  function renameNode(node) {
+    if (node.nodeType !== 3) return; // text nodes only
+    var t = node.textContent;
+    var changed = false;
+
+    // Page label renames
+    Object.keys(RENAMES).forEach(function(old) {
+      if (t.indexOf(old) !== -1) {
+        t = t.replace(new RegExp(old.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g'), RENAMES[old]);
+        changed = true;
+      }
+    });
+
+    // Section header renames
+    Object.keys(SECTION_RENAMES).forEach(function(old) {
+      var trimmed = t.trim();
+      if (trimmed === old || trimmed.indexOf(old) !== -1) {
+        t = t.replace(new RegExp('\\b' + old + '\\b', 'g'), SECTION_RENAMES[old]);
+        changed = true;
+      }
+    });
+
+    if (changed) node.textContent = t;
+  }
+
+  function renameAllNavText() {
+    // Target nav containers specifically to avoid touching page content
+    var navSelectors = [
+      'nav', '.sidebar', '.nav-sidebar', '.side-nav',
+      '[class*="nav"]', '[class*="sidebar"]', '[class*="menu"]',
+      '.nav-link', '.sidebar-link', '[onclick*="showPage"]', '[data-page]'
     ];
-    var seen = new Set();
 
-    selectors.forEach(function(sel) {
+    var processed = new Set();
+
+    navSelectors.forEach(function(sel) {
       document.querySelectorAll(sel).forEach(function(el) {
-        if (seen.has(el)) return;
-        var rawText = el.textContent || '';
-
-        Object.keys(NAV_MAP).forEach(function(label) {
-          // Only process if the label text is present
-          if (rawText.indexOf(label) === -1) return;
-
-          var newIcon = NAV_MAP[label];
-
-          // Case 1: element contains an SVG icon → remove SVGs, prepend emoji
-          var svgs = el.querySelectorAll('svg');
-          if (svgs.length) {
-            svgs.forEach(function(s) { s.remove(); });
-            // Find or create a text node for the label
-            var labelNode = null;
-            el.childNodes.forEach(function(n) {
-              if (n.nodeType === 3 && n.textContent.indexOf(label) !== -1) labelNode = n;
-            });
-            if (labelNode) {
-              labelNode.textContent = ' ' + label;
-              el.insertBefore(document.createTextNode(newIcon), el.firstChild);
-            } else {
-              el.insertBefore(document.createTextNode(newIcon + ' '), el.firstChild);
-            }
-            seen.add(el);
-            return;
+        // Walk all text nodes within this element
+        var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+        var node;
+        while ((node = walker.nextNode())) {
+          if (!processed.has(node)) {
+            renameNode(node);
+            processed.add(node);
           }
+        }
+      });
+    });
 
-          // Case 2: element has icon characters before the label in text nodes
-          el.childNodes.forEach(function(node) {
-            if (node.nodeType !== 3) return;
-            var t = node.textContent;
-            // If this text node contains the label, strip any leading non-word chars
-            if (t.indexOf(label) !== -1) {
-              // Replace everything before the label (icons, symbols, spaces) with emoji + space
-              node.textContent = t.replace(/^[\s\S]*?(?=\w)/, newIcon + ' ');
-              seen.add(el);
-            }
-          });
+    // Also update document title if it contains old names
+    if (document.title) {
+      Object.keys(RENAMES).forEach(function(old) {
+        document.title = document.title.replace(new RegExp(old, 'g'), RENAMES[old]);
+      });
+    }
+  }
 
-          // Case 3: icon is in a child span/i element
-          el.querySelectorAll('span,i').forEach(function(child) {
-            var ct = child.textContent.trim();
-            // If child has only symbol/icon chars (not the label itself)
-            if (ct && ct.indexOf(label) === -1 && ct.length <= 4) {
-              child.textContent = newIcon;
-              seen.add(el);
-            }
-          });
-        });
+  // Also update the S21 page hero titles (they reference old names)
+  function renameHeroTitles() {
+    document.querySelectorAll('.s21-hero-title, .s21-hero-sub, .s20-hero-title').forEach(function(el) {
+      Object.keys(RENAMES).forEach(function(old) {
+        if (el.textContent.indexOf(old) !== -1) {
+          el.innerHTML = el.innerHTML.replace(
+            new RegExp(old.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g'),
+            RENAMES[old]
+          );
+        }
       });
     });
   }
 
-  // Run on load and after a short delay (for apps that build nav dynamically)
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      applyNavIcons();
-      setTimeout(applyNavIcons, 600);
-    });
-  } else {
-    applyNavIcons();
-    setTimeout(applyNavIcons, 600);
+  // Update S21 page hero configs so future navigation uses new names
+  if (typeof S21_PAGES !== 'undefined') {
+    if (S21_PAGES.roster)   S21_PAGES.roster.title   = 'Students';
+    if (S21_PAGES.bm)       S21_PAGES.bm.title       = 'Progress';
+    if (S21_PAGES.benchmark)S21_PAGES.benchmark.title = 'Progress';
+    if (S21_PAGES.reports)  S21_PAGES.reports.title   = 'MTSS Reports';
+    if (S21_PAGES.groups)   S21_PAGES.groups.title    = 'Small Groups';
+    if (S21_PAGES.settings) S21_PAGES.settings.title  = 'Settings & Privacy';
+    if (S21_PAGES.observations) S21_PAGES.observations.title = 'Observations';
   }
+
+  // Boot: run on load + small delay for dynamic nav builds
+  function init() {
+    renameAllNavText();
+    renameHeroTitles();
+    setTimeout(function() {
+      renameAllNavText();
+      renameHeroTitles();
+    }, 800);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  // Watch for nav re-renders (e.g. after showPage() rebuilds the sidebar)
+  var _renameObserver = new MutationObserver(function(mutations) {
+    var shouldRename = mutations.some(function(m) {
+      return m.target.closest && (
+        m.target.closest('nav') ||
+        m.target.closest('.sidebar') ||
+        m.target.closest('[class*="nav"]')
+      );
+    });
+    if (shouldRename) {
+      clearTimeout(_renameObserver._timer);
+      _renameObserver._timer = setTimeout(renameAllNavText, 100);
+    }
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    _renameObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+  });
 })();
 </script>
 
