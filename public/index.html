@@ -726,6 +726,40 @@
   .lm-toast-info { background:#3b82f6; } .lm-toast-success { background:#10b981; }
   .lm-toast-error { background:#ef4444; } .lm-toast-warn { background:#f59e0b; }
   </style>
+<style id="s24-literary-imagery">
+/* Sprint 24: Literary background imagery — CSS only, no JS */
+:root {
+  --s24-lib:   url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1400&q=75&auto=format&fit=crop');
+  --s24-books: url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1400&q=75&auto=format&fit=crop');
+  --s24-open:  url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1400&q=75&auto=format&fit=crop');
+  --s24-child: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1400&q=75&auto=format&fit=crop');
+  --s24-abc:   url('https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=1400&q=75&auto=format&fit=crop');
+  --s24-rays:  url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=1400&q=75&auto=format&fit=crop');
+  --s24-teach: url('https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=1400&q=75&auto=format&fit=crop');
+  --s24-grp:   url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1400&q=75&auto=format&fit=crop');
+  --s24-tutor: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1400&q=75&auto=format&fit=crop');
+  --s24-pen:   url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=75&auto=format&fit=crop');
+  --s24-data:  url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1400&q=75&auto=format&fit=crop');
+  --s24-cat:   url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1400&q=75&auto=format&fit=crop');
+  --s24-shelf: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1400&q=75&auto=format&fit=crop');
+  --s24-vtg:   url('https://images.unsplash.com/photo-1568667256549-094345857637?w=1400&q=75&auto=format&fit=crop');
+}
+.s20-hero{background-image:var(--s24-lib)!important;background-size:cover!important;background-position:center 30%!important}
+.s21-hero-roster,.s21-hero-overview{background-image:var(--s24-child);background-position:center 35%}
+.s21-hero-bm,.s21-hero-progress{background-image:var(--s24-open);background-position:center 50%}
+.s21-hero-reports{background-image:var(--s24-data);background-position:center 40%}
+.s21-hero-groups{background-image:var(--s24-grp);background-position:center 35%}
+.s21-hero-settings{background-image:var(--s24-shelf);background-position:center 60%}
+.s21-hero-observations{background-image:var(--s24-teach);background-position:center 30%}
+.s21-hero-skills{background-image:var(--s24-abc);background-position:center 50%}
+.s21-hero-import{background-image:var(--s24-cat);background-position:center 40%}
+.s21-hero-strategies{background-image:var(--s24-shelf);background-position:center 50%}
+.s21-hero-interventions{background-image:var(--s24-tutor);background-position:center 30%}
+.s21-hero-assess{background-image:var(--s24-pen);background-position:center 50%}
+[class^="s21-hero-"],[class*=" s21-hero-"]{background-size:cover!important;background-repeat:no-repeat}
+.s20-stat-card{position:relative;overflow:hidden}
+.s20-stat-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(to right,#f87171,#fb923c,#fbbf24,#4ade80,#60a5fa,#a78bfa,#f472b6);border-radius:0 0 10px 10px}
+</style>
 </head>
 <body>
   <div class="container">
@@ -3212,492 +3246,6 @@ function printCurrentReport() {
     +'.rpt-footer{margin-top:24px;font-size:.75rem;color:#999;text-align:center}'
     +'@media print{body{padding:0}}'
     +'
-/* ══════════════════════════════════════════════════════════════════════════
-   Sprint 24: Literary Background Imagery — CSS ONLY (id: s24-literary-imagery)
-   No JavaScript. Images applied via class selectors only.
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* ── Image variables ────────────────────────────────────────────────────── */
-:root {
-  --s24-library-hall:    url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1400&q=75&auto=format&fit=crop');
-  --s24-books-stacked:   url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1400&q=75&auto=format&fit=crop');
-  --s24-open-book:       url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1400&q=75&auto=format&fit=crop');
-  --s24-child-reading:   url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1400&q=75&auto=format&fit=crop');
-  --s24-alphabet:        url('https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=1400&q=75&auto=format&fit=crop');
-  --s24-light-rays:      url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=1400&q=75&auto=format&fit=crop');
-  --s24-teacher:         url('https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=1400&q=75&auto=format&fit=crop');
-  --s24-group-read:      url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1400&q=75&auto=format&fit=crop');
-  --s24-tutoring:        url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1400&q=75&auto=format&fit=crop');
-  --s24-pencil:          url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&q=75&auto=format&fit=crop');
-  --s24-data:            url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1400&q=75&auto=format&fit=crop');
-  --s24-catalogue:       url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1400&q=75&auto=format&fit=crop');
-  --s24-bookshelves:     url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1400&q=75&auto=format&fit=crop');
-  --s24-vintage:         url('https://images.unsplash.com/photo-1568667256549-094345857637?w=1400&q=75&auto=format&fit=crop');
-  --s24-reading-chair:   url('https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1400&q=75&auto=format&fit=crop');
-}
-
-/* ── Overview hero / summary card ───────────────────────────────────────── */
-.s20-hero {
-  background-image:    var(--s24-library-hall) !important;
-  background-size:     cover !important;
-  background-position: center 30% !important;
-}
-
-/* ── Per-page S21 hero backgrounds ──────────────────────────────────────── */
-.s21-hero-roster,
-.s21-hero-overview     { background-image: var(--s24-child-reading);   background-position: center 35%; }
-.s21-hero-bm,
-.s21-hero-progress     { background-image: var(--s24-open-book);       background-position: center 50%; }
-.s21-hero-reports      { background-image: var(--s24-data);            background-position: center 40%; }
-.s21-hero-groups       { background-image: var(--s24-group-read);      background-position: center 35%; }
-.s21-hero-settings     { background-image: var(--s24-bookshelves);     background-position: center 60%; }
-.s21-hero-observations { background-image: var(--s24-teacher);         background-position: center 30%; }
-.s21-hero-skills       { background-image: var(--s24-alphabet);        background-position: center 50%; }
-.s21-hero-import       { background-image: var(--s24-catalogue);       background-position: center 40%; }
-.s21-hero-strategies   { background-image: var(--s24-bookshelves);     background-position: center 50%; }
-.s21-hero-interventions{ background-image: var(--s24-tutoring);        background-position: center 30%; }
-.s21-hero-assess       { background-image: var(--s24-pencil);          background-position: center 50%; }
-
-[class^="s21-hero-"], [class*=" s21-hero-"] {
-  background-size:     cover !important;
-  background-repeat:   no-repeat;
-}
-
-/* ── Stat cards — book-spine accent bar via ::after ──────────────────────── */
-.s20-stat-card {
-  position: relative;
-  overflow: hidden;
-}
-.s20-stat-card::before {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 4px;
-  background: linear-gradient(to right,
-    #f87171, #fb923c, #fbbf24, #4ade80, #60a5fa, #a78bfa, #f472b6);
-  border-radius: 0 0 10px 10px;
-}
-
-/* ── Sidebar faint book watermark ────────────────────────────────────────── */
-nav::after,
-.sidebar::after,
-[class*="sidebar"]::after {
-  content: '';
-  position: absolute;
-  bottom: 70px; left: 0;
-  width: 100%; height: 180px;
-  background-image: var(--s24-books-stacked);
-  background-size: cover;
-  background-position: center;
-  opacity: 0.035;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ── Literacy image ribbon — shown on overview page ──────────────────────── */
-/* Injected into #page-overview via a :has() selector where supported,
-   otherwise it will be positioned with the mosaic strip JS adds later */
-
-/* ── Reading quote strip — subtle background on the page header area ─────── */
-#page-overview > h1,
-#page-overview > h2,
-.page-header {
-  position: relative;
-}
-</style></head><body>'+window._lastReportHTML+'</body></html>');
-  w.document.close();
-  setTimeout(function(){ w.print(); }, 400);
-}
-
-function downloadReportHTML() {
-  if (!window._lastReportHTML) { showToast('Generate a report first', 'warn'); return; }
-  var blob = new Blob(['<!DOCTYPE html><html><head><title>'+(window._lastReportTitle||'Report')
-    +'</title><style>body{font-family:sans-serif;padding:24px;color:#111}'
-    +'.rpt-table{width:100%;border-collapse:collapse}.rpt-table th,.rpt-table td{border:1px solid #ccc;padding:6px 10px}'
-    +'.rpt-table thead{background:#f0f0f0}.rpt-stat{display:inline-block;padding:8px 16px;border:1px solid #ccc;margin:4px;border-radius:6px}'
-    +'
-/* ══════════════════════════════════════════════════════════════════════════
-
-function getApiKey(){return(typeof S!=='undefined'&&S.settings&&S.settings.apiKey)||localStorage.getItem('lm_apiKey')||'';}
-async function analyzeWithClaude(prompt,outputElId,btnEl){
-  var key=getApiKey();
-  if(!key){showToast('Add your Anthropic API key in Settings first','warn');return;}
-  if(btnEl){btnEl.disabled=true;btnEl.dataset.origText=btnEl.dataset.origText||btnEl.textContent;btnEl.textContent='Analyzing…';}
-  try{
-    var resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
-      headers:{'x-api-key':key,'anthropic-version':'2023-06-01','content-type':'application/json',
-               'anthropic-dangerous-direct-browser-calls':'true'},
-      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1024,
-        messages:[{role:'user',content:prompt}]})});
-    if(!resp.ok){var err=await resp.json();throw new Error(err.error&&err.error.message||resp.status);}
-    var data=await resp.json();
-    var text=data.content&&data.content[0]&&data.content[0].text||'No response.';
-    var out=outputElId?document.getElementById(outputElId):null;
-    if(out){out.innerHTML='<div class="ai-result">'+text.replace(/\n/g,'<br>')+'</div>';}
-    return text;
-  }catch(e){showToast('Claude API error: '+e.message,'error');return null;}
-  finally{if(btnEl){btnEl.disabled=false;btnEl.textContent=btnEl.dataset.origText||'🤖 Analyze';}}
-}
-function analyzeCaseload(btnEl){
-  var all=getStudents();if(!all.length){showToast('No student data','warn');return;}
-  var summary=all.map(function(s){return(s.name||'?')+': Grade '+(s.grade||'?')+', Tier '+(s.tier||'?')+', WPM '+(s.wpm||'?');}).join('\n');
-  var prompt='You are a reading specialist. Analyze this caseload and provide: 1) Key patterns, 2) Priority students, 3) Recommended groupings, 4) Focus areas for next 4 weeks.\n\n'+summary;
-  analyzeWithClaude(prompt,'claude-analysis-output',btnEl);
-}
-function logInterventionSession(studentId,programName,minutes,notes){
-  var session={id:Date.now(),studentId:studentId,program:programName||'',minutes:parseInt(minutes)||20,
-    notes:notes||'',date:new Date().toISOString(),month:new Date().toISOString().slice(0,7)};
-  var key='lm_int_'+studentId;
-  var existing=JSON.parse(localStorage.getItem(key)||'[]');
-  existing.push(session);localStorage.setItem(key,JSON.stringify(existing));
-  showToast('Session logged: '+session.minutes+' min','success');return session;
-}
-
-
-// ══════════════════════════════════════════════════════════════
-// Sprint 18 Fix: CSV export, settings, search, assessment tracker,
-//               quick-log, observations, dashboard ribbon
-// ══════════════════════════════════════════════════════════════
-
-// ── Utilities ────────────────────────────────────────────────────────────────
-function _esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
-function recordAssessmentDate(sid){localStorage.setItem('lm_assess_'+sid,new Date().toISOString());}
-function getLastAssessedDate(sid){
-  var r=localStorage.getItem('lm_assess_'+sid);
-  return r?new Date(r).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';
-}
-function daysSinceAssessed(sid){
-  var r=localStorage.getItem('lm_assess_'+sid);
-  if(!r)return null;
-  return Math.floor((Date.now()-new Date(r).getTime())/(1000*60*60*24));
-}
-function assessedBadge(sid){
-  var d=daysSinceAssessed(sid);
-  if(d===null)return '<span class="assess-badge assess-never">Not assessed</span>';
-  if(d<=7)return '<span class="assess-badge assess-recent">'+d+'d ago</span>';
-  if(d<=21)return '<span class="assess-badge assess-ok">'+d+'d ago</span>';
-  return '<span class="assess-badge assess-overdue">'+d+'d ago</span>';
-}
-function getMonthlyInterventionMins(sid){
-  var sessions=JSON.parse(localStorage.getItem('lm_int_'+sid)||'[]');
-  var m=new Date().toISOString().slice(0,7);
-  return sessions.filter(function(s){return s.month===m;}).reduce(function(a,s){return a+s.minutes;},0);
-}
-
-// ── CSV Export ────────────────────────────────────────────────────────────────
-function exportRosterCSV(){
-  var all=getStudents();
-  if(!all.length){showToast('No students to export','warn');return;}
-  var hdr=['Name','Grade','Tier','Level','WPM','Comp%','Last Assessed','Int. Min/Month','Notes'];
-  var rows=all.map(function(s){
-    var sid=s.id||s.name||'';
-    return[s.name||'',s.grade||s.Grade||'',s.tier||s.Tier||'',
-      s.level||s.readingLevel||'',s.wpm||s.WPM||'',s.comp||'',
-      getLastAssessedDate(sid),getMonthlyInterventionMins(sid),
-      (s.notes||'').replace(/,/g,';')
-    ].map(function(v){return'"'+String(v).replace(/"/g,'""')+'"';}).join(',');
-  });
-  var csv=[hdr.join(',')].concat(rows).join('\n');
-  var a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download='roster-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
-  showToast('Exported '+all.length+' students','success');
-}
-function exportObservationsCSV(){
-  var all=getStudents();
-  var rows=[['Student','Date','Category','Observation','Author']];
-  all.forEach(function(s){
-    var sid=s.id||s.name||'';
-    getObservations(sid).forEach(function(o){
-      rows.push([s.name||'',new Date(o.date).toLocaleDateString(),
-        o.category,o.text.replace(/,/g,';'),o.author||'']);
-    });
-  });
-  if(rows.length<=1){showToast('No observations to export','warn');return;}
-  var csv=rows.map(function(r){return r.map(function(v){return '"'+String(v).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
-  var a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download='observations-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
-  showToast('Observations exported','success');
-}
-
-// ── Settings persistence ──────────────────────────────────────────────────────
-function saveSettings(){
-  var settings=((typeof S!=='undefined')&&S.settings)||{};
-  ['teacher','school','apiKey','theme'].forEach(function(f){
-    var el=document.getElementById('setting-'+f);if(el)settings[f]=el.value.trim();
-  });
-  if(typeof S!=='undefined')S.settings=settings;
-  localStorage.setItem('lm_settings',JSON.stringify(settings));
-  if(settings.apiKey)localStorage.setItem('lm_apiKey',settings.apiKey);
-  showToast('Settings saved','success');
-}
-function loadSettingsUI(){
-  var settings=((typeof S!=='undefined')&&S.settings)||JSON.parse(localStorage.getItem('lm_settings')||'{}');
-  if(typeof S!=='undefined')S.settings=settings;
-  ['teacher','school','apiKey','theme'].forEach(function(f){
-    var el=document.getElementById('setting-'+f);if(el&&settings[f])el.value=settings[f];
-  });
-}
-
-// ── Real-time roster search ───────────────────────────────────────────────────
-function filterBySearch(q){
-  q=(q||'').toLowerCase().trim();
-  var rows=document.querySelectorAll('.roster-row,[data-student-row]');
-  var shown=0;
-  rows.forEach(function(row){
-    var match=!q||(row.textContent||'').toLowerCase().indexOf(q)!==-1;
-    row.style.display=match?'':'none';
-    if(match)shown++;
-  });
-  var el=document.getElementById('search-result-count');
-  if(el)el.textContent=q?(shown+' result'+(shown!==1?'s':'')):'';
-}
-
-// ── Observation journal ───────────────────────────────────────────────────────
-function addObservation(sid,sname,text,category){
-  if(!text||text.length<3){showToast('Enter an observation','warn');return null;}
-  var key='lm_obs_'+sid;
-  var obs=JSON.parse(localStorage.getItem(key)||'[]');
-  var entry={id:Date.now(),text:text,category:category||'general',
-    date:new Date().toISOString(),author:((typeof S!=='undefined')&&S.settings&&S.settings.teacher)||''};
-  obs.unshift(entry);
-  localStorage.setItem(key,JSON.stringify(obs));
-  showToast('Observation saved','success');
-  return entry;
-}
-function getObservations(sid){return JSON.parse(localStorage.getItem('lm_obs_'+sid)||'[]');}
-function deleteObservation(sid,obsId){
-  var key='lm_obs_'+sid;
-  var obs=JSON.parse(localStorage.getItem(key)||'[]').filter(function(o){return o.id!==Number(obsId);});
-  localStorage.setItem(key,JSON.stringify(obs));
-}
-function _obsEntryHTML(sid,o){
-  var d=new Date(o.date).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-  return '<div class="obs-entry" data-obs-id="'+o.id+'" data-sid="'+_esc(sid)+'">'
-    +'<div class="obs-entry-header">'
-    +'<span class="obs-tag">'+_esc(o.category)+'</span>'
-    +'<span class="obs-date">'+d+'</span>'
-    +'<button class="obs-del" data-action="del-obs" data-sid="'+_esc(sid)+'" data-obs-id="'+o.id+'">&#x2715;</button>'
-    +'</div>'
-    +'<div class="obs-text">'+_esc(o.text)+'</div>'
-    +'</div>';
-}
-function openObservationJournal(sid,sname){
-  var existing=document.getElementById('obs-journal-modal');if(existing)existing.remove();
-  var cats=['fluency','decoding','comprehension','phonics','vocabulary','engagement','behavior','general'];
-  var catOpts=cats.map(function(c){return'<option value="'+c+'">'+c.charAt(0).toUpperCase()+c.slice(1)+'</option>';}).join('');
-  var obs=getObservations(sid);
-  var obsHTML=obs.length?obs.map(function(o){return _obsEntryHTML(sid,o);}).join('')
-    :'<div class="obs-empty">No observations yet.</div>';
-  var modal=document.createElement('div');
-  modal.id='obs-journal-modal';
-  modal.className='modal-overlay';
-  modal.setAttribute('data-sid',sid);
-  modal.setAttribute('data-sname',sname);
-  modal.innerHTML=
-    '<div class="modal-box obs-journal-box">'
-      +'<div class="modal-header">'
-        +'<h3>Observations &mdash; '+_esc(sname)+'</h3>'
-        +'<button class="modal-close" data-action="close-modal" data-target="obs-journal-modal">&times;</button>'
-      +'</div>'
-      +'<div class="modal-body">'
-        +'<div class="obs-add-row">'
-          +'<textarea id="new-obs-text" class="form-input" rows="2" placeholder="Write an observation..."></textarea>'
-          +'<div class="obs-add-controls">'
-            +'<select id="new-obs-cat" class="form-input form-select">'+catOpts+'</select>'
-            +'<button class="btn btn-primary" data-action="submit-obs" data-sid="'+_esc(sid)+'" data-sname="'+_esc(sname)+'">Add</button>'
-          +'</div>'
-        +'</div>'
-        +'<div id="obs-list-'+_esc(sid)+'" class="obs-list">'+obsHTML+'</div>'
-      +'</div>'
-    +'</div>';
-  document.body.appendChild(modal);
-  setTimeout(function(){var el=document.getElementById('new-obs-text');if(el)el.focus();},50);
-}
-
-// ── Quick-log intervention modal ──────────────────────────────────────────────
-function openQuickLog(sid,sname){
-  var existing=document.getElementById('quick-log-modal');if(existing)existing.remove();
-  var modal=document.createElement('div');
-  modal.id='quick-log-modal';
-  modal.className='modal-overlay';
-  modal.innerHTML=
-    '<div class="modal-box quick-log-box">'
-      +'<div class="modal-header">'
-        +'<h3>Log Session &mdash; '+_esc(sname)+'</h3>'
-        +'<button class="modal-close" data-action="close-modal" data-target="quick-log-modal">&times;</button>'
-      +'</div>'
-      +'<div class="modal-body">'
-        +'<label class="form-label">Program / Curriculum</label>'
-        +'<input id="ql-program" class="form-input" placeholder="e.g. RAVE-O, Fundations, Heggerty..." />'
-        +'<label class="form-label">Duration (minutes)</label>'
-        +'<div class="ql-duration-row">'
-          +'<button class="btn btn-ghost ql-dur" data-mins="15">15</button>'
-          +'<button class="btn btn-ghost ql-dur" data-mins="20">20</button>'
-          +'<button class="btn btn-ghost ql-dur" data-mins="30">30</button>'
-          +'<button class="btn btn-ghost ql-dur" data-mins="45">45</button>'
-        +'</div>'
-        +'<input id="ql-mins" class="form-input" type="number" min="5" max="120" value="20" style="margin-top:6px" />'
-        +'<label class="form-label">Notes</label>'
-        +'<textarea id="ql-notes" class="form-input" rows="3" placeholder="Observations, next steps..."></textarea>'
-      +'</div>'
-      +'<div class="modal-footer">'
-        +'<button class="btn btn-ghost" data-action="close-modal" data-target="quick-log-modal">Cancel</button>'
-        +'<button class="btn btn-primary" data-action="submit-quicklog" data-sid="'+_esc(sid)+'" data-sname="'+_esc(sname)+'">Save Session</button>'
-      +'</div>'
-    +'</div>';
-  document.body.appendChild(modal);
-  setTimeout(function(){var el=document.getElementById('ql-program');if(el)el.focus();},50);
-}
-
-// ── Dashboard summary ribbon ──────────────────────────────────────────────────
-function renderDashboardRibbon(){
-  var container=document.getElementById('dashboard-ribbon');
-  if(!container){
-    var target=document.getElementById('page-overview')||document.querySelector('[id^=page-]');
-    if(!target)return;
-    container=document.createElement('div');container.id='dashboard-ribbon';
-    target.insertBefore(container,target.firstChild);
-  }
-  var all=getStudents();
-  var t3=all.filter(function(s){return String(s.tier||s.Tier||'')=='3';}).length;
-  var t2=all.filter(function(s){return String(s.tier||s.Tier||'')=='2';}).length;
-  var t1=all.filter(function(s){return String(s.tier||s.Tier||'')=='1';}).length;
-  var wpms=all.map(function(s){return parseFloat(s.wpm||s.WPM||0);}).filter(Boolean);
-  var avgWPM=wpms.length?Math.round(wpms.reduce(function(a,b){return a+b;},0)/wpms.length):0;
-  var totalMins=all.reduce(function(a,s){return a+getMonthlyInterventionMins(s.id||s.name||'');},0);
-  var needAssess=all.filter(function(s){var d=daysSinceAssessed(s.id||s.name||'');return d===null||d>21;}).length;
-  container.innerHTML=
-    '<div class="ribbon-card t3-bg"><div class="ribbon-n">'+t3+'</div><div class="ribbon-label">Tier 3</div></div>'
-    +'<div class="ribbon-card t2-bg"><div class="ribbon-n">'+t2+'</div><div class="ribbon-label">Tier 2</div></div>'
-    +'<div class="ribbon-card t1-bg"><div class="ribbon-n">'+t1+'</div><div class="ribbon-label">Tier 1</div></div>'
-    +'<div class="ribbon-card"><div class="ribbon-n">'+(avgWPM||'--')+'</div><div class="ribbon-label">Avg WPM</div></div>'
-    +'<div class="ribbon-card"><div class="ribbon-n">'+totalMins+'</div><div class="ribbon-label">Min / month</div></div>'
-    +(needAssess?'<div class="ribbon-card ribbon-alert"><div class="ribbon-n">'+needAssess+'</div><div class="ribbon-label">Need assessing</div></div>':'');
-}
-
-// ── Global event delegation (replaces all fragile inline onclick) ─────────────
-document.addEventListener('click',function(e){
-  var btn=e.target.closest('[data-action]');
-  if(!btn)return;
-  var action=btn.dataset.action;
-
-  if(action==='close-modal'){
-    var id=btn.dataset.target;
-    var el=document.getElementById(id)||btn.closest('.modal-overlay');
-    if(el)el.remove();
-    return;
-  }
-  if(action==='del-obs'){
-    var sid=btn.dataset.sid,obsId=btn.dataset.obsId;
-    deleteObservation(sid,obsId);
-    var entry=btn.closest('.obs-entry');if(entry)entry.remove();
-    var list=document.getElementById('obs-list-'+sid);
-    if(list&&!list.querySelector('.obs-entry'))list.innerHTML='<div class="obs-empty">No observations yet.</div>';
-    showToast('Removed','warn');
-    return;
-  }
-  if(action==='submit-obs'){
-    var sid=btn.dataset.sid,sname=btn.dataset.sname;
-    var textEl=document.getElementById('new-obs-text');
-    var catEl=document.getElementById('new-obs-cat');
-    var text=textEl?textEl.value.trim():'';
-    var cat=catEl?catEl.value:'general';
-    var entry=addObservation(sid,sname,text,cat);
-    if(entry){
-      var list=document.getElementById('obs-list-'+sid);
-      if(list){
-        var empty=list.querySelector('.obs-empty');if(empty)empty.remove();
-        var div=document.createElement('div');div.innerHTML=_obsEntryHTML(sid,entry);
-        list.insertBefore(div.firstChild,list.firstChild);
-      }
-      if(textEl)textEl.value='';
-    }
-    return;
-  }
-  if(action==='submit-quicklog'){
-    var sid=btn.dataset.sid,sname=btn.dataset.sname;
-    var prog=(document.getElementById('ql-program')||{}).value||'General';
-    var mins=parseInt((document.getElementById('ql-mins')||{}).value)||20;
-    var notes=(document.getElementById('ql-notes')||{}).value||'';
-    logInterventionSession(sid,prog,mins,notes);
-    recordAssessmentDate(sid);
-    var modal=document.getElementById('quick-log-modal');if(modal)modal.remove();
-    renderDashboardRibbon();
-    return;
-  }
-  if(action==='modal-overlay-close'){
-    var modal=btn.closest('.modal-overlay');if(modal)modal.remove();
-    return;
-  }
-});
-
-// Duration preset buttons (ql-dur)
-document.addEventListener('click',function(e){
-  var btn=e.target.closest('.ql-dur[data-mins]');
-  if(!btn)return;
-  var inp=document.getElementById('ql-mins');
-  if(inp)inp.value=btn.dataset.mins;
-});
-
-// Close modal on overlay backdrop click
-document.addEventListener('click',function(e){
-  if(e.target.classList.contains('modal-overlay')){e.target.remove();}
-});
-
-// ── Inject Settings form if settings page exists ──────────────────────────────
-function injectSettingsFormS18(){
-  var pg=document.getElementById('page-settings');
-  if(!pg||document.getElementById('s18-settings-form'))return;
-  var form=document.createElement('div');form.id='s18-settings-form';
-  form.innerHTML=
-    '<div class="settings-section">'
-      +'<h3 class="settings-section-title">Teacher Info</h3>'
-      +'<label class="form-label">Teacher Name</label>'
-      +'<input id="setting-teacher" class="form-input" placeholder="Ms. Rowe" />'
-      +'<label class="form-label">School Name</label>'
-      +'<input id="setting-school" class="form-input" placeholder="Lincoln Elementary" />'
-    +'</div>'
-    +'<div class="settings-section">'
-      +'<h3 class="settings-section-title">Claude AI</h3>'
-      +'<label class="form-label">Anthropic API Key</label>'
-      +'<input id="setting-apiKey" class="form-input" type="password" placeholder="sk-ant-..." style="font-family:monospace" />'
-      +'<p style="font-size:.78rem;color:var(--muted);margin-top:4px">Stored locally in your browser only.</p>'
-    +'</div>'
-    +'<div class="settings-section">'
-      +'<h3 class="settings-section-title">Data Export</h3>'
-      +'<div style="display:flex;gap:10px;flex-wrap:wrap">'
-        +'<button class="btn btn-primary" onclick="exportRosterCSV()">Export Roster CSV</button>'
-        +'<button class="btn btn-ghost" onclick="exportObservationsCSV()">Export Observations CSV</button>'
-      +'</div>'
-    +'</div>'
-    +'<button class="btn btn-primary" onclick="saveSettings()" style="margin-top:8px">Save Settings</button>';
-  pg.appendChild(form);
-  loadSettingsUI();
-}
-
-// ── Search bar init ───────────────────────────────────────────────────────────
-function initSearchBarS18(){
-  var el=document.getElementById('roster-search')||document.querySelector('input[placeholder*="earch"]');
-  if(!el||el._s18)return;
-  el._s18=true;
-  el.addEventListener('input',function(){filterBySearch(this.value);});
-}
-
-// ── Boot ──────────────────────────────────────────────────────────────────────
-(function boot(){
-  function init(){
-    loadSettingsUI();
-    injectSettingsFormS18();
-    initSearchBarS18();
-    renderDashboardRibbon();
-  }
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
-  else{setTimeout(init,200);}
-})();
-
 // ══════════════════════════════════════════════════════════════════════════════
 // Sprint 19: 30-Factor Taxonomy · Coaching Engine · FERPA Compliance
 // ══════════════════════════════════════════════════════════════════════════════
@@ -4825,51 +4373,6 @@ function s21InitAllPages() {
     setTimeout(s21InitAllPages, 500);
   }
 })();
-
-// ══════════════════════════════════════════════════════════════════════════════
-// Sprint 22: Semantic Nav Icons  (id: s22-nav-icons)
-// Walks the live DOM and replaces nav icons that regex missed.
-// ══════════════════════════════════════════════════════════════════════════════
-(function() {
-  var NAV_MAP = {
-    'Overview':          '🏠',
-    'Student Roster':    '👥',
-    'Skill Domains':     '🧠',
-    'Growth Trends':     '📈',
-    'Qualitative Data':  '🔍',
-    'Group Builder':     '🧩',
-    'Interventions':     '🎯',
-    'Record Assessment': '✏️',
-    'Reports':           '📑',
-    'Import Data':       '📥',
-    'Strategies':        '💡'
-  };
-
-  function applyNavIcons() {
-    // Selectors that typically cover nav items
-    var selectors = [
-      '.nav-link', '.sidebar-link', '.nav-item',
-      '[onclick*="showPage"]', '[data-page]',
-      'nav a', 'nav button', 'nav li',
-      '.sidebar a', '.sidebar button', '.sidebar li'
-    ];
-    var seen = new Set();
-
-    selectors.forEach(function(sel) {
-      document.querySelectorAll(sel).forEach(function(el) {
-        if (seen.has(el)) return;
-        var rawText = el.textContent || '';
-
-        Object.keys(NAV_MAP).forEach(function(label) {
-          // Only process if the label text is present
-          if (rawText.indexOf(label) === -1) return;
-
-          var newIcon = NAV_MAP[label];
-
-          // Case 1: element contains an SVG icon → remove SVGs, prepend emoji
-          var svgs = el.querySelectorAll('svg');
-          if (svgs.length) {
-            svgs.forEach(function(s) { s.remove(); });
             // Find or create a text node for the label
             var labelNode = null;
             el.childNodes.forEach(function(n) {
@@ -4922,91 +4425,6 @@ function s21InitAllPages() {
     setTimeout(applyNavIcons, 600);
   }
 })();
-
-// ══════════════════════════════════════════════════════════════════════════════
-// Sprint 23 Fix: Idempotent nav rename + icon replacement
-// id: s23fix-navlabels
-// ══════════════════════════════════════════════════════════════════════════════
-(function() {
-  'use strict';
-
-  // ── Rename map (old → new) ────────────────────────────────────────────────
-  var RENAMES = [
-    ['Overview',          'My Caseload'],
-    ['Student Roster',    'Students'],
-    ['Skill Domains',     'Reading Skills'],
-    ['Growth Trends',     'Progress'],
-    ['Qualitative Data',  'Observations'],
-    ['Group Builder',     'Small Groups'],
-    ['Interventions',     'Intervention Log'],
-    ['Record Assessment', 'Assess'],
-    ['Reports',           'MTSS Reports'],
-    ['Import Data',       'Import'],
-    ['Strategies',        'Strategy Bank']
-  ];
-
-  // ── Icon map (new label → emoji) ──────────────────────────────────────────
-  var ICONS = {
-    'My Caseload':     '🏠',
-    'Students':        '👥',
-    'Reading Skills':  '🧠',
-    'Progress':        '📈',
-    'Observations':    '🔍',
-    'Small Groups':    '🧩',
-    'Intervention Log':'🎯',
-    'Assess':          '✏️',
-    'MTSS Reports':    '📑',
-    'Import':          '📥',
-    'Strategy Bank':   '💡'
-  };
-
-  // Unicode geometric symbols that apps use as placeholder icons
-  var GEO_RE = /^[■-◿☀-⛿✀-➿⊞⊙↑️\s]+/;
-
-  // ── Section header map ────────────────────────────────────────────────────
-  var SECTIONS = { 'ANALYSIS': 'MY STUDENTS', 'PLANNING': 'TAKE ACTION' };
-
-  // ── Fix MTSS duplication in text nodes ───────────────────────────────────
-  function fixMTSSDupe(text) {
-    return text.replace(/(MTSS\s+){2,}Reports/g, 'MTSS Reports')
-               .replace(/MTSS\s+MTSS/g, 'MTSS');
-  }
-
-  // ── Process one nav element ───────────────────────────────────────────────
-  function processNavEl(el) {
-    if (el.getAttribute('data-lm-renamed')) return; // already done
-
-    var rawText = el.textContent || '';
-
-    // Fix MTSS duplication first
-    if (rawText.indexOf('MTSS MTSS') !== -1) {
-      el.childNodes.forEach(function(n) {
-        if (n.nodeType === 3) n.textContent = fixMTSSDupe(n.textContent);
-      });
-      rawText = el.textContent;
-    }
-
-    // Determine which label this nav item carries (check new names first, then old)
-    var matchedNew = null;
-    Object.keys(ICONS).forEach(function(newLabel) {
-      if (!matchedNew && rawText.indexOf(newLabel) !== -1) matchedNew = newLabel;
-    });
-    // Also check old names that might not be renamed yet
-    var oldToNew = {};
-    RENAMES.forEach(function(pair) { oldToNew[pair[0]] = pair[1]; });
-    if (!matchedNew) {
-      RENAMES.forEach(function(pair) {
-        if (!matchedNew && rawText.indexOf(pair[0]) !== -1) matchedNew = pair[1];
-      });
-    }
-    if (!matchedNew) return; // not a known nav item
-
-    var targetIcon  = ICONS[matchedNew] || '';
-    var targetLabel = matchedNew;
-
-    // ── Step 1: Remove SVG icon children ─────────────────────────────────
-    el.querySelectorAll('svg').forEach(function(svg) { svg.remove(); });
-
     // ── Step 2: Remove icon-only <span> or <i> children ──────────────────
     el.querySelectorAll('span, i').forEach(function(child) {
       var ct = child.textContent.trim();
@@ -5194,6 +4612,142 @@ function s21InitAllPages() {
 // ══════════════════════════════════════════════════════════════════════════════
 
 // ══════════════════════════════════════════════════════════════════════════════
+
+// Sprint 23 Fix: Nav renames + icons  (id: s23fix-navlabels)
+(function() {
+  'use strict';
+  var REN = {
+    'Overview':'My Caseload','Student Roster':'Students',
+    'Skill Domains':'Reading Skills','Growth Trends':'Progress',
+    'Qualitative Data':'Observations','Group Builder':'Small Groups',
+    'Interventions':'Intervention Log','Record Assessment':'Assess',
+    'Reports':'MTSS Reports','Import Data':'Import','Strategies':'Strategy Bank'
+  };
+  var ICO = {
+    'My Caseload':'🏠','Students':'👥',
+    'Reading Skills':'🧠','Progress':'📈',
+    'Observations':'🔍','Small Groups':'🧩',
+    'Intervention Log':'🎯','Assess':'✏️',
+    'MTSS Reports':'📑','Import':'📥',
+    'Strategy Bank':'💡'
+  };
+  var SEC = {'ANALYSIS':'MY STUDENTS','PLANNING':'TAKE ACTION'};
+
+  function fixEl(el) {
+    if (el.getAttribute('data-lm-r')) return;
+    var txt = el.textContent || '';
+    // Collapse MTSS duplication
+    if (txt.indexOf('MTSS MTSS') !== -1) {
+      el.childNodes.forEach(function(n) {
+        if (n.nodeType === 3) {
+          n.textContent = n.textContent
+            .replace(/(MTSS )+Reports/g, 'MTSS Reports')
+            .replace(/MTSS MTSS/g, 'MTSS');
+        }
+      });
+      txt = el.textContent;
+    }
+    // Match old or new label
+    var newLabel = null;
+    Object.keys(REN).forEach(function(old) {
+      if (!newLabel && txt.indexOf(old) !== -1) newLabel = REN[old];
+    });
+    if (!newLabel) {
+      Object.keys(ICO).forEach(function(lbl) {
+        if (!newLabel && txt.indexOf(lbl) !== -1) newLabel = lbl;
+      });
+    }
+    if (!newLabel) return;
+    var icon = ICO[newLabel] || '';
+    // Remove SVG children
+    el.querySelectorAll('svg').forEach(function(s) { s.remove(); });
+    // Find and update the text node
+    var done = false;
+    el.childNodes.forEach(function(n) {
+      if (n.nodeType !== 3 || done) return;
+      var t = n.textContent;
+      var match = Object.keys(REN).some(function(o) { return t.indexOf(o) !== -1; }) ||
+                  Object.keys(ICO).some(function(o) { return t.indexOf(o) !== -1; });
+      if (!match) return;
+      // Apply renames
+      Object.keys(REN).forEach(function(o) {
+        t = t.replace(new RegExp(o.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'), REN[o]);
+      });
+      // Strip leading symbols (ASCII-safe: remove non-alphanum leading chars)
+      t = t.replace(/^[^\w\s]+\s*/, '').replace(/^\s+/, '');
+      n.textContent = ' ' + t;
+      el.insertBefore(document.createTextNode(icon), el.firstChild);
+      done = true;
+    });
+    if (!done && icon) {
+      var badge = el.querySelector('.badge,[class*="count"],[class*="badge"]');
+      var bh = badge ? badge.outerHTML : '';
+      el.innerHTML = icon + ' ' + newLabel + (bh ? ' ' + bh : '');
+    }
+    el.setAttribute('data-lm-r', '1');
+  }
+
+  function fixSections() {
+    try {
+      var navRoots = document.querySelectorAll('nav,.sidebar,[class*="sidebar"]');
+      navRoots.forEach(function(nav) {
+        var walker = document.createTreeWalker(nav, NodeFilter.SHOW_TEXT, null, false);
+        var node;
+        while ((node = walker.nextNode())) {
+          var p = node.parentElement;
+          if (!p || p.getAttribute('data-lm-sec')) continue;
+          var t = node.textContent.trim();
+          if (SEC[t]) {
+            node.textContent = node.textContent.replace(t, SEC[t]);
+            p.setAttribute('data-lm-sec', '1');
+          }
+        }
+      });
+    } catch (e) {}
+  }
+
+  function run() {
+    try {
+      var sels = [
+        'nav a','nav button','nav li',
+        '.sidebar a','.sidebar button','.sidebar li',
+        '[class*="sidebar"] a','[class*="sidebar"] button',
+        '[class*="nav-link"]','[class*="nav-item"]',
+        '[onclick*="showPage"]','[data-page]'
+      ];
+      sels.forEach(function(sel) {
+        document.querySelectorAll(sel).forEach(fixEl);
+      });
+      fixSections();
+    } catch (e) {}
+  }
+
+  // Boot + retry
+  function boot() {
+    run();
+    setTimeout(run, 600);
+    setTimeout(run, 1600);
+    // Wrap showPage AFTER it's defined
+    setTimeout(function() {
+      try {
+        var orig = window.showPage;
+        if (typeof orig === 'function' && !orig._s23wrapped) {
+          window.showPage = function() {
+            try { orig.apply(this, arguments); } catch(e) {}
+            setTimeout(run, 250);
+          };
+          window.showPage._s23wrapped = true;
+        }
+      } catch(e) {}
+    }, 500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
 </script>
 
   <!-- Quick-assess modal -->
