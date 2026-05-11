@@ -3245,7 +3245,6 @@ function printCurrentReport() {
     +'.t3-bg{background:#fef2f2}.t2-bg{background:#fff7ed}.t1-bg{background:#f0fdf4}'
     +'.rpt-footer{margin-top:24px;font-size:.75rem;color:#999;text-align:center}'
     +'@media print{body{padding:0}}'
-    +'
 // ══════════════════════════════════════════════════════════════════════════════
 // Sprint 19: 30-Factor Taxonomy · Coaching Engine · FERPA Compliance
 // ══════════════════════════════════════════════════════════════════════════════
@@ -4613,54 +4612,6 @@ function s21InitAllPages() {
 
 // ══════════════════════════════════════════════════════════════════════════════
 
-// Sprint 23 Fix: Nav renames + icons  (id: s23fix-navlabels)
-(function() {
-  'use strict';
-  var REN = {
-    'Overview':'My Caseload','Student Roster':'Students',
-    'Skill Domains':'Reading Skills','Growth Trends':'Progress',
-    'Qualitative Data':'Observations','Group Builder':'Small Groups',
-    'Interventions':'Intervention Log','Record Assessment':'Assess',
-    'Reports':'MTSS Reports','Import Data':'Import','Strategies':'Strategy Bank'
-  };
-  var ICO = {
-    'My Caseload':'🏠','Students':'👥',
-    'Reading Skills':'🧠','Progress':'📈',
-    'Observations':'🔍','Small Groups':'🧩',
-    'Intervention Log':'🎯','Assess':'✏️',
-    'MTSS Reports':'📑','Import':'📥',
-    'Strategy Bank':'💡'
-  };
-  var SEC = {'ANALYSIS':'MY STUDENTS','PLANNING':'TAKE ACTION'};
-
-  function fixEl(el) {
-    if (el.getAttribute('data-lm-r')) return;
-    var txt = el.textContent || '';
-    // Collapse MTSS duplication
-    if (txt.indexOf('MTSS MTSS') !== -1) {
-      el.childNodes.forEach(function(n) {
-        if (n.nodeType === 3) {
-          n.textContent = n.textContent
-            .replace(/(MTSS )+Reports/g, 'MTSS Reports')
-            .replace(/MTSS MTSS/g, 'MTSS');
-        }
-      });
-      txt = el.textContent;
-    }
-    // Match old or new label
-    var newLabel = null;
-    Object.keys(REN).forEach(function(old) {
-      if (!newLabel && txt.indexOf(old) !== -1) newLabel = REN[old];
-    });
-    if (!newLabel) {
-      Object.keys(ICO).forEach(function(lbl) {
-        if (!newLabel && txt.indexOf(lbl) !== -1) newLabel = lbl;
-      });
-    }
-    if (!newLabel) return;
-    var icon = ICO[newLabel] || '';
-    // Remove SVG children
-    el.querySelectorAll('svg').forEach(function(s) { s.remove(); });
     // Find and update the text node
     var done = false;
     el.childNodes.forEach(function(n) {
@@ -4747,6 +4698,110 @@ function s21InitAllPages() {
   } else {
     boot();
   }
+})();
+
+// Sprint 23 Fix: Nav renames + icons  (id: s23fix-navlabels)
+(function() {
+  'use strict';
+  var REN = {
+    'Overview':'My Caseload','Student Roster':'Students',
+    'Skill Domains':'Reading Skills','Growth Trends':'Progress',
+    'Qualitative Data':'Observations','Group Builder':'Small Groups',
+    'Interventions':'Intervention Log','Record Assessment':'Assess',
+    'Reports':'MTSS Reports','Import Data':'Import','Strategies':'Strategy Bank'
+  };
+  var ICO = {
+    'My Caseload':'🏠','Students':'👥','Reading Skills':'🧠','Progress':'📈',
+    'Observations':'🔍','Small Groups':'🧩','Intervention Log':'🎯',
+    'Assess':'✏️','MTSS Reports':'📑','Import':'📥','Strategy Bank':'💡'
+  };
+  var SEC = {'ANALYSIS':'MY STUDENTS','PLANNING':'TAKE ACTION'};
+
+  function fixEl(el) {
+    try {
+      if (el.getAttribute('data-lm-r')) return;
+      var txt = el.textContent || '';
+      if (txt.indexOf('MTSS MTSS') !== -1) {
+        el.childNodes.forEach(function(n) {
+          if (n.nodeType === 3) n.textContent = n.textContent.replace(/(MTSS )+Reports/g,'MTSS Reports').replace(/MTSS MTSS/g,'MTSS');
+        });
+        txt = el.textContent;
+      }
+      var newLabel = null;
+      Object.keys(REN).forEach(function(old) { if (!newLabel && txt.indexOf(old) !== -1) newLabel = REN[old]; });
+      if (!newLabel) Object.keys(ICO).forEach(function(l) { if (!newLabel && txt.indexOf(l) !== -1) newLabel = l; });
+      if (!newLabel) return;
+      var icon = ICO[newLabel] || '';
+      el.querySelectorAll('svg').forEach(function(s) { s.remove(); });
+      var done = false;
+      el.childNodes.forEach(function(n) {
+        if (n.nodeType !== 3 || done) return;
+        var t = n.textContent;
+        var match = Object.keys(REN).some(function(o) { return t.indexOf(o) !== -1; }) ||
+                    Object.keys(ICO).some(function(o) { return t.indexOf(o) !== -1; });
+        if (!match) return;
+        Object.keys(REN).forEach(function(o) { t = t.replace(new RegExp(o.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'), REN[o]); });
+        t = t.replace(/^[^\w\s]+\s*/, '').replace(/^\s+/, '');
+        n.textContent = ' ' + t;
+        el.insertBefore(document.createTextNode(icon), el.firstChild);
+        done = true;
+      });
+      if (!done && icon) {
+        var badge = el.querySelector('.badge,[class*="count"],[class*="badge"]');
+        el.innerHTML = icon + ' ' + newLabel + (badge ? ' ' + badge.outerHTML : '');
+      }
+      el.setAttribute('data-lm-r', '1');
+    } catch(e) {}
+  }
+
+  function fixSections() {
+    try {
+      var navEls = document.querySelectorAll('nav,.sidebar,[class*="sidebar"],.topbar-left,#sidebar');
+      navEls.forEach(function(nav) {
+        var walker = document.createTreeWalker(nav, NodeFilter.SHOW_TEXT, null, false);
+        var node;
+        while ((node = walker.nextNode())) {
+          var p = node.parentElement;
+          if (!p || p.getAttribute('data-lm-sec')) continue;
+          var t = node.textContent.trim();
+          if (SEC[t]) { node.textContent = node.textContent.replace(t, SEC[t]); p.setAttribute('data-lm-sec','1'); }
+        }
+      });
+    } catch(e) {}
+  }
+
+  function run() {
+    try {
+      ['nav a','nav button','nav li','nav [onclick]',
+       '.sidebar a','.sidebar button','.sidebar li','.sidebar [onclick]',
+       '#sidebar a','#sidebar button','#sidebar li','#sidebar [onclick]',
+       '[data-view]','[class*="nav-item"]','[class*="sidebar-item"]'
+      ].forEach(function(sel) { document.querySelectorAll(sel).forEach(fixEl); });
+      fixSections();
+    } catch(e) {}
+  }
+
+  function boot() {
+    run();
+    setTimeout(run, 500);
+    setTimeout(run, 1500);
+    // Hook the app's go() navigation function (not showPage — this app uses go())
+    setTimeout(function() {
+      try {
+        var orig = window.go;
+        if (typeof orig === 'function' && !orig._s23) {
+          window.go = function() {
+            try { orig.apply(this, arguments); } catch(e) {}
+            setTimeout(run, 200);
+          };
+          window.go._s23 = true;
+        }
+      } catch(e) {}
+    }, 800);
+  }
+
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', boot); }
+  else { boot(); }
 })();
 </script>
 
