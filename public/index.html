@@ -5577,6 +5577,197 @@ function s21InitAllPages() {
   // Retry once after dynamic content settles
   setTimeout(init, 1200);
 })();
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Sprint 24 Fix: Literary imagery — safe, additive-only  (id: s24-literary-imagery)
+// ══════════════════════════════════════════════════════════════════════════════
+(function() {
+  'use strict';
+
+  var QUOTES = [
+    { q: "Once you learn to read, you will be forever free.",           a: "Frederick Douglass" },
+    { q: "A reader lives a thousand lives before he dies.",             a: "George R.R. Martin" },
+    { q: "Not all readers are leaders, but all leaders are readers.",   a: "Harry S. Truman" },
+    { q: "Reading is to the mind what exercise is to the body.",        a: "Joseph Addison" },
+    { q: "There is no friend as loyal as a book.",                      a: "Ernest Hemingway" },
+    { q: "The more that you read, the more things you will know.",      a: "Dr. Seuss" },
+    { q: "Today a reader, tomorrow a leader.",                          a: "Margaret Fuller" },
+    { q: "A book is a dream you hold in your hands.",                   a: "Neil Gaiman" },
+    { q: "Literacy is a bridge from misery to hope.",                   a: "Kofi Annan" },
+    { q: "Every child deserves a champion who believes they can read.", a: "Rita Pierson (adapted)" },
+    { q: "Teaching kids to read is the most important thing we do.",    a: "George W. Bush" },
+    { q: "Reading is not optional.",                                    a: "Pat Cunningham" }
+  ];
+
+  var _qIdx   = Math.floor(Math.random() * QUOTES.length);
+  var _qTimer = null;
+
+  var SPINE_PALETTES = [
+    ['#f87171','#fb923c','#fbbf24','#4ade80','#60a5fa','#a78bfa','#f472b6'],
+    ['#818cf8','#38bdf8','#34d399','#fbbf24','#f87171'],
+    ['#c084fc','#e879f9','#fb7185','#fdba74','#86efac','#67e8f9'],
+    ['#fde68a','#fca5a5','#a5f3fc','#bbf7d0','#ddd6fe'],
+    ['#f9a8d4','#c4b5fd','#93c5fd','#6ee7b7','#fcd34d'],
+    ['#ef4444','#f97316','#eab308','#22c55e','#3b82f6']
+  ];
+
+  var MOSAIC_CAPTIONS = [
+    'Grand Library Hall','Vintage Library','Curated Bookshelves',
+    'Open Book','Children Reading','Books Stacked','Pen & Craft'
+  ];
+
+  // ── Safe element builder helpers ──────────────────────────────────────────
+  function el(tag, cls, html) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html !== undefined) e.innerHTML = html;
+    return e;
+  }
+
+  // ── Quote banner ──────────────────────────────────────────────────────────
+  function buildQuoteBanner() {
+    var q = QUOTES[_qIdx];
+    var wrap = el('div', 's24-quote-banner');
+    wrap.id = 's24-quote-banner';
+    wrap.appendChild(el('div', 's24-quote-text', '“' + q.q + '”'));
+    wrap.appendChild(el('div', 's24-quote-attr', '— ' + q.a));
+    return wrap;
+  }
+
+  function rotateQuote() {
+    try {
+      var banner = document.getElementById('s24-quote-banner');
+      if (!banner) return;
+      _qIdx = (_qIdx + 1) % QUOTES.length;
+      var q = QUOTES[_qIdx];
+      banner.style.opacity = '0';
+      banner.style.transition = 'opacity 0.45s';
+      setTimeout(function() {
+        try {
+          banner.querySelector('.s24-quote-text').textContent = '“' + q.q + '”';
+          banner.querySelector('.s24-quote-attr').textContent = '— ' + q.a;
+          banner.style.opacity = '1';
+        } catch(e) {}
+      }, 460);
+    } catch(e) {}
+  }
+
+  // ── Mosaic strip ──────────────────────────────────────────────────────────
+  function buildMosaic() {
+    var wrap = el('div', 's24-mosaic');
+    wrap.id = 's24-mosaic';
+    MOSAIC_CAPTIONS.forEach(function(cap) {
+      var p = el('div', 's24-mosaic-panel');
+      p.setAttribute('data-caption', cap);
+      wrap.appendChild(p);
+    });
+    return wrap;
+  }
+
+  // ── Book-spine bar ────────────────────────────────────────────────────────
+  function addBookSpines(card, idx) {
+    try {
+      if (card.querySelector('.s24-book-spines')) return;
+      var palette = SPINE_PALETTES[idx % SPINE_PALETTES.length];
+      var bar = el('div', 's24-book-spines');
+      palette.forEach(function(c) {
+        var s = el('div', 's24-spine');
+        s.style.background = c;
+        bar.appendChild(s);
+      });
+      card.appendChild(bar);
+    } catch(e) {}
+  }
+
+  // ── Inject extras into Overview page ─────────────────────────────────────
+  // CRITICAL: we ONLY append new elements — we never clear or replace content.
+  // We also wait until s20BuildOverview() has had time to run.
+  function injectOverviewExtras() {
+    try {
+      // Find the overview page container
+      var page = document.getElementById('page-overview') ||
+                 document.querySelector('[id*="overview"]');
+      if (!page) return;
+
+      // Don't inject twice
+      if (page.querySelector('#s24-mosaic')) return;
+
+      // Find the stat grid built by s20BuildOverview
+      // We look for the element AFTER it has real content (stat cards)
+      var grid = page.querySelector('.s20-grid, [class*="stat-grid"], [class*="s20-stat"]');
+      if (!grid) {
+        // s20BuildOverview hasn't run yet — try again later
+        return;
+      }
+
+      // Find the parent we'll append into (overview page content area)
+      var container = grid.parentElement || page;
+
+      // Insert quote banner after the grid
+      var banner = buildQuoteBanner();
+      grid.insertAdjacentElement('afterend', banner);
+
+      // Insert mosaic after quote banner
+      banner.insertAdjacentElement('afterend', buildMosaic());
+
+      // Add book spines to stat cards (additive only)
+      page.querySelectorAll('.s20-stat-card').forEach(addBookSpines);
+
+      // Start quote rotation
+      clearInterval(_qTimer);
+      _qTimer = setInterval(rotateQuote, 8000);
+
+    } catch(e) {
+      // Silently swallow any error — never break page rendering
+    }
+  }
+
+  // ── Main init — runs AFTER all existing scripts have set up ──────────────
+  function init() {
+    try {
+      // Overview extras: retry a few times to wait for s20BuildOverview()
+      var attempts = 0;
+      function tryOverview() {
+        injectOverviewExtras();
+        if (!document.getElementById('s24-mosaic') && attempts < 8) {
+          attempts++;
+          setTimeout(tryOverview, 400);
+        }
+      }
+      setTimeout(tryOverview, 300);
+
+    } catch(e) {}
+  }
+
+  // ── Hook showPage — but ONLY after DOMContentLoaded so original is defined ─
+  function hookShowPage() {
+    try {
+      var _orig = window.showPage;
+      if (typeof _orig !== 'function') return; // not defined yet — skip
+      window.showPage = function(pageId) {
+        try { _orig.apply(this, arguments); } catch(e) {}
+        setTimeout(function() {
+          try {
+            if (!pageId || pageId === 'overview') {
+              injectOverviewExtras();
+            }
+          } catch(e) {}
+        }, 400);
+      };
+    } catch(e) {}
+  }
+
+  // Boot sequence: wait for DOM, then hook
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      init();
+      hookShowPage();
+    });
+  } else {
+    init();
+    hookShowPage();
+  }
+})();
 </script>
 
   <!-- Quick-assess modal -->
