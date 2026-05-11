@@ -467,18 +467,20 @@
       .rpt-table th{background:#f0f0f0!important;color:#111!important;}
     }
 
+    
     /* ── Sprint 18 ────────────────────────────────────────────────────────── */
 
     /* Dashboard ribbon */
     #dashboard-ribbon{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
-    .ribbon-card{flex:1;min-width:80px;text-align:center;padding:14px 10px;
+    .ribbon-card{flex:1;min-width:76px;text-align:center;padding:14px 8px;
       background:var(--bg3);border:1px solid var(--border);border-radius:10px;}
     .ribbon-card.t3-bg{background:var(--t3b);border-color:var(--t3d);}
     .ribbon-card.t2-bg{background:var(--t2b);border-color:var(--t2d);}
     .ribbon-card.t1-bg{background:var(--t1b);border-color:var(--t1d);}
     .ribbon-card.ribbon-alert{background:var(--t2b);border-color:var(--t2d);border-style:dashed;}
     .ribbon-n{font-size:1.8rem;font-weight:700;line-height:1;}
-    .ribbon-label{font-size:.73rem;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.05em;}
+    .ribbon-label{font-size:.72rem;color:var(--muted);margin-top:4px;
+      text-transform:uppercase;letter-spacing:.05em;}
 
     /* Assessment badges */
     .assess-badge{font-size:.72rem;padding:2px 7px;border-radius:10px;font-weight:600;}
@@ -487,44 +489,61 @@
     .assess-ok{background:var(--t2b);color:var(--t2);}
     .assess-overdue{background:var(--t3b);color:var(--t3);}
 
-    /* Quick-log modal */
+    /* Modal shared */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;
+      display:flex;align-items:center;justify-content:center;padding:16px;}
+    .modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;
+      width:100%;box-shadow:0 20px 60px rgba(0,0,0,.5);display:flex;flex-direction:column;}
+    .modal-header{display:flex;align-items:center;padding:16px 20px;
+      border-bottom:1px solid var(--border);}
+    .modal-header h3{flex:1;margin:0;font-size:1rem;font-weight:600;}
+    .modal-close{background:none;border:none;color:var(--muted);cursor:pointer;
+      font-size:1.3rem;line-height:1;padding:0 4px;}
+    .modal-close:hover{color:var(--text);}
+    .modal-body{padding:16px 20px;overflow-y:auto;}
+    .modal-footer{display:flex;justify-content:flex-end;gap:10px;
+      padding:12px 20px;border-top:1px solid var(--border);}
+
+    /* Quick-log */
     .quick-log-box{max-width:440px;}
-    .ql-duration-row{display:flex;gap:8px;margin-bottom:0;}
+    .ql-duration-row{display:flex;gap:8px;margin:6px 0;}
     .ql-dur{padding:4px 12px;font-size:.82rem;}
+    .ql-dur.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 
     /* Observation journal */
-    .obs-journal-box{max-width:560px;max-height:80vh;display:flex;flex-direction:column;}
-    .obs-journal-box .modal-body{flex:1;overflow-y:auto;}
+    .obs-journal-box{max-width:560px;max-height:80vh;}
     .obs-add-row{margin-bottom:14px;}
     .obs-add-controls{display:flex;gap:8px;margin-top:6px;align-items:center;}
-    .form-select{background:var(--bg3);color:var(--text);border:1px solid var(--bmed);
-      border-radius:6px;padding:6px 10px;font-size:.85rem;}
-    .obs-list{display:flex;flex-direction:column;gap:8px;}
-    .obs-entry{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+    .obs-list{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+    .obs-entry{background:var(--bg3);border:1px solid var(--border);
+      border-radius:8px;padding:10px 12px;}
     .obs-entry-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
     .obs-date{font-size:.75rem;color:var(--muted);margin-left:auto;}
-    .obs-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;
-      padding:0 4px;line-height:1;}
+    .obs-del{background:none;border:none;color:var(--muted);cursor:pointer;
+      font-size:1rem;padding:0 4px;line-height:1;}
     .obs-del:hover{color:var(--t3);}
-    .obs-text{font-size:.86rem;color:var(--text);line-height:1.5;}
+    .obs-text{font-size:.86rem;line-height:1.5;}
     .obs-empty{text-align:center;padding:24px;color:var(--muted);font-size:.88rem;}
+    .obs-tag{display:inline-block;background:var(--accent);color:#fff;border-radius:12px;
+      padding:2px 9px;font-size:.75rem;}
 
-    /* Settings form */
+    /* Settings */
     .settings-section{margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border);}
     .settings-section:last-of-type{border-bottom:none;}
-    .settings-section-title{font-size:.95rem;font-weight:600;margin-bottom:12px;color:var(--text);}
-    .form-label{display:block;font-size:.8rem;font-weight:600;color:var(--muted);
-      text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;margin-top:12px;}
+    .settings-section-title{font-size:.95rem;font-weight:600;margin-bottom:12px;}
+    .form-label{display:block;font-size:.78rem;font-weight:600;color:var(--muted);
+      text-transform:uppercase;letter-spacing:.05em;margin:10px 0 4px;}
     .form-input{width:100%;background:var(--bg3);color:var(--text);
       border:1px solid var(--bmed);border-radius:7px;padding:8px 11px;
       font-size:.88rem;box-sizing:border-box;transition:border-color .15s;}
     .form-input:focus{outline:none;border-color:var(--accent);}
+    .form-select{background:var(--bg3);color:var(--text);border:1px solid var(--bmed);
+      border-radius:6px;padding:6px 10px;font-size:.85rem;}
 
-    /* Search clear button */
-    .search-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);
-      background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;
-      line-height:1;padding:0 4px;}
-    .search-clear:hover{color:var(--text);}
+    /* AI panel */
+    .ai-panel{background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+      padding:16px;margin-top:16px;}
+    .ai-result{line-height:1.7;white-space:pre-wrap;font-size:.88rem;}
 </style>
   <style id="lm-toast-styles">
   @keyframes lm-fadein { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
@@ -3167,261 +3186,219 @@ function logInterventionSession(studentId,programName,minutes,notes){
   showToast('Session logged: '+session.minutes+' min','success');return session;
 }
 
+
 // ══════════════════════════════════════════════════════════════
-// Sprint 18: CSV Export, Settings persistence, Search,
-//            Assessment date tracker, Quick-log, Observations,
-//            Dashboard summary ribbon
+// Sprint 18 Fix: CSV export, settings, search, assessment tracker,
+//               quick-log, observations, dashboard ribbon
 // ══════════════════════════════════════════════════════════════
 
-// ── CSV Export ───────────────────────────────────────────────────────────────
+// ── Utilities ────────────────────────────────────────────────────────────────
+function _esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function recordAssessmentDate(sid){localStorage.setItem('lm_assess_'+sid,new Date().toISOString());}
+function getLastAssessedDate(sid){
+  var r=localStorage.getItem('lm_assess_'+sid);
+  return r?new Date(r).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';
+}
+function daysSinceAssessed(sid){
+  var r=localStorage.getItem('lm_assess_'+sid);
+  if(!r)return null;
+  return Math.floor((Date.now()-new Date(r).getTime())/(1000*60*60*24));
+}
+function assessedBadge(sid){
+  var d=daysSinceAssessed(sid);
+  if(d===null)return '<span class="assess-badge assess-never">Not assessed</span>';
+  if(d<=7)return '<span class="assess-badge assess-recent">'+d+'d ago</span>';
+  if(d<=21)return '<span class="assess-badge assess-ok">'+d+'d ago</span>';
+  return '<span class="assess-badge assess-overdue">'+d+'d ago</span>';
+}
+function getMonthlyInterventionMins(sid){
+  var sessions=JSON.parse(localStorage.getItem('lm_int_'+sid)||'[]');
+  var m=new Date().toISOString().slice(0,7);
+  return sessions.filter(function(s){return s.month===m;}).reduce(function(a,s){return a+s.minutes;},0);
+}
+
+// ── CSV Export ────────────────────────────────────────────────────────────────
 function exportRosterCSV(){
   var all=getStudents();
   if(!all.length){showToast('No students to export','warn');return;}
-  var headers=['Name','Grade','Tier','Reading Level','WPM','Comprehension %',
-    'Last Assessed','Intervention Minutes (Month)','Notes'];
+  var hdr=['Name','Grade','Tier','Level','WPM','Comp%','Last Assessed','Int. Min/Month','Notes'];
   var rows=all.map(function(s){
-    var mins=getMonthlyInterventionMins(s.id||s.name||'');
-    var lastAssessed=getLastAssessedDate(s.id||s.name||'');
-    return[
-      s.name||'',s.grade||s.Grade||'',s.tier||s.Tier||'',
-      s.level||s.readingLevel||'',s.wpm||s.WPM||'',
-      s.comp||s.comprehension||'',lastAssessed,mins,
+    var sid=s.id||s.name||'';
+    return[s.name||'',s.grade||s.Grade||'',s.tier||s.Tier||'',
+      s.level||s.readingLevel||'',s.wpm||s.WPM||'',s.comp||'',
+      getLastAssessedDate(sid),getMonthlyInterventionMins(sid),
       (s.notes||'').replace(/,/g,';')
     ].map(function(v){return'"'+String(v).replace(/"/g,'""')+'"';}).join(',');
   });
-  var csv=[headers.join(',')].concat(rows).join('\n');
-  var blob=new Blob([csv],{type:'text/csv'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  var d=new Date().toISOString().slice(0,10);
-  a.download='literacy-map-roster-'+d+'.csv';a.click();
-  showToast('Exported '+all.length+' students to CSV','success');
+  var csv=[hdr.join(',')].concat(rows).join('\n');
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='roster-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+  showToast('Exported '+all.length+' students','success');
+}
+function exportObservationsCSV(){
+  var all=getStudents();
+  var rows=[['Student','Date','Category','Observation','Author']];
+  all.forEach(function(s){
+    var sid=s.id||s.name||'';
+    getObservations(sid).forEach(function(o){
+      rows.push([s.name||'',new Date(o.date).toLocaleDateString(),
+        o.category,o.text.replace(/,/g,';'),o.author||'']);
+    });
+  });
+  if(rows.length<=1){showToast('No observations to export','warn');return;}
+  var csv=rows.map(function(r){return r.map(function(v){return '"'+String(v).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='observations-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+  showToast('Observations exported','success');
 }
 
 // ── Settings persistence ──────────────────────────────────────────────────────
 function saveSettings(){
-  var fields=['teacher','school','apiKey','theme','defaultGrade'];
-  var settings=S.settings||{};
-  fields.forEach(function(f){
-    var el=document.getElementById('setting-'+f);
-    if(el)settings[f]=el.value.trim();
+  var settings=((typeof S!=='undefined')&&S.settings)||{};
+  ['teacher','school','apiKey','theme'].forEach(function(f){
+    var el=document.getElementById('setting-'+f);if(el)settings[f]=el.value.trim();
   });
-  S.settings=settings;
+  if(typeof S!=='undefined')S.settings=settings;
   localStorage.setItem('lm_settings',JSON.stringify(settings));
   if(settings.apiKey)localStorage.setItem('lm_apiKey',settings.apiKey);
-  if(settings.theme)applyThemeS18(settings.theme);
   showToast('Settings saved','success');
 }
 function loadSettingsUI(){
-  var settings=S.settings||JSON.parse(localStorage.getItem('lm_settings')||'{}');
-  S.settings=settings;
-  ['teacher','school','apiKey','theme','defaultGrade'].forEach(function(f){
-    var el=document.getElementById('setting-'+f);
-    if(el&&settings[f])el.value=settings[f];
+  var settings=((typeof S!=='undefined')&&S.settings)||JSON.parse(localStorage.getItem('lm_settings')||'{}');
+  if(typeof S!=='undefined')S.settings=settings;
+  ['teacher','school','apiKey','theme'].forEach(function(f){
+    var el=document.getElementById('setting-'+f);if(el&&settings[f])el.value=settings[f];
   });
-}
-function applyThemeS18(theme){
-  if(theme==='light'){
-    document.documentElement.style.setProperty('--bg1','#ffffff');
-    document.documentElement.style.setProperty('--bg2','#f5f6fa');
-    document.documentElement.style.setProperty('--text','#1a1d2e');
-  }else{
-    document.documentElement.style.removeProperty('--bg1');
-    document.documentElement.style.removeProperty('--bg2');
-    document.documentElement.style.removeProperty('--text');
-  }
 }
 
 // ── Real-time roster search ───────────────────────────────────────────────────
-function filterBySearch(query){
-  query=(query||'').toLowerCase().trim();
+function filterBySearch(q){
+  q=(q||'').toLowerCase().trim();
   var rows=document.querySelectorAll('.roster-row,[data-student-row]');
   var shown=0;
   rows.forEach(function(row){
-    var text=(row.textContent||'').toLowerCase();
-    var match=!query||text.indexOf(query)!==-1;
+    var match=!q||(row.textContent||'').toLowerCase().indexOf(q)!==-1;
     row.style.display=match?'':'none';
     if(match)shown++;
   });
-  var countEl=document.getElementById('search-result-count');
-  if(countEl)countEl.textContent=query?shown+' result'+(shown!==1?'s':''):'';
+  var el=document.getElementById('search-result-count');
+  if(el)el.textContent=q?(shown+' result'+(shown!==1?'s':'')):'';
 }
 
-// Attach search to any existing search input
-(function(){
-  document.addEventListener('DOMContentLoaded',function(){
-    var searchEl=document.getElementById('roster-search')||document.querySelector('input[type="search"]');
-    if(searchEl&&!searchEl._s18){
-      searchEl._s18=true;
-      searchEl.addEventListener('input',function(){filterBySearch(this.value);});
-      // Add clear button
-      var wrap=searchEl.parentElement;
-      if(wrap&&!wrap.querySelector('.search-clear')){
-        var clr=document.createElement('button');
-        clr.className='search-clear';clr.textContent='×';clr.title='Clear search';
-        clr.onclick=function(){searchEl.value='';filterBySearch('');searchEl.focus();};
-        wrap.style.position='relative';wrap.appendChild(clr);
-      }
-    }
-    loadSettingsUI();
-    setTimeout(renderDashboardRibbon,800);
-  });
-})();
-
-// ── Assessment date tracker ───────────────────────────────────────────────────
-function recordAssessmentDate(studentId){
-  var key='lm_assess_'+studentId;
-  localStorage.setItem(key,new Date().toISOString());
+// ── Observation journal ───────────────────────────────────────────────────────
+function addObservation(sid,sname,text,category){
+  if(!text||text.length<3){showToast('Enter an observation','warn');return null;}
+  var key='lm_obs_'+sid;
+  var obs=JSON.parse(localStorage.getItem(key)||'[]');
+  var entry={id:Date.now(),text:text,category:category||'general',
+    date:new Date().toISOString(),author:((typeof S!=='undefined')&&S.settings&&S.settings.teacher)||''};
+  obs.unshift(entry);
+  localStorage.setItem(key,JSON.stringify(obs));
+  showToast('Observation saved','success');
+  return entry;
 }
-function getLastAssessedDate(studentId){
-  var raw=localStorage.getItem('lm_assess_'+studentId);
-  if(!raw)return'';
-  return new Date(raw).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+function getObservations(sid){return JSON.parse(localStorage.getItem('lm_obs_'+sid)||'[]');}
+function deleteObservation(sid,obsId){
+  var key='lm_obs_'+sid;
+  var obs=JSON.parse(localStorage.getItem(key)||'[]').filter(function(o){return o.id!==Number(obsId);});
+  localStorage.setItem(key,JSON.stringify(obs));
 }
-function daysSinceAssessed(studentId){
-  var raw=localStorage.getItem('lm_assess_'+studentId);
-  if(!raw)return null;
-  return Math.floor((Date.now()-new Date(raw).getTime())/(1000*60*60*24));
+function _obsEntryHTML(sid,o){
+  var d=new Date(o.date).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  return '<div class="obs-entry" data-obs-id="'+o.id+'" data-sid="'+_esc(sid)+'">'
+    +'<div class="obs-entry-header">'
+    +'<span class="obs-tag">'+_esc(o.category)+'</span>'
+    +'<span class="obs-date">'+d+'</span>'
+    +'<button class="obs-del" data-action="del-obs" data-sid="'+_esc(sid)+'" data-obs-id="'+o.id+'">&#x2715;</button>'
+    +'</div>'
+    +'<div class="obs-text">'+_esc(o.text)+'</div>'
+    +'</div>';
 }
-function assessedBadge(studentId){
-  var days=daysSinceAssessed(studentId);
-  if(days===null)return'<span class="assess-badge assess-never">Not assessed</span>';
-  if(days<=7)return'<span class="assess-badge assess-recent">'+days+'d ago</span>';
-  if(days<=21)return'<span class="assess-badge assess-ok">'+days+'d ago</span>';
-  return'<span class="assess-badge assess-overdue">'+days+'d ago</span>';
+function openObservationJournal(sid,sname){
+  var existing=document.getElementById('obs-journal-modal');if(existing)existing.remove();
+  var cats=['fluency','decoding','comprehension','phonics','vocabulary','engagement','behavior','general'];
+  var catOpts=cats.map(function(c){return'<option value="'+c+'">'+c.charAt(0).toUpperCase()+c.slice(1)+'</option>';}).join('');
+  var obs=getObservations(sid);
+  var obsHTML=obs.length?obs.map(function(o){return _obsEntryHTML(sid,o);}).join('')
+    :'<div class="obs-empty">No observations yet.</div>';
+  var modal=document.createElement('div');
+  modal.id='obs-journal-modal';
+  modal.className='modal-overlay';
+  modal.setAttribute('data-sid',sid);
+  modal.setAttribute('data-sname',sname);
+  modal.innerHTML=
+    '<div class="modal-box obs-journal-box">'
+      +'<div class="modal-header">'
+        +'<h3>Observations &mdash; '+_esc(sname)+'</h3>'
+        +'<button class="modal-close" data-action="close-modal" data-target="obs-journal-modal">&times;</button>'
+      +'</div>'
+      +'<div class="modal-body">'
+        +'<div class="obs-add-row">'
+          +'<textarea id="new-obs-text" class="form-input" rows="2" placeholder="Write an observation..."></textarea>'
+          +'<div class="obs-add-controls">'
+            +'<select id="new-obs-cat" class="form-input form-select">'+catOpts+'</select>'
+            +'<button class="btn btn-primary" data-action="submit-obs" data-sid="'+_esc(sid)+'" data-sname="'+_esc(sname)+'">Add</button>'
+          +'</div>'
+        +'</div>'
+        +'<div id="obs-list-'+_esc(sid)+'" class="obs-list">'+obsHTML+'</div>'
+      +'</div>'
+    +'</div>';
+  document.body.appendChild(modal);
+  setTimeout(function(){var el=document.getElementById('new-obs-text');if(el)el.focus();},50);
 }
 
 // ── Quick-log intervention modal ──────────────────────────────────────────────
-function openQuickLog(studentId,studentName){
-  var existing=document.getElementById('quick-log-modal');
-  if(existing)existing.remove();
+function openQuickLog(sid,sname){
+  var existing=document.getElementById('quick-log-modal');if(existing)existing.remove();
   var modal=document.createElement('div');
   modal.id='quick-log-modal';
   modal.className='modal-overlay';
   modal.innerHTML=
     '<div class="modal-box quick-log-box">'
-    +'<div class="modal-header"><h3>Log Session — '+studentName+'</h3>'
-    +'<button class="modal-close" onclick="document.getElementById(\'quick-log-modal\').remove()">×</button></div>'
-    +'<div class="modal-body">'
-    +'<label class="form-label">Program / Curriculum</label>'
-    +'<input id="ql-program" class="form-input" placeholder="e.g. RAVE-O, Fundations, Heggerty…" />'
-    +'<label class="form-label">Duration (minutes)</label>'
-    +'<div class="ql-duration-row">'
-    +'<button class="btn btn-ghost ql-dur" onclick="document.getElementById(\'ql-mins\').value=15">15</button>'
-    +'<button class="btn btn-ghost ql-dur" onclick="document.getElementById(\'ql-mins\').value=20">20</button>'
-    +'<button class="btn btn-ghost ql-dur" onclick="document.getElementById(\'ql-mins\').value=30">30</button>'
-    +'<button class="btn btn-ghost ql-dur" onclick="document.getElementById(\'ql-mins\').value=45">45</button>'
-    +'</div>'
-    +'<input id="ql-mins" class="form-input" type="number" min="5" max="120" value="20" style="margin-top:6px" />'
-    +'<label class="form-label">Notes</label>'
-    +'<textarea id="ql-notes" class="form-input" rows="3" placeholder="Observations, next steps…"></textarea>'
-    +'</div>'
-    +'<div class="modal-footer">'
-    +'<button class="btn btn-ghost" onclick="document.getElementById(\'quick-log-modal\').remove()">Cancel</button>'
-    +'<button class="btn btn-primary" onclick="submitQuickLog(\''+studentId+'\',\''+studentName+'\')">'
-    +'💾 Save Session</button>'
-    +'</div></div>';
+      +'<div class="modal-header">'
+        +'<h3>Log Session &mdash; '+_esc(sname)+'</h3>'
+        +'<button class="modal-close" data-action="close-modal" data-target="quick-log-modal">&times;</button>'
+      +'</div>'
+      +'<div class="modal-body">'
+        +'<label class="form-label">Program / Curriculum</label>'
+        +'<input id="ql-program" class="form-input" placeholder="e.g. RAVE-O, Fundations, Heggerty..." />'
+        +'<label class="form-label">Duration (minutes)</label>'
+        +'<div class="ql-duration-row">'
+          +'<button class="btn btn-ghost ql-dur" data-mins="15">15</button>'
+          +'<button class="btn btn-ghost ql-dur" data-mins="20">20</button>'
+          +'<button class="btn btn-ghost ql-dur" data-mins="30">30</button>'
+          +'<button class="btn btn-ghost ql-dur" data-mins="45">45</button>'
+        +'</div>'
+        +'<input id="ql-mins" class="form-input" type="number" min="5" max="120" value="20" style="margin-top:6px" />'
+        +'<label class="form-label">Notes</label>'
+        +'<textarea id="ql-notes" class="form-input" rows="3" placeholder="Observations, next steps..."></textarea>'
+      +'</div>'
+      +'<div class="modal-footer">'
+        +'<button class="btn btn-ghost" data-action="close-modal" data-target="quick-log-modal">Cancel</button>'
+        +'<button class="btn btn-primary" data-action="submit-quicklog" data-sid="'+_esc(sid)+'" data-sname="'+_esc(sname)+'">Save Session</button>'
+      +'</div>'
+    +'</div>';
   document.body.appendChild(modal);
   setTimeout(function(){var el=document.getElementById('ql-program');if(el)el.focus();},50);
-}
-function submitQuickLog(studentId,studentName){
-  var program=document.getElementById('ql-program').value.trim()||'General';
-  var mins=parseInt(document.getElementById('ql-mins').value)||20;
-  var notes=document.getElementById('ql-notes').value.trim();
-  logInterventionSession(studentId,program,mins,notes);
-  recordAssessmentDate(studentId);
-  document.getElementById('quick-log-modal').remove();
-  renderDashboardRibbon();
-}
-function getMonthlyInterventionMins(studentId){
-  var key='lm_int_'+studentId;
-  var sessions=JSON.parse(localStorage.getItem(key)||'[]');
-  var thisMonth=new Date().toISOString().slice(0,7);
-  return sessions.filter(function(s){return s.month===thisMonth;})
-    .reduce(function(a,s){return a+s.minutes;},0);
-}
-
-// ── Observation journal ───────────────────────────────────────────────────────
-function addObservation(studentId,studentName,text,category){
-  if(!text||text.length<3){showToast('Enter an observation','warn');return;}
-  var key='lm_obs_'+studentId;
-  var obs=JSON.parse(localStorage.getItem(key)||'[]');
-  obs.unshift({id:Date.now(),text:text,category:category||'general',
-    date:new Date().toISOString(),author:(S.settings&&S.settings.teacher)||''});
-  localStorage.setItem(key,JSON.stringify(obs));
-  showToast('Observation saved','success');
-  return obs[0];
-}
-function getObservations(studentId){
-  return JSON.parse(localStorage.getItem('lm_obs_'+studentId)||'[]');
-}
-function deleteObservation(studentId,obsId){
-  var key='lm_obs_'+studentId;
-  var obs=JSON.parse(localStorage.getItem(key)||'[]').filter(function(o){return o.id!==obsId;});
-  localStorage.setItem(key,JSON.stringify(obs));
-}
-function openObservationJournal(studentId,studentName){
-  var existing=document.getElementById('obs-journal-modal');
-  if(existing)existing.remove();
-  var obs=getObservations(studentId);
-  var cats=['fluency','decoding','comprehension','phonics','vocabulary','engagement','behavior','general'];
-  var catOpts=cats.map(function(c){return'<option value="'+c+'">'+c.charAt(0).toUpperCase()+c.slice(1)+'</option>';}).join('');
-  var obsHTML=obs.length?obs.map(function(o){
-    var d=new Date(o.date).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    return'<div class="obs-entry" id="obs-'+o.id+'">'
-      +'<div class="obs-entry-header">'
-      +'<span class="obs-tag">'+o.category+'</span>'
-      +'<span class="obs-date">'+d+'</span>'
-      +'<button class="obs-del" onclick="deleteObservation(\''+studentId+'\','+o.id+');this.closest(\'.obs-entry\').remove();showToast(\'Removed\',\'warn\')">×</button>'
-      +'</div>'
-      +'<div class="obs-text">'+o.text+'</div>'
-      +'</div>';
-  }).join(''):'<div class="obs-empty">No observations yet.</div>';
-  var modal=document.createElement('div');
-  modal.id='obs-journal-modal';modal.className='modal-overlay';
-  modal.innerHTML=
-    '<div class="modal-box obs-journal-box">'
-    +'<div class="modal-header"><h3>📓 Observations — '+studentName+'</h3>'
-    +'<button class="modal-close" onclick="document.getElementById(\'obs-journal-modal\').remove()">×</button></div>'
-    +'<div class="modal-body">'
-    +'<div class="obs-add-row">'
-    +'<textarea id="new-obs-text" class="form-input" rows="2" placeholder="Write an observation…"></textarea>'
-    +'<div class="obs-add-controls">'
-    +'<select id="new-obs-cat" class="form-input form-select">'+catOpts+'</select>'
-    +'<button class="btn btn-primary" onclick="(function(){'
-      +'var t=document.getElementById(\'new-obs-text\');'
-      +'var c=document.getElementById(\'new-obs-cat\');'
-      +'var o=addObservation(\''+studentId+'\',\''+studentName+'\',t.value,c.value);'
-      +'if(o){var d=new Date(o.date).toLocaleDateString(\'en-US\',{month:\'short\',day:\'numeric\'});'
-      +'var h=\'<div class="obs-entry" id="obs-\'+o.id+\'">'
-      +'<div class="obs-entry-header">'
-      +'<span class="obs-tag">\'+o.category+\'</span>'
-      +'<span class="obs-date">\'+d+\'</span>'
-      +'<button class="obs-del" onclick="deleteObservation(\\\''+studentId+'\\\',\'+o.id+\');this.closest(\\\\'.obs-entry\\\\').remove()">×</button>'
-      +'</div><div class="obs-text">\'+o.text+\'</div></div>\';'
-      +'var list=document.getElementById(\'obs-list-'+studentId+'\');'
-      +'if(list){var empty=list.querySelector(\'.obs-empty\');if(empty)empty.remove();list.insertAdjacentHTML(\'afterbegin\',h);}'
-      +'t.value=\'\';}})()">Add</button>'
-    +'</div></div>'
-    +'<div id="obs-list-'+studentId+'" class="obs-list">'+obsHTML+'</div>'
-    +'</div></div>';
-  document.body.appendChild(modal);
 }
 
 // ── Dashboard summary ribbon ──────────────────────────────────────────────────
 function renderDashboardRibbon(){
   var container=document.getElementById('dashboard-ribbon');
   if(!container){
-    // Try to inject near page-overview or first page
-    var overview=document.getElementById('page-overview')||document.querySelector('.page-content');
-    if(!overview)return;
+    var target=document.getElementById('page-overview')||document.querySelector('[id^=page-]');
+    if(!target)return;
     container=document.createElement('div');container.id='dashboard-ribbon';
-    overview.insertBefore(container,overview.firstChild);
+    target.insertBefore(container,target.firstChild);
   }
   var all=getStudents();
   var t3=all.filter(function(s){return String(s.tier||s.Tier||'')=='3';}).length;
   var t2=all.filter(function(s){return String(s.tier||s.Tier||'')=='2';}).length;
   var t1=all.filter(function(s){return String(s.tier||s.Tier||'')=='1';}).length;
-  var wpms=all.map(function(s){return parseFloat(s.wpm||s.WPM||0);}).filter(function(w){return w>0;});
+  var wpms=all.map(function(s){return parseFloat(s.wpm||s.WPM||0);}).filter(Boolean);
   var avgWPM=wpms.length?Math.round(wpms.reduce(function(a,b){return a+b;},0)/wpms.length):0;
   var totalMins=all.reduce(function(a,s){return a+getMonthlyInterventionMins(s.id||s.name||'');},0);
   var needAssess=all.filter(function(s){var d=daysSinceAssessed(s.id||s.name||'');return d===null||d>21;}).length;
@@ -3429,76 +3406,130 @@ function renderDashboardRibbon(){
     '<div class="ribbon-card t3-bg"><div class="ribbon-n">'+t3+'</div><div class="ribbon-label">Tier 3</div></div>'
     +'<div class="ribbon-card t2-bg"><div class="ribbon-n">'+t2+'</div><div class="ribbon-label">Tier 2</div></div>'
     +'<div class="ribbon-card t1-bg"><div class="ribbon-n">'+t1+'</div><div class="ribbon-label">Tier 1</div></div>'
-    +'<div class="ribbon-card"><div class="ribbon-n">'+(avgWPM||'—')+'</div><div class="ribbon-label">Avg WPM</div></div>'
-    +'<div class="ribbon-card"><div class="ribbon-n">'+totalMins+'</div><div class="ribbon-label">Min this month</div></div>'
+    +'<div class="ribbon-card"><div class="ribbon-n">'+(avgWPM||'--')+'</div><div class="ribbon-label">Avg WPM</div></div>'
+    +'<div class="ribbon-card"><div class="ribbon-n">'+totalMins+'</div><div class="ribbon-label">Min / month</div></div>'
     +(needAssess?'<div class="ribbon-card ribbon-alert"><div class="ribbon-n">'+needAssess+'</div><div class="ribbon-label">Need assessing</div></div>':'');
 }
 
-// ── Inject Settings UI if settings page exists ────────────────────────────────
-(function(){
-  document.addEventListener('DOMContentLoaded',function(){
-    var settingsPage=document.getElementById('page-settings');
-    if(settingsPage&&!document.getElementById('s18-settings-form')){
-      var form=document.createElement('div');
-      form.id='s18-settings-form';
-      form.innerHTML=
-        '<div class="settings-section">'
-        +'<h3 class="settings-section-title">👤 Teacher Info</h3>'
-        +'<label class="form-label">Teacher Name</label>'
-        +'<input id="setting-teacher" class="form-input" placeholder="Ms. Rowe" />'
-        +'<label class="form-label">School Name</label>'
-        +'<input id="setting-school" class="form-input" placeholder="Lincoln Elementary" />'
-        +'</div>'
-        +'<div class="settings-section">'
-        +'<h3 class="settings-section-title">🤖 Claude AI</h3>'
-        +'<label class="form-label">Anthropic API Key</label>'
-        +'<input id="setting-apiKey" class="form-input" type="password" placeholder="sk-ant-…" '
-        +'style="font-family:monospace" />'
-        +'<div style="font-size:.78rem;color:var(--muted);margin-top:4px">'
-        +'Your key is stored locally in your browser only. Never sent to our servers.</div>'
-        +'</div>'
-        +'<div class="settings-section">'
-        +'<h3 class="settings-section-title">🎨 Appearance</h3>'
-        +'<label class="form-label">Theme</label>'
-        +'<select id="setting-theme" class="form-input form-select">'
-        +'<option value="dark">Dark (default)</option>'
-        +'<option value="light">Light</option>'
-        +'</select>'
-        +'</div>'
-        +'<div class="settings-section">'
-        +'<h3 class="settings-section-title">📤 Data</h3>'
-        +'<div style="display:flex;gap:10px;flex-wrap:wrap">'
-        +'<button class="btn btn-primary" onclick="exportRosterCSV()">⬇ Export Roster CSV</button>'
-        +'<button class="btn btn-ghost" onclick="exportObservationsCSV()">⬇ Export Observations</button>'
-        +'</div></div>'
-        +'<div style="margin-top:20px">'
-        +'<button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>'
-        +'</div>';
-      settingsPage.appendChild(form);
-      loadSettingsUI();
-    }
-    renderDashboardRibbon();
-  });
-})();
+// ── Global event delegation (replaces all fragile inline onclick) ─────────────
+document.addEventListener('click',function(e){
+  var btn=e.target.closest('[data-action]');
+  if(!btn)return;
+  var action=btn.dataset.action;
 
-// ── Export observations as CSV ────────────────────────────────────────────────
-function exportObservationsCSV(){
-  var all=getStudents();
-  var rows=[['Student','Date','Category','Observation','Author']];
-  all.forEach(function(s){
-    var obs=getObservations(s.id||s.name||'');
-    obs.forEach(function(o){
-      var d=new Date(o.date).toLocaleDateString('en-US');
-      rows.push([s.name||'',d,o.category,o.text.replace(/,/g,';'),o.author||'']);
-    });
-  });
-  if(rows.length<=1){showToast('No observations to export','warn');return;}
-  var csv=rows.map(function(r){return r.map(function(v){return'"'+String(v).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
-  var blob=new Blob([csv],{type:'text/csv'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download='literacy-map-observations-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
-  showToast('Observations exported','success');
+  if(action==='close-modal'){
+    var id=btn.dataset.target;
+    var el=document.getElementById(id)||btn.closest('.modal-overlay');
+    if(el)el.remove();
+    return;
+  }
+  if(action==='del-obs'){
+    var sid=btn.dataset.sid,obsId=btn.dataset.obsId;
+    deleteObservation(sid,obsId);
+    var entry=btn.closest('.obs-entry');if(entry)entry.remove();
+    var list=document.getElementById('obs-list-'+sid);
+    if(list&&!list.querySelector('.obs-entry'))list.innerHTML='<div class="obs-empty">No observations yet.</div>';
+    showToast('Removed','warn');
+    return;
+  }
+  if(action==='submit-obs'){
+    var sid=btn.dataset.sid,sname=btn.dataset.sname;
+    var textEl=document.getElementById('new-obs-text');
+    var catEl=document.getElementById('new-obs-cat');
+    var text=textEl?textEl.value.trim():'';
+    var cat=catEl?catEl.value:'general';
+    var entry=addObservation(sid,sname,text,cat);
+    if(entry){
+      var list=document.getElementById('obs-list-'+sid);
+      if(list){
+        var empty=list.querySelector('.obs-empty');if(empty)empty.remove();
+        var div=document.createElement('div');div.innerHTML=_obsEntryHTML(sid,entry);
+        list.insertBefore(div.firstChild,list.firstChild);
+      }
+      if(textEl)textEl.value='';
+    }
+    return;
+  }
+  if(action==='submit-quicklog'){
+    var sid=btn.dataset.sid,sname=btn.dataset.sname;
+    var prog=(document.getElementById('ql-program')||{}).value||'General';
+    var mins=parseInt((document.getElementById('ql-mins')||{}).value)||20;
+    var notes=(document.getElementById('ql-notes')||{}).value||'';
+    logInterventionSession(sid,prog,mins,notes);
+    recordAssessmentDate(sid);
+    var modal=document.getElementById('quick-log-modal');if(modal)modal.remove();
+    renderDashboardRibbon();
+    return;
+  }
+  if(action==='modal-overlay-close'){
+    var modal=btn.closest('.modal-overlay');if(modal)modal.remove();
+    return;
+  }
+});
+
+// Duration preset buttons (ql-dur)
+document.addEventListener('click',function(e){
+  var btn=e.target.closest('.ql-dur[data-mins]');
+  if(!btn)return;
+  var inp=document.getElementById('ql-mins');
+  if(inp)inp.value=btn.dataset.mins;
+});
+
+// Close modal on overlay backdrop click
+document.addEventListener('click',function(e){
+  if(e.target.classList.contains('modal-overlay')){e.target.remove();}
+});
+
+// ── Inject Settings form if settings page exists ──────────────────────────────
+function injectSettingsFormS18(){
+  var pg=document.getElementById('page-settings');
+  if(!pg||document.getElementById('s18-settings-form'))return;
+  var form=document.createElement('div');form.id='s18-settings-form';
+  form.innerHTML=
+    '<div class="settings-section">'
+      +'<h3 class="settings-section-title">Teacher Info</h3>'
+      +'<label class="form-label">Teacher Name</label>'
+      +'<input id="setting-teacher" class="form-input" placeholder="Ms. Rowe" />'
+      +'<label class="form-label">School Name</label>'
+      +'<input id="setting-school" class="form-input" placeholder="Lincoln Elementary" />'
+    +'</div>'
+    +'<div class="settings-section">'
+      +'<h3 class="settings-section-title">Claude AI</h3>'
+      +'<label class="form-label">Anthropic API Key</label>'
+      +'<input id="setting-apiKey" class="form-input" type="password" placeholder="sk-ant-..." style="font-family:monospace" />'
+      +'<p style="font-size:.78rem;color:var(--muted);margin-top:4px">Stored locally in your browser only.</p>'
+    +'</div>'
+    +'<div class="settings-section">'
+      +'<h3 class="settings-section-title">Data Export</h3>'
+      +'<div style="display:flex;gap:10px;flex-wrap:wrap">'
+        +'<button class="btn btn-primary" onclick="exportRosterCSV()">Export Roster CSV</button>'
+        +'<button class="btn btn-ghost" onclick="exportObservationsCSV()">Export Observations CSV</button>'
+      +'</div>'
+    +'</div>'
+    +'<button class="btn btn-primary" onclick="saveSettings()" style="margin-top:8px">Save Settings</button>';
+  pg.appendChild(form);
+  loadSettingsUI();
 }
+
+// ── Search bar init ───────────────────────────────────────────────────────────
+function initSearchBarS18(){
+  var el=document.getElementById('roster-search')||document.querySelector('input[placeholder*="earch"]');
+  if(!el||el._s18)return;
+  el._s18=true;
+  el.addEventListener('input',function(){filterBySearch(this.value);});
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+(function boot(){
+  function init(){
+    loadSettingsUI();
+    injectSettingsFormS18();
+    initSearchBarS18();
+    renderDashboardRibbon();
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
+  else{setTimeout(init,200);}
+})();
 </script>
 
   <!-- Quick-assess modal -->
