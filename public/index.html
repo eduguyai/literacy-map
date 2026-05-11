@@ -319,44 +319,60 @@
   #roster-stats{font-size:12px;color:var(--muted);padding:4px 0 10px;display:flex;gap:16px;flex-wrap:wrap;}
 .overdue-row{border-left:3px solid var(--t3)!important;}
 
-    /* ── Sprint 15: Enhanced Button Visuals ─────────────────────────────── */
-    .btn{transition:all .15s ease;letter-spacing:.02em;font-weight:500;}
-    .btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.25);}
-    .btn:active{transform:translateY(0);box-shadow:none;}
-    .btn-primary{background:linear-gradient(135deg,var(--accent),#7ca4f4);border:none;color:#fff;}
-    .btn-primary:hover{background:linear-gradient(135deg,#6b9df4,#8db4f7);}
-    .btn-ghost{background:transparent;border:1px solid var(--bmed);color:var(--text);}
-    .btn-ghost:hover{background:var(--bg4);border-color:var(--accent);color:var(--accent);}
-    .btn-danger{background:var(--t3b);border:1px solid var(--t3);color:var(--t3);}
-    .btn-danger:hover{background:var(--t3);color:#fff;}
-    /* Grade filter pills */
-    .grade-btn{border-radius:20px;padding:4px 14px;transition:all .15s ease;font-size:.82rem;font-weight:600;}
-    .grade-btn.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(91,141,238,.4);}
-    .grade-btn:not(.active):hover{background:var(--bg4);border-color:var(--accent);}
-    /* Tier filter pills */
-    .filter-btn{border-radius:20px;padding:5px 14px;transition:all .15s ease;}
-    .filter-btn.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(91,141,238,.3);}
-    .filter-btn:not(.active):hover{background:var(--bg4);}
-    /* Tier-coloured active states */
-    .filter-btn[data-tier="3"].active{background:var(--t3);box-shadow:0 2px 8px rgba(248,113,113,.3);}
-    .filter-btn[data-tier="2"].active{background:var(--t2);box-shadow:0 2px 8px rgba(251,146,60,.3);}
-    .filter-btn[data-tier="1"].active{background:var(--t1);color:#0f1117;box-shadow:0 2px 8px rgba(52,211,153,.3);}
-    /* Benchmark grade target badge */
-    .bm-grade-target{font-size:.72rem;padding:1px 6px;border-radius:10px;
-      background:var(--bg4);color:var(--muted);margin-left:4px;}
-    .bm-grade-target.tier-1{background:var(--t1b);color:var(--t1);}
-    .bm-grade-target.tier-2{background:var(--t2b);color:var(--t2);}
-    .bm-grade-target.tier-3{background:var(--t3b);color:var(--t3);}
-    /* Action buttons in roster */
-    .roster-actions .btn{padding:4px 10px;font-size:.78rem;}
-    /* Modal buttons */
-    .modal .btn,.qa-actions .btn{min-width:90px;justify-content:center;}
-    /* Nav sidebar buttons */
-    .nav-link{transition:all .12s ease;}
-    .nav-link:hover{background:var(--bg3);padding-left:20px;}
-    /* Save / Export toolbar buttons */
-    .toolbar-btn{transition:all .15s ease;}
-    .toolbar-btn:hover{opacity:.85;transform:translateY(-1px);}
+    /* ── Sprint 16: Reports, Toasts, Group Cards ─────────────────────────── */
+
+    /* Report toolbar */
+    .report-toolbar{display:flex;flex-wrap:wrap;gap:8px;padding:12px 0 16px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+
+    /* Report output panel */
+    .report-output{min-height:200px;background:var(--bg2);border-radius:10px;padding:20px;}
+    .report-placeholder{text-align:center;padding:48px 0;color:var(--muted);}
+
+    /* MTSS Report styles */
+    .mtss-report{color:var(--text);font-family:var(--sans);}
+    .rpt-header h1{font-family:var(--serif);font-size:1.3rem;margin-bottom:4px;}
+    .rpt-meta{font-size:.82rem;color:var(--muted);margin-bottom:16px;}
+    .rpt-summary-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+    .rpt-stat{flex:1;min-width:80px;text-align:center;padding:12px 8px;
+              background:var(--bg3);border-radius:8px;border:1px solid var(--border);}
+    .rpt-stat-n{font-size:1.7rem;font-weight:700;}
+    .rpt-stat.t3-bg{background:var(--t3b);border-color:var(--t3d);}
+    .rpt-stat.t2-bg{background:var(--t2b);border-color:var(--t2d);}
+    .rpt-stat.t1-bg{background:var(--t1b);border-color:var(--t1d);}
+    .rpt-table{width:100%;border-collapse:collapse;font-size:.85rem;}
+    .rpt-table th{background:var(--bg4);padding:8px 12px;text-align:left;font-weight:600;
+                  font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;}
+    .rpt-table td{padding:7px 12px;border-bottom:1px solid var(--border);}
+    .rpt-table tr:hover td{background:var(--bg3);}
+    .rpt-footer{margin-top:20px;font-size:.72rem;color:var(--dim);text-align:right;}
+
+    /* Group cards */
+    .group-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+               padding:14px 16px;margin-bottom:10px;}
+    .group-card-header{font-weight:700;font-size:.9rem;margin-bottom:8px;}
+    .group-card-members{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;}
+    .group-chip{background:var(--bg4);border-radius:14px;padding:3px 10px;
+               font-size:.8rem;color:var(--text);}
+    .group-card-meta{font-size:.76rem;color:var(--muted);}
+
+    /* Toast notifications */
+    .toast{position:fixed;bottom:24px;right:24px;z-index:9999;
+           padding:11px 18px;border-radius:8px;font-size:.875rem;font-weight:500;
+           background:var(--bg3);color:var(--text);border:1px solid var(--border);
+           box-shadow:0 4px 16px rgba(0,0,0,.3);
+           transform:translateY(20px);opacity:0;transition:all .25s ease;pointer-events:none;}
+    .toast.toast-show{transform:translateY(0);opacity:1;}
+    .toast.toast-success{background:var(--t1b);border-color:var(--t1d);color:var(--t1);}
+    .toast.toast-error,.toast.toast-warn{background:var(--t3b);border-color:var(--t3d);color:var(--t3);}
+    .toast.toast-warn{background:var(--t2b);border-color:var(--t2d);color:var(--t2);}
+
+    /* Print styles */
+    @media print {
+      .sidebar,.nav-sidebar,.toolbar,.report-toolbar,button{display:none!important;}
+      .report-output,.mtss-report{background:#fff!important;color:#111!important;}
+      .rpt-table th{background:#f0f0f0!important;color:#111!important;}
+      .rpt-table td{border-bottom:1px solid #ccc!important;}
+    }
 </style>
   <style id="lm-toast-styles">
   @keyframes lm-fadein { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
@@ -530,7 +546,7 @@
           <li>MTSS report generation</li>
         </ul>
         <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:8px;font-size:11px;font-family:var(--mono);color:var(--dim)">
-          Version 1.0 · Sprint 15 · Built for Ms. Rowe
+          Version 1.0 · Sprint 16 · Built for Ms. Rowe
         </div>
       </div>
       <div class="card" style="margin-bottom:16px">
@@ -2692,48 +2708,263 @@ function generateHandoff() {
       return result;
     };
   });
-  
-// ── DIBELS 8th Edition WPM Benchmarks (Evidence-based targets) ──────────────
-var DIBELS8={
-  K :{bom:0,  mom:20,  eoy:40 },
-  1 :{bom:0,  mom:23,  eoy:53 },
-  2 :{bom:51, mom:72,  eoy:89 },
-  3 :{bom:79, mom:93,  eoy:107},
-  4 :{bom:99, mom:112, eoy:123},
-  5 :{bom:109,mom:124, eoy:139},
-  6 :{bom:120,mom:133, eoy:150}
-};
-// Return DIBELS 8 target WPM for a grade (K|1-6) and period (bom|mom|eoy)
-function getDibelsTarget(grade,period){
-  period=period||'eoy';
-  var g=String(grade).replace('K','K');
-  var key=isNaN(parseInt(g))?g:parseInt(g);
-  return (DIBELS8[key]||{})[period]||null;
-}
-// Return color class based on WPM vs DIBELS 8 EOY target
-function dibelsColor(wpm,grade){
-  var target=getDibelsTarget(grade,'eoy');
-  if(!target||!wpm)return '';
-  var ratio=wpm/target;
-  if(ratio>=1)return 'tier-1';
-  if(ratio>=0.85)return 'tier-2';
-  return 'tier-3';
-}
-
-// ── Benchmark Section Grade Target helper ───────────────────────────────────
-function bmGradeTargetBadge(wpm,grade){
-  var target=getDibelsTarget(grade,'eoy');
-  if(!target)return '';
-  var pct=wpm?Math.round(wpm/target*100):0;
-  var cls=dibelsColor(wpm,grade);
-  return '<span class="bm-grade-target '+cls+'" title="DIBELS 8 EOY target">'
-        +(wpm?pct+'% of '+target+' WPM target':target+' WPM target')+'</span>';
-}
-
-// Load persisted data if app hasn't already populated students
+  // Load persisted data if app hasn't already populated students
   if (typeof students !== 'undefined' && students.length === 0) {
     loadFromStorage();
   }
+})();
+
+// ── Sprint 16: MTSS/RTI Report Generation ────────────────────────────────────
+
+function generateMTSSReport(type) {
+  var title, rows;
+  var all = S.students || students || [];
+  switch(type) {
+    case 'tier3':
+      title = 'Tier 3 — Intensive Intervention Report';
+      rows = all.filter(function(s){ return (s.tier||s.Tier||'') == '3' || (s.tier||s.Tier||'') == 3; });
+      break;
+    case 'tier2':
+      title = 'Tier 2 — Strategic Intervention Report';
+      rows = all.filter(function(s){ return (s.tier||s.Tier||'') == '2' || (s.tier||s.Tier||'') == 2; });
+      break;
+    case 'progress':
+      title = 'Progress Monitoring Summary';
+      rows = all.slice().sort(function(a,b){
+        var wa=parseFloat(a.wpm||a.WPM||0), wb=parseFloat(b.wpm||b.WPM||0);
+        return wa - wb;
+      });
+      break;
+    case 'all':
+      title = 'Full Roster Report';
+      rows = all;
+      break;
+    default: // caseload
+      title = 'Caseload Overview';
+      rows = all;
+  }
+
+  if (!rows.length) {
+    showToast('No students match this filter.', 'warn');
+    return;
+  }
+
+  var t3 = all.filter(function(s){ return String(s.tier||s.Tier||'')=='3'; }).length;
+  var t2 = all.filter(function(s){ return String(s.tier||s.Tier||'')=='2'; }).length;
+  var t1 = all.filter(function(s){ return String(s.tier||s.Tier||'')=='1'; }).length;
+
+  var today = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  var school = (S.settings&&S.settings.school) || '';
+  var teacher = (S.settings&&S.settings.teacher) || 'Ms. Rowe';
+
+  var rowsHTML = rows.map(function(s) {
+    var wpm  = s.wpm  || s.WPM  || s.fluencyWPM || '—';
+    var comp = s.comp || s.Comp || s.comprehension || '—';
+    var rl   = s.level|| s.Level|| s.readingLevel || '—';
+    var grade= s.grade|| s.Grade|| '';
+    var tier = s.tier || s.Tier || '—';
+    var name = s.name || s.Name || s.firstName || 'Unknown';
+    var flag = '';
+    if (parseFloat(wpm) < 40 && grade >= 2) flag = '⚠';
+    var tierClr = tier=='3'?'#f87171':tier=='2'?'#fb923c':'#34d399';
+    return '<tr>'
+      +'<td>'+name+'</td>'
+      +'<td><span style="color:'+tierClr+';font-weight:700">T'+tier+'</span></td>'
+      +'<td>'+grade+'</td>'
+      +'<td>'+rl+'</td>'
+      +'<td>'+(wpm!='—'?wpm+' wpm':'—')+' '+flag+'</td>'
+      +'<td>'+(comp!='—'?comp+'%':'—')+'</td>'
+      +'</tr>';
+  }).join('');
+
+  var html = '<div class="mtss-report">'
+    +'<div class="rpt-header">'
+    +'<h1>'+title+'</h1>'
+    +'<div class="rpt-meta">'+teacher+(school?' · '+school:'')+'<span style="float:right">Generated: '+today+'</span></div>'
+    +'</div>'
+    +(type==='caseload'||type==='all' ? (
+      '<div class="rpt-summary-row">'
+      +'<div class="rpt-stat t3-bg"><div class="rpt-stat-n">'+t3+'</div><div>Tier 3</div></div>'
+      +'<div class="rpt-stat t2-bg"><div class="rpt-stat-n">'+t2+'</div><div>Tier 2</div></div>'
+      +'<div class="rpt-stat t1-bg"><div class="rpt-stat-n">'+t1+'</div><div>Tier 1</div></div>'
+      +'<div class="rpt-stat"    ><div class="rpt-stat-n">'+all.length+'</div><div>Total</div></div>'
+      +'</div>'
+    ) : '')
+    +'<table class="rpt-table">'
+    +'<thead><tr><th>Student</th><th>Tier</th><th>Grade</th><th>Level</th><th>WPM</th><th>Comp%</th></tr></thead>'
+    +'<tbody>'+rowsHTML+'</tbody>'
+    +'</table>'
+    +'<div class="rpt-footer">LiteracyMap · MTSS/RTI Report · Sprint 16</div>'
+    +'</div>';
+
+  var out = document.getElementById('report-output');
+  if (out) {
+    out.innerHTML = html;
+    window._lastReportHTML = html;
+    window._lastReportTitle = title;
+    // scroll into view
+    out.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  showToast('Report generated: '+rows.length+' students', 'success');
+}
+
+function generateHandoffDoc(studentId) {
+  var all = S.students || students || [];
+  var s = all.find(function(x){ return x.id===studentId || x.name===studentId; });
+  if (!s) { showToast('Student not found', 'error'); return; }
+  var today = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  var html = '<div class="mtss-report handoff">'
+    +'<h1>Student Transition / Handoff Summary</h1>'
+    +'<div class="rpt-meta">'+today+'</div>'
+    +'<table class="rpt-table" style="margin-top:16px">'
+    +'<tr><td><b>Name</b></td><td>'+(s.name||'')+'</td><td><b>Grade</b></td><td>'+(s.grade||'')+'</td></tr>'
+    +'<tr><td><b>Tier</b></td><td>Tier '+(s.tier||'—')+'</td><td><b>Reading Level</b></td><td>'+(s.level||s.readingLevel||'—')+'</td></tr>'
+    +'<tr><td><b>Fluency (WPM)</b></td><td>'+(s.wpm||s.fluencyWPM||'—')+'</td><td><b>Comprehension</b></td><td>'+(s.comp||s.comprehension||'—')+'%</td></tr>'
+    +'</table>'
+    +'<h3 style="margin-top:20px">Current Interventions</h3>'
+    +'<p>'+(s.interventions||s.notes||'No interventions recorded.')+'</p>'
+    +'<h3>Recommendations for Receiving Teacher</h3>'
+    +'<ul><li>Continue current '+(s.tier==3?'intensive':'strategic')+' intervention support</li>'
+    +'<li>Assess fluency within first 2 weeks of placement</li>'
+    +'<li>Monitor comprehension bi-weekly</li></ul>'
+    +'<div class="rpt-footer">LiteracyMap Handoff Doc · '+today+'</div>'
+    +'</div>';
+  var out = document.getElementById('report-output');
+  if (out) { out.innerHTML = html; window._lastReportHTML = html; window._lastReportTitle = 'Handoff: '+(s.name||''); }
+  // navigate to reports section
+  var el = document.getElementById('page-reports'); if(el) showPage('reports');
+  showToast('Handoff doc ready — use 🖨 Print to save as PDF', 'success');
+}
+
+function printCurrentReport() {
+  if (!window._lastReportHTML) { showToast('Generate a report first', 'warn'); return; }
+  var w = window.open('','_blank','width=900,height=700');
+  w.document.write('<!DOCTYPE html><html><head><title>'+( window._lastReportTitle||'Report')+'</title>'
+    +'<style>body{font-family:sans-serif;padding:32px;color:#111}'
+    +'.mtss-report{max-width:800px;margin:0 auto}'
+    +'.rpt-header h1{font-size:1.4rem;margin-bottom:4px}'
+    +'.rpt-meta{color:#666;font-size:.85rem;margin-bottom:16px}'
+    +'.rpt-table{width:100%;border-collapse:collapse;font-size:.9rem}'
+    +'.rpt-table th,.rpt-table td{border:1px solid #ccc;padding:6px 10px;text-align:left}'
+    +'.rpt-table thead{background:#f5f5f5}'
+    +'.rpt-summary-row{display:flex;gap:12px;margin-bottom:16px}'
+    +'.rpt-stat{flex:1;text-align:center;padding:12px;border:1px solid #eee;border-radius:8px}'
+    +'.rpt-stat-n{font-size:1.8rem;font-weight:700}'
+    +'.t3-bg{background:#fef2f2}.t2-bg{background:#fff7ed}.t1-bg{background:#f0fdf4}'
+    +'.rpt-footer{margin-top:24px;font-size:.75rem;color:#999;text-align:center}'
+    +'@media print{body{padding:0}}'
+    +'</style></head><body>'+window._lastReportHTML+'</body></html>');
+  w.document.close();
+  setTimeout(function(){ w.print(); }, 400);
+}
+
+function downloadReportHTML() {
+  if (!window._lastReportHTML) { showToast('Generate a report first', 'warn'); return; }
+  var blob = new Blob(['<!DOCTYPE html><html><head><title>'+(window._lastReportTitle||'Report')
+    +'</title><style>body{font-family:sans-serif;padding:24px;color:#111}'
+    +'.rpt-table{width:100%;border-collapse:collapse}.rpt-table th,.rpt-table td{border:1px solid #ccc;padding:6px 10px}'
+    +'.rpt-table thead{background:#f0f0f0}.rpt-stat{display:inline-block;padding:8px 16px;border:1px solid #ccc;margin:4px;border-radius:6px}'
+    +'</style></head><body>'+window._lastReportHTML+'</body></html>'], {type:'text/html'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (window._lastReportTitle||'report').replace(/[^a-z0-9]/gi,'_')+'.html';
+  a.click();
+  showToast('Report downloaded', 'success');
+}
+
+// ── Auto-Generate Groups (complete algorithm) ─────────────────────────────────
+function autoGenerateGroupsImpl() {
+  var all = S.students || students || [];
+  if (!all.length) { showToast('No students to group', 'warn'); return; }
+
+  // Group by: tier first, then approximate WPM bucket within tier
+  var groups = {};
+  all.forEach(function(s) {
+    var tier  = String(s.tier||s.Tier||'1');
+    var wpm   = parseFloat(s.wpm||s.WPM||s.fluencyWPM||0)||0;
+    var grade = parseInt(s.grade||s.Grade)||0;
+    // Bucket: round WPM to nearest 20 within tier
+    var bucket = tier + '-' + (Math.floor(wpm/20)*20);
+    if (!groups[bucket]) groups[bucket] = {tier:tier, wpmMin:Math.floor(wpm/20)*20, students:[]};
+    groups[bucket].students.push(s);
+  });
+
+  // Merge buckets with < 2 students into adjacent bucket
+  var keys = Object.keys(groups).sort();
+  var merged = [];
+  var temp = null;
+  keys.forEach(function(k) {
+    var g = groups[k];
+    if (temp && temp.tier === g.tier) {
+      temp.students = temp.students.concat(g.students);
+      if (temp.students.length >= 3) { merged.push(temp); temp = null; }
+    } else {
+      if (temp) merged.push(temp);
+      temp = {tier: g.tier, wpmMin: g.wpmMin, students: g.students};
+    }
+  });
+  if (temp) merged.push(temp);
+
+  // Build output HTML
+  var tierNames = {'3':'Intensive','2':'Strategic','1':'Core'};
+  var tierColors = {'3':'var(--t3)','2':'var(--t2)','1':'var(--t1)'};
+  var html = merged.map(function(g, i) {
+    var memberList = g.students.map(function(s){
+      return '<span class="group-chip">'+(s.name||s.Name||'?')+'</span>';
+    }).join(' ');
+    return '<div class="group-card">'
+      +'<div class="group-card-header" style="color:'+tierColors[g.tier]+'">'
+      +'Group '+(i+1)+' — Tier '+g.tier+' '+tierNames[g.tier]
+      +(g.wpmMin?' · ~'+g.wpmMin+'–'+(g.wpmMin+20)+' WPM':'')
+      +'</div>'
+      +'<div class="group-card-members">'+memberList+'</div>'
+      +'<div class="group-card-meta">'+g.students.length+' students</div>'
+      +'</div>';
+  }).join('');
+
+  var container = document.getElementById('groups-output') || document.querySelector('.groups-container');
+  if (container) {
+    container.innerHTML = '<h3 style="margin-bottom:12px">Generated Groups ('+merged.length+')</h3>'+html;
+  } else {
+    // fallback: show in a modal or alert
+    showToast(merged.length+' groups generated!', 'success');
+    console.log('Groups:', merged);
+  }
+  window._generatedGroups = merged;
+  showToast(merged.length+' instructional groups created', 'success');
+}
+
+// Override stub if it exists, otherwise define
+if (typeof autoGenerateGroups === 'undefined') {
+  window.autoGenerateGroups = autoGenerateGroupsImpl;
+} else {
+  // wrap: call new implementation
+  var _origAutoGen = window.autoGenerateGroups;
+  window.autoGenerateGroups = function() {
+    autoGenerateGroupsImpl();
+  };
+}
+
+// ── Toast polish: ensure showToast handles type param ────────────────────────
+(function patchToast() {
+  var orig = window.showToast;
+  window.showToast = function(msg, type) {
+    type = type || 'info';
+    // If native implementation works, just use it
+    if (orig && typeof orig === 'function') {
+      try { orig(msg, type); return; } catch(e) {}
+    }
+    // Fallback toast implementation
+    var el = document.createElement('div');
+    el.className = 'toast toast-' + type;
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(function(){ el.classList.add('toast-show'); }, 10);
+    setTimeout(function(){
+      el.classList.remove('toast-show');
+      setTimeout(function(){ el.remove(); }, 300);
+    }, 3000);
+  };
 })();
 </script>
 
