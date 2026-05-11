@@ -466,6 +466,65 @@
       .report-output,.mtss-report{background:#fff!important;color:#111!important;}
       .rpt-table th{background:#f0f0f0!important;color:#111!important;}
     }
+
+    /* ── Sprint 18 ────────────────────────────────────────────────────────── */
+
+    /* Dashboard ribbon */
+    #dashboard-ribbon{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+    .ribbon-card{flex:1;min-width:80px;text-align:center;padding:14px 10px;
+      background:var(--bg3);border:1px solid var(--border);border-radius:10px;}
+    .ribbon-card.t3-bg{background:var(--t3b);border-color:var(--t3d);}
+    .ribbon-card.t2-bg{background:var(--t2b);border-color:var(--t2d);}
+    .ribbon-card.t1-bg{background:var(--t1b);border-color:var(--t1d);}
+    .ribbon-card.ribbon-alert{background:var(--t2b);border-color:var(--t2d);border-style:dashed;}
+    .ribbon-n{font-size:1.8rem;font-weight:700;line-height:1;}
+    .ribbon-label{font-size:.73rem;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.05em;}
+
+    /* Assessment badges */
+    .assess-badge{font-size:.72rem;padding:2px 7px;border-radius:10px;font-weight:600;}
+    .assess-never{background:var(--bg4);color:var(--muted);}
+    .assess-recent{background:var(--t1b);color:var(--t1);}
+    .assess-ok{background:var(--t2b);color:var(--t2);}
+    .assess-overdue{background:var(--t3b);color:var(--t3);}
+
+    /* Quick-log modal */
+    .quick-log-box{max-width:440px;}
+    .ql-duration-row{display:flex;gap:8px;margin-bottom:0;}
+    .ql-dur{padding:4px 12px;font-size:.82rem;}
+
+    /* Observation journal */
+    .obs-journal-box{max-width:560px;max-height:80vh;display:flex;flex-direction:column;}
+    .obs-journal-box .modal-body{flex:1;overflow-y:auto;}
+    .obs-add-row{margin-bottom:14px;}
+    .obs-add-controls{display:flex;gap:8px;margin-top:6px;align-items:center;}
+    .form-select{background:var(--bg3);color:var(--text);border:1px solid var(--bmed);
+      border-radius:6px;padding:6px 10px;font-size:.85rem;}
+    .obs-list{display:flex;flex-direction:column;gap:8px;}
+    .obs-entry{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+    .obs-entry-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+    .obs-date{font-size:.75rem;color:var(--muted);margin-left:auto;}
+    .obs-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;
+      padding:0 4px;line-height:1;}
+    .obs-del:hover{color:var(--t3);}
+    .obs-text{font-size:.86rem;color:var(--text);line-height:1.5;}
+    .obs-empty{text-align:center;padding:24px;color:var(--muted);font-size:.88rem;}
+
+    /* Settings form */
+    .settings-section{margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+    .settings-section:last-of-type{border-bottom:none;}
+    .settings-section-title{font-size:.95rem;font-weight:600;margin-bottom:12px;color:var(--text);}
+    .form-label{display:block;font-size:.8rem;font-weight:600;color:var(--muted);
+      text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;margin-top:12px;}
+    .form-input{width:100%;background:var(--bg3);color:var(--text);
+      border:1px solid var(--bmed);border-radius:7px;padding:8px 11px;
+      font-size:.88rem;box-sizing:border-box;transition:border-color .15s;}
+    .form-input:focus{outline:none;border-color:var(--accent);}
+
+    /* Search clear button */
+    .search-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);
+      background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;
+      line-height:1;padding:0 4px;}
+    .search-clear:hover{color:var(--text);}
 </style>
   <style id="lm-toast-styles">
   @keyframes lm-fadein { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
@@ -639,7 +698,7 @@
           <li>MTSS report generation</li>
         </ul>
         <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:8px;font-size:11px;font-family:var(--mono);color:var(--dim)">
-          Version 1.0 · Sprint 17 · Built for Ms. Rowe
+          Version 1.0 · Sprint 18 · Built for Ms. Rowe
         </div>
       </div>
       <div class="card" style="margin-bottom:16px">
@@ -3072,6 +3131,374 @@ if (typeof autoGenerateGroups === 'undefined') {
     }, 3000);
   };
 })();
+
+function getApiKey(){return(typeof S!=='undefined'&&S.settings&&S.settings.apiKey)||localStorage.getItem('lm_apiKey')||'';}
+async function analyzeWithClaude(prompt,outputElId,btnEl){
+  var key=getApiKey();
+  if(!key){showToast('Add your Anthropic API key in Settings first','warn');return;}
+  if(btnEl){btnEl.disabled=true;btnEl.dataset.origText=btnEl.dataset.origText||btnEl.textContent;btnEl.textContent='Analyzing…';}
+  try{
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+      headers:{'x-api-key':key,'anthropic-version':'2023-06-01','content-type':'application/json',
+               'anthropic-dangerous-direct-browser-calls':'true'},
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1024,
+        messages:[{role:'user',content:prompt}]})});
+    if(!resp.ok){var err=await resp.json();throw new Error(err.error&&err.error.message||resp.status);}
+    var data=await resp.json();
+    var text=data.content&&data.content[0]&&data.content[0].text||'No response.';
+    var out=outputElId?document.getElementById(outputElId):null;
+    if(out){out.innerHTML='<div class="ai-result">'+text.replace(/\n/g,'<br>')+'</div>';}
+    return text;
+  }catch(e){showToast('Claude API error: '+e.message,'error');return null;}
+  finally{if(btnEl){btnEl.disabled=false;btnEl.textContent=btnEl.dataset.origText||'🤖 Analyze';}}
+}
+function analyzeCaseload(btnEl){
+  var all=getStudents();if(!all.length){showToast('No student data','warn');return;}
+  var summary=all.map(function(s){return(s.name||'?')+': Grade '+(s.grade||'?')+', Tier '+(s.tier||'?')+', WPM '+(s.wpm||'?');}).join('\n');
+  var prompt='You are a reading specialist. Analyze this caseload and provide: 1) Key patterns, 2) Priority students, 3) Recommended groupings, 4) Focus areas for next 4 weeks.\n\n'+summary;
+  analyzeWithClaude(prompt,'claude-analysis-output',btnEl);
+}
+function logInterventionSession(studentId,programName,minutes,notes){
+  var session={id:Date.now(),studentId:studentId,program:programName||'',minutes:parseInt(minutes)||20,
+    notes:notes||'',date:new Date().toISOString(),month:new Date().toISOString().slice(0,7)};
+  var key='lm_int_'+studentId;
+  var existing=JSON.parse(localStorage.getItem(key)||'[]');
+  existing.push(session);localStorage.setItem(key,JSON.stringify(existing));
+  showToast('Session logged: '+session.minutes+' min','success');return session;
+}
+
+// ══════════════════════════════════════════════════════════════
+// Sprint 18: CSV Export, Settings persistence, Search,
+//            Assessment date tracker, Quick-log, Observations,
+//            Dashboard summary ribbon
+// ══════════════════════════════════════════════════════════════
+
+// ── CSV Export ───────────────────────────────────────────────────────────────
+function exportRosterCSV(){
+  var all=getStudents();
+  if(!all.length){showToast('No students to export','warn');return;}
+  var headers=['Name','Grade','Tier','Reading Level','WPM','Comprehension %',
+    'Last Assessed','Intervention Minutes (Month)','Notes'];
+  var rows=all.map(function(s){
+    var mins=getMonthlyInterventionMins(s.id||s.name||'');
+    var lastAssessed=getLastAssessedDate(s.id||s.name||'');
+    return[
+      s.name||'',s.grade||s.Grade||'',s.tier||s.Tier||'',
+      s.level||s.readingLevel||'',s.wpm||s.WPM||'',
+      s.comp||s.comprehension||'',lastAssessed,mins,
+      (s.notes||'').replace(/,/g,';')
+    ].map(function(v){return'"'+String(v).replace(/"/g,'""')+'"';}).join(',');
+  });
+  var csv=[headers.join(',')].concat(rows).join('\n');
+  var blob=new Blob([csv],{type:'text/csv'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  var d=new Date().toISOString().slice(0,10);
+  a.download='literacy-map-roster-'+d+'.csv';a.click();
+  showToast('Exported '+all.length+' students to CSV','success');
+}
+
+// ── Settings persistence ──────────────────────────────────────────────────────
+function saveSettings(){
+  var fields=['teacher','school','apiKey','theme','defaultGrade'];
+  var settings=S.settings||{};
+  fields.forEach(function(f){
+    var el=document.getElementById('setting-'+f);
+    if(el)settings[f]=el.value.trim();
+  });
+  S.settings=settings;
+  localStorage.setItem('lm_settings',JSON.stringify(settings));
+  if(settings.apiKey)localStorage.setItem('lm_apiKey',settings.apiKey);
+  if(settings.theme)applyThemeS18(settings.theme);
+  showToast('Settings saved','success');
+}
+function loadSettingsUI(){
+  var settings=S.settings||JSON.parse(localStorage.getItem('lm_settings')||'{}');
+  S.settings=settings;
+  ['teacher','school','apiKey','theme','defaultGrade'].forEach(function(f){
+    var el=document.getElementById('setting-'+f);
+    if(el&&settings[f])el.value=settings[f];
+  });
+}
+function applyThemeS18(theme){
+  if(theme==='light'){
+    document.documentElement.style.setProperty('--bg1','#ffffff');
+    document.documentElement.style.setProperty('--bg2','#f5f6fa');
+    document.documentElement.style.setProperty('--text','#1a1d2e');
+  }else{
+    document.documentElement.style.removeProperty('--bg1');
+    document.documentElement.style.removeProperty('--bg2');
+    document.documentElement.style.removeProperty('--text');
+  }
+}
+
+// ── Real-time roster search ───────────────────────────────────────────────────
+function filterBySearch(query){
+  query=(query||'').toLowerCase().trim();
+  var rows=document.querySelectorAll('.roster-row,[data-student-row]');
+  var shown=0;
+  rows.forEach(function(row){
+    var text=(row.textContent||'').toLowerCase();
+    var match=!query||text.indexOf(query)!==-1;
+    row.style.display=match?'':'none';
+    if(match)shown++;
+  });
+  var countEl=document.getElementById('search-result-count');
+  if(countEl)countEl.textContent=query?shown+' result'+(shown!==1?'s':''):'';
+}
+
+// Attach search to any existing search input
+(function(){
+  document.addEventListener('DOMContentLoaded',function(){
+    var searchEl=document.getElementById('roster-search')||document.querySelector('input[type="search"]');
+    if(searchEl&&!searchEl._s18){
+      searchEl._s18=true;
+      searchEl.addEventListener('input',function(){filterBySearch(this.value);});
+      // Add clear button
+      var wrap=searchEl.parentElement;
+      if(wrap&&!wrap.querySelector('.search-clear')){
+        var clr=document.createElement('button');
+        clr.className='search-clear';clr.textContent='×';clr.title='Clear search';
+        clr.onclick=function(){searchEl.value='';filterBySearch('');searchEl.focus();};
+        wrap.style.position='relative';wrap.appendChild(clr);
+      }
+    }
+    loadSettingsUI();
+    setTimeout(renderDashboardRibbon,800);
+  });
+})();
+
+// ── Assessment date tracker ───────────────────────────────────────────────────
+function recordAssessmentDate(studentId){
+  var key='lm_assess_'+studentId;
+  localStorage.setItem(key,new Date().toISOString());
+}
+function getLastAssessedDate(studentId){
+  var raw=localStorage.getItem('lm_assess_'+studentId);
+  if(!raw)return'';
+  return new Date(raw).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
+function daysSinceAssessed(studentId){
+  var raw=localStorage.getItem('lm_assess_'+studentId);
+  if(!raw)return null;
+  return Math.floor((Date.now()-new Date(raw).getTime())/(1000*60*60*24));
+}
+function assessedBadge(studentId){
+  var days=daysSinceAssessed(studentId);
+  if(days===null)return'<span class="assess-badge assess-never">Not assessed</span>';
+  if(days<=7)return'<span class="assess-badge assess-recent">'+days+'d ago</span>';
+  if(days<=21)return'<span class="assess-badge assess-ok">'+days+'d ago</span>';
+  return'<span class="assess-badge assess-overdue">'+days+'d ago</span>';
+}
+
+// ── Quick-log intervention modal ──────────────────────────────────────────────
+function openQuickLog(studentId,studentName){
+  var existing=document.getElementById('quick-log-modal');
+  if(existing)existing.remove();
+  var modal=document.createElement('div');
+  modal.id='quick-log-modal';
+  modal.className='modal-overlay';
+  modal.innerHTML=
+    '<div class="modal-box quick-log-box">'
+    +'<div class="modal-header"><h3>Log Session — '+studentName+'</h3>'
+    +'<button class="modal-close" onclick="document.getElementById(\'quick-log-modal\').remove()">×</button></div>'
+    +'<div class="modal-body">'
+    +'<label class="form-label">Program / Curriculum</label>'
+    +'<input id="ql-program" class="form-input" placeholder="e.g. RAVE-O, Fundations, Heggerty…" />'
+    +'<label class="form-label">Duration (minutes)</label>'
+    +'<div class="ql-duration-row">'
+    +'<button class="btn btn-ghost ql-dur" onclick="document.getElementById(\'ql-mins\').value=15">15</button>'
+    +'<button class="btn btn-ghost ql-dur" onclick="document.getElementById(\'ql-mins\').value=20">20</button>'
+    +'<button class="btn btn-ghost ql-dur" onclick="document.getElementById(\'ql-mins\').value=30">30</button>'
+    +'<button class="btn btn-ghost ql-dur" onclick="document.getElementById(\'ql-mins\').value=45">45</button>'
+    +'</div>'
+    +'<input id="ql-mins" class="form-input" type="number" min="5" max="120" value="20" style="margin-top:6px" />'
+    +'<label class="form-label">Notes</label>'
+    +'<textarea id="ql-notes" class="form-input" rows="3" placeholder="Observations, next steps…"></textarea>'
+    +'</div>'
+    +'<div class="modal-footer">'
+    +'<button class="btn btn-ghost" onclick="document.getElementById(\'quick-log-modal\').remove()">Cancel</button>'
+    +'<button class="btn btn-primary" onclick="submitQuickLog(\''+studentId+'\',\''+studentName+'\')">'
+    +'💾 Save Session</button>'
+    +'</div></div>';
+  document.body.appendChild(modal);
+  setTimeout(function(){var el=document.getElementById('ql-program');if(el)el.focus();},50);
+}
+function submitQuickLog(studentId,studentName){
+  var program=document.getElementById('ql-program').value.trim()||'General';
+  var mins=parseInt(document.getElementById('ql-mins').value)||20;
+  var notes=document.getElementById('ql-notes').value.trim();
+  logInterventionSession(studentId,program,mins,notes);
+  recordAssessmentDate(studentId);
+  document.getElementById('quick-log-modal').remove();
+  renderDashboardRibbon();
+}
+function getMonthlyInterventionMins(studentId){
+  var key='lm_int_'+studentId;
+  var sessions=JSON.parse(localStorage.getItem(key)||'[]');
+  var thisMonth=new Date().toISOString().slice(0,7);
+  return sessions.filter(function(s){return s.month===thisMonth;})
+    .reduce(function(a,s){return a+s.minutes;},0);
+}
+
+// ── Observation journal ───────────────────────────────────────────────────────
+function addObservation(studentId,studentName,text,category){
+  if(!text||text.length<3){showToast('Enter an observation','warn');return;}
+  var key='lm_obs_'+studentId;
+  var obs=JSON.parse(localStorage.getItem(key)||'[]');
+  obs.unshift({id:Date.now(),text:text,category:category||'general',
+    date:new Date().toISOString(),author:(S.settings&&S.settings.teacher)||''});
+  localStorage.setItem(key,JSON.stringify(obs));
+  showToast('Observation saved','success');
+  return obs[0];
+}
+function getObservations(studentId){
+  return JSON.parse(localStorage.getItem('lm_obs_'+studentId)||'[]');
+}
+function deleteObservation(studentId,obsId){
+  var key='lm_obs_'+studentId;
+  var obs=JSON.parse(localStorage.getItem(key)||'[]').filter(function(o){return o.id!==obsId;});
+  localStorage.setItem(key,JSON.stringify(obs));
+}
+function openObservationJournal(studentId,studentName){
+  var existing=document.getElementById('obs-journal-modal');
+  if(existing)existing.remove();
+  var obs=getObservations(studentId);
+  var cats=['fluency','decoding','comprehension','phonics','vocabulary','engagement','behavior','general'];
+  var catOpts=cats.map(function(c){return'<option value="'+c+'">'+c.charAt(0).toUpperCase()+c.slice(1)+'</option>';}).join('');
+  var obsHTML=obs.length?obs.map(function(o){
+    var d=new Date(o.date).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    return'<div class="obs-entry" id="obs-'+o.id+'">'
+      +'<div class="obs-entry-header">'
+      +'<span class="obs-tag">'+o.category+'</span>'
+      +'<span class="obs-date">'+d+'</span>'
+      +'<button class="obs-del" onclick="deleteObservation(\''+studentId+'\','+o.id+');this.closest(\'.obs-entry\').remove();showToast(\'Removed\',\'warn\')">×</button>'
+      +'</div>'
+      +'<div class="obs-text">'+o.text+'</div>'
+      +'</div>';
+  }).join(''):'<div class="obs-empty">No observations yet.</div>';
+  var modal=document.createElement('div');
+  modal.id='obs-journal-modal';modal.className='modal-overlay';
+  modal.innerHTML=
+    '<div class="modal-box obs-journal-box">'
+    +'<div class="modal-header"><h3>📓 Observations — '+studentName+'</h3>'
+    +'<button class="modal-close" onclick="document.getElementById(\'obs-journal-modal\').remove()">×</button></div>'
+    +'<div class="modal-body">'
+    +'<div class="obs-add-row">'
+    +'<textarea id="new-obs-text" class="form-input" rows="2" placeholder="Write an observation…"></textarea>'
+    +'<div class="obs-add-controls">'
+    +'<select id="new-obs-cat" class="form-input form-select">'+catOpts+'</select>'
+    +'<button class="btn btn-primary" onclick="(function(){'
+      +'var t=document.getElementById(\'new-obs-text\');'
+      +'var c=document.getElementById(\'new-obs-cat\');'
+      +'var o=addObservation(\''+studentId+'\',\''+studentName+'\',t.value,c.value);'
+      +'if(o){var d=new Date(o.date).toLocaleDateString(\'en-US\',{month:\'short\',day:\'numeric\'});'
+      +'var h=\'<div class="obs-entry" id="obs-\'+o.id+\'">'
+      +'<div class="obs-entry-header">'
+      +'<span class="obs-tag">\'+o.category+\'</span>'
+      +'<span class="obs-date">\'+d+\'</span>'
+      +'<button class="obs-del" onclick="deleteObservation(\\\''+studentId+'\\\',\'+o.id+\');this.closest(\\\\'.obs-entry\\\\').remove()">×</button>'
+      +'</div><div class="obs-text">\'+o.text+\'</div></div>\';'
+      +'var list=document.getElementById(\'obs-list-'+studentId+'\');'
+      +'if(list){var empty=list.querySelector(\'.obs-empty\');if(empty)empty.remove();list.insertAdjacentHTML(\'afterbegin\',h);}'
+      +'t.value=\'\';}})()">Add</button>'
+    +'</div></div>'
+    +'<div id="obs-list-'+studentId+'" class="obs-list">'+obsHTML+'</div>'
+    +'</div></div>';
+  document.body.appendChild(modal);
+}
+
+// ── Dashboard summary ribbon ──────────────────────────────────────────────────
+function renderDashboardRibbon(){
+  var container=document.getElementById('dashboard-ribbon');
+  if(!container){
+    // Try to inject near page-overview or first page
+    var overview=document.getElementById('page-overview')||document.querySelector('.page-content');
+    if(!overview)return;
+    container=document.createElement('div');container.id='dashboard-ribbon';
+    overview.insertBefore(container,overview.firstChild);
+  }
+  var all=getStudents();
+  var t3=all.filter(function(s){return String(s.tier||s.Tier||'')=='3';}).length;
+  var t2=all.filter(function(s){return String(s.tier||s.Tier||'')=='2';}).length;
+  var t1=all.filter(function(s){return String(s.tier||s.Tier||'')=='1';}).length;
+  var wpms=all.map(function(s){return parseFloat(s.wpm||s.WPM||0);}).filter(function(w){return w>0;});
+  var avgWPM=wpms.length?Math.round(wpms.reduce(function(a,b){return a+b;},0)/wpms.length):0;
+  var totalMins=all.reduce(function(a,s){return a+getMonthlyInterventionMins(s.id||s.name||'');},0);
+  var needAssess=all.filter(function(s){var d=daysSinceAssessed(s.id||s.name||'');return d===null||d>21;}).length;
+  container.innerHTML=
+    '<div class="ribbon-card t3-bg"><div class="ribbon-n">'+t3+'</div><div class="ribbon-label">Tier 3</div></div>'
+    +'<div class="ribbon-card t2-bg"><div class="ribbon-n">'+t2+'</div><div class="ribbon-label">Tier 2</div></div>'
+    +'<div class="ribbon-card t1-bg"><div class="ribbon-n">'+t1+'</div><div class="ribbon-label">Tier 1</div></div>'
+    +'<div class="ribbon-card"><div class="ribbon-n">'+(avgWPM||'—')+'</div><div class="ribbon-label">Avg WPM</div></div>'
+    +'<div class="ribbon-card"><div class="ribbon-n">'+totalMins+'</div><div class="ribbon-label">Min this month</div></div>'
+    +(needAssess?'<div class="ribbon-card ribbon-alert"><div class="ribbon-n">'+needAssess+'</div><div class="ribbon-label">Need assessing</div></div>':'');
+}
+
+// ── Inject Settings UI if settings page exists ────────────────────────────────
+(function(){
+  document.addEventListener('DOMContentLoaded',function(){
+    var settingsPage=document.getElementById('page-settings');
+    if(settingsPage&&!document.getElementById('s18-settings-form')){
+      var form=document.createElement('div');
+      form.id='s18-settings-form';
+      form.innerHTML=
+        '<div class="settings-section">'
+        +'<h3 class="settings-section-title">👤 Teacher Info</h3>'
+        +'<label class="form-label">Teacher Name</label>'
+        +'<input id="setting-teacher" class="form-input" placeholder="Ms. Rowe" />'
+        +'<label class="form-label">School Name</label>'
+        +'<input id="setting-school" class="form-input" placeholder="Lincoln Elementary" />'
+        +'</div>'
+        +'<div class="settings-section">'
+        +'<h3 class="settings-section-title">🤖 Claude AI</h3>'
+        +'<label class="form-label">Anthropic API Key</label>'
+        +'<input id="setting-apiKey" class="form-input" type="password" placeholder="sk-ant-…" '
+        +'style="font-family:monospace" />'
+        +'<div style="font-size:.78rem;color:var(--muted);margin-top:4px">'
+        +'Your key is stored locally in your browser only. Never sent to our servers.</div>'
+        +'</div>'
+        +'<div class="settings-section">'
+        +'<h3 class="settings-section-title">🎨 Appearance</h3>'
+        +'<label class="form-label">Theme</label>'
+        +'<select id="setting-theme" class="form-input form-select">'
+        +'<option value="dark">Dark (default)</option>'
+        +'<option value="light">Light</option>'
+        +'</select>'
+        +'</div>'
+        +'<div class="settings-section">'
+        +'<h3 class="settings-section-title">📤 Data</h3>'
+        +'<div style="display:flex;gap:10px;flex-wrap:wrap">'
+        +'<button class="btn btn-primary" onclick="exportRosterCSV()">⬇ Export Roster CSV</button>'
+        +'<button class="btn btn-ghost" onclick="exportObservationsCSV()">⬇ Export Observations</button>'
+        +'</div></div>'
+        +'<div style="margin-top:20px">'
+        +'<button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>'
+        +'</div>';
+      settingsPage.appendChild(form);
+      loadSettingsUI();
+    }
+    renderDashboardRibbon();
+  });
+})();
+
+// ── Export observations as CSV ────────────────────────────────────────────────
+function exportObservationsCSV(){
+  var all=getStudents();
+  var rows=[['Student','Date','Category','Observation','Author']];
+  all.forEach(function(s){
+    var obs=getObservations(s.id||s.name||'');
+    obs.forEach(function(o){
+      var d=new Date(o.date).toLocaleDateString('en-US');
+      rows.push([s.name||'',d,o.category,o.text.replace(/,/g,';'),o.author||'']);
+    });
+  });
+  if(rows.length<=1){showToast('No observations to export','warn');return;}
+  var csv=rows.map(function(r){return r.map(function(v){return'"'+String(v).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+  var blob=new Blob([csv],{type:'text/csv'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='literacy-map-observations-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+  showToast('Observations exported','success');
+}
 </script>
 
   <!-- Quick-assess modal -->
