@@ -891,7 +891,7 @@
           <li>MTSS report generation</li>
         </ul>
         <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:8px;font-size:11px;font-family:var(--mono);color:var(--dim)">
-          Version 1.0 · Sprint 22 · Built for Ms. Rowe
+          Version 1.0 · Sprint 23 · Built for Ms. Rowe
         </div>
       </div>
       <div class="card" style="margin-bottom:16px">
@@ -1919,7 +1919,7 @@ function selectQualStudent(id) {
 
 function toggleObsTag(btn) { btn.classList.toggle('selected'); }
 
-/* === AI ANALYSIS === */
+/* === AI MY STUDENTS === */
 async function analyzeWithAI() {
   const text = document.getElementById('obs-text').value;
   if (!text) { toast('Write an observation first', 'var(--t3)'); return; }
@@ -2195,7 +2195,7 @@ function generateReport(type) {
       text += '\n';
     });
   } else if (type === 'skillgap') {
-    text = `SKILL GAP ANALYSIS\n${header}`;
+    text = `SKILL GAP MY STUDENTS\n${header}`;
     const domains = ['phonics','fluency','comprehension','vocabulary'];
     const labels = { phonics:'Phonics & Decoding', fluency:'Reading Fluency', comprehension:'Comprehension', vocabulary:'Vocabulary' };
     text += `CLASS-WIDE AVERAGES\n`;
@@ -4236,7 +4236,7 @@ function showCoachingPanel(sid, sname) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 5. ANONYMIZED AI CASELOAD ANALYSIS
+// 5. ANONYMIZED AI CASELOAD MY STUDENTS
 // ─────────────────────────────────────────────────────────────────────────────
 
 function analyzeCaseloadAnonymized(btnEl) {
@@ -4927,6 +4927,274 @@ function s21InitAllPages() {
   } else {
     applyNavIcons();
     setTimeout(applyNavIcons, 600);
+  }
+})();
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Sprint 23 Fix: Idempotent nav rename + icon replacement
+// id: s23fix-navlabels
+// ══════════════════════════════════════════════════════════════════════════════
+(function() {
+  'use strict';
+
+  // ── Rename map (old → new) ────────────────────────────────────────────────
+  var RENAMES = [
+    ['Overview',          'My Caseload'],
+    ['Student Roster',    'Students'],
+    ['Skill Domains',     'Reading Skills'],
+    ['Growth Trends',     'Progress'],
+    ['Qualitative Data',  'Observations'],
+    ['Group Builder',     'Small Groups'],
+    ['Interventions',     'Intervention Log'],
+    ['Record Assessment', 'Assess'],
+    ['Reports',           'MTSS Reports'],
+    ['Import Data',       'Import'],
+    ['Strategies',        'Strategy Bank']
+  ];
+
+  // ── Icon map (new label → emoji) ──────────────────────────────────────────
+  var ICONS = {
+    'My Caseload':     '🏠',
+    'Students':        '👥',
+    'Reading Skills':  '🧠',
+    'Progress':        '📈',
+    'Observations':    '🔍',
+    'Small Groups':    '🧩',
+    'Intervention Log':'🎯',
+    'Assess':          '✏️',
+    'MTSS Reports':    '📑',
+    'Import':          '📥',
+    'Strategy Bank':   '💡'
+  };
+
+  // Unicode geometric symbols that apps use as placeholder icons
+  var GEO_RE = /^[■-◿☀-⛿✀-➿⊞⊙↑️\s]+/;
+
+  // ── Section header map ────────────────────────────────────────────────────
+  var SECTIONS = { 'ANALYSIS': 'MY STUDENTS', 'PLANNING': 'TAKE ACTION' };
+
+  // ── Fix MTSS duplication in text nodes ───────────────────────────────────
+  function fixMTSSDupe(text) {
+    return text.replace(/(MTSS\s+){2,}Reports/g, 'MTSS Reports')
+               .replace(/MTSS\s+MTSS/g, 'MTSS');
+  }
+
+  // ── Process one nav element ───────────────────────────────────────────────
+  function processNavEl(el) {
+    if (el.getAttribute('data-lm-renamed')) return; // already done
+
+    var rawText = el.textContent || '';
+
+    // Fix MTSS duplication first
+    if (rawText.indexOf('MTSS MTSS') !== -1) {
+      el.childNodes.forEach(function(n) {
+        if (n.nodeType === 3) n.textContent = fixMTSSDupe(n.textContent);
+      });
+      rawText = el.textContent;
+    }
+
+    // Determine which label this nav item carries (check new names first, then old)
+    var matchedNew = null;
+    Object.keys(ICONS).forEach(function(newLabel) {
+      if (!matchedNew && rawText.indexOf(newLabel) !== -1) matchedNew = newLabel;
+    });
+    // Also check old names that might not be renamed yet
+    var oldToNew = {};
+    RENAMES.forEach(function(pair) { oldToNew[pair[0]] = pair[1]; });
+    if (!matchedNew) {
+      RENAMES.forEach(function(pair) {
+        if (!matchedNew && rawText.indexOf(pair[0]) !== -1) matchedNew = pair[1];
+      });
+    }
+    if (!matchedNew) return; // not a known nav item
+
+    var targetIcon  = ICONS[matchedNew] || '';
+    var targetLabel = matchedNew;
+
+    // ── Step 1: Remove SVG icon children ─────────────────────────────────
+    el.querySelectorAll('svg').forEach(function(svg) { svg.remove(); });
+
+    // ── Step 2: Remove icon-only <span> or <i> children ──────────────────
+    el.querySelectorAll('span, i').forEach(function(child) {
+      var ct = child.textContent.trim();
+      // Only remove if it holds only icon/symbol chars and not the label
+      if (ct.length <= 4 && ct.indexOf(targetLabel) === -1 && GEO_RE.test(ct)) {
+        child.remove();
+      }
+    });
+
+    // ── Step 3: Find and update the text node containing the label ────────
+    var labelNode = null;
+    el.childNodes.forEach(function(n) {
+      if (n.nodeType === 3 && (n.textContent.indexOf(targetLabel) !== -1 ||
+          RENAMES.some(function(p){ return n.textContent.indexOf(p[0]) !== -1; }))) {
+        labelNode = n;
+      }
+    });
+
+    if (labelNode) {
+      var t = labelNode.textContent;
+      // Apply renames
+      RENAMES.forEach(function(pair) {
+        t = t.replace(new RegExp(pair[0].replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g'), pair[1]);
+      });
+      // Strip geometric prefix symbols
+      t = t.replace(GEO_RE, '');
+      // Strip any existing emoji at the very start (we'll re-add the right one)
+      t = t.replace(/^[\u{1F000}-\u{1FFFF}][️⃣]?\s*/u, '');
+      // Clean whitespace
+      t = t.trim();
+      labelNode.textContent = ' ' + t;
+      // Prepend the correct icon as a separate text node
+      el.insertBefore(document.createTextNode(targetIcon), el.firstChild);
+    } else {
+      // Fallback: rebuild the element's text content cleanly
+      // Preserve any non-text children (badges, counts)
+      var badge = el.querySelector('.badge, [class*="count"], [class*="badge"]');
+      var badgeHTML = badge ? badge.outerHTML : '';
+      el.innerHTML = targetIcon + ' ' + targetLabel + (badgeHTML ? ' ' + badgeHTML : '');
+    }
+
+    el.setAttribute('data-lm-renamed', '1');
+  }
+
+  // ── Process section headers ───────────────────────────────────────────────
+  function processSections() {
+    var selectors = [
+      '.nav-section', '.sidebar-section', '[class*="nav-group"]',
+      '[class*="section-title"]', '[class*="nav-heading"]',
+      '.nav-category', 'nav h3, nav h4, nav h5',
+      '.sidebar h3, .sidebar h4, .sidebar h5'
+    ];
+    selectors.forEach(function(sel) {
+      document.querySelectorAll(sel).forEach(function(el) {
+        if (el.getAttribute('data-lm-section-renamed')) return;
+        var t = el.textContent.trim();
+        if (SECTIONS[t]) {
+          el.textContent = SECTIONS[t];
+          el.setAttribute('data-lm-section-renamed', '1');
+        }
+      });
+    });
+
+    // Also scan all text nodes in nav for section labels as plain text
+    var navEls = document.querySelectorAll('nav, .sidebar, [class*="sidebar"], [class*="sidenav"]');
+    navEls.forEach(function(nav) {
+      var walker = document.createTreeWalker(nav, NodeFilter.SHOW_TEXT, null, false);
+      var node;
+      while ((node = walker.nextNode())) {
+        var parent = node.parentElement;
+        if (!parent || parent.getAttribute('data-lm-section-renamed')) continue;
+        var t = node.textContent.trim();
+        if (SECTIONS[t]) {
+          node.textContent = node.textContent.replace(t, SECTIONS[t]);
+          parent.setAttribute('data-lm-section-renamed', '1');
+        }
+      }
+    });
+  }
+
+  // ── Main: find and process all nav items ──────────────────────────────────
+  function applyAll() {
+    // Nav element selectors — broad but targeted to navigation areas
+    var navSelectors = [
+      'nav a', 'nav button', 'nav li',
+      '.sidebar a', '.sidebar button', '.sidebar li',
+      '[class*="sidebar"] a', '[class*="sidebar"] button',
+      '[class*="nav-link"]', '[class*="nav-item"]',
+      '[onclick*="showPage"]', '[data-page]'
+    ];
+
+    navSelectors.forEach(function(sel) {
+      document.querySelectorAll(sel).forEach(processNavEl);
+    });
+
+    processSections();
+  }
+
+  // Update S21 hero titles to use new names
+  function syncHeroTitles() {
+    var heroTitleMap = {
+      'Overview':          'My Caseload',
+      'Student Roster':    'Students',
+      'Skill Domains':     'Reading Skills',
+      'Growth Trends':     'Progress',
+      'Qualitative Data':  'Observations',
+      'Group Builder':     'Small Groups',
+      'Interventions':     'Intervention Log',
+      'Record Assessment': 'Assess',
+      'Reports':           'MTSS Reports',
+      'Import Data':       'Import',
+      'Strategies':        'Strategy Bank'
+    };
+    document.querySelectorAll('.s21-hero-title, .s20-hero-title').forEach(function(el) {
+      Object.keys(heroTitleMap).forEach(function(old) {
+        if (el.textContent.indexOf(old) !== -1) {
+          el.textContent = el.textContent.replace(
+            new RegExp(old.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g'),
+            heroTitleMap[old]
+          );
+        }
+      });
+    });
+
+    // Update S21 page registry
+    if (typeof S21_PAGES !== 'undefined') {
+      var pageUpdates = {
+        roster:       { title: 'Students',        icon: '👥' },
+        bm:           { title: 'Progress',         icon: '📈' },
+        benchmark:    { title: 'Progress',         icon: '📈' },
+        reports:      { title: 'MTSS Reports',     icon: '📑' },
+        groups:       { title: 'Small Groups',     icon: '🧩' },
+        interventions:{ title: 'Intervention Log', icon: '🎯' },
+        settings:     { title: 'Settings',         icon: '⚙️' },
+        observations: { title: 'Observations',     icon: '🔍' },
+        overview:     { title: 'My Caseload',      icon: '🏠' },
+        skills:       { title: 'Reading Skills',   icon: '🧠' },
+        progress:     { title: 'Progress',         icon: '📈' },
+        import:       { title: 'Import',           icon: '📥' },
+        strategies:   { title: 'Strategy Bank',    icon: '💡' }
+      };
+      Object.keys(pageUpdates).forEach(function(k) {
+        if (S21_PAGES[k]) {
+          S21_PAGES[k].title = pageUpdates[k].title;
+          S21_PAGES[k].icon  = pageUpdates[k].icon;
+        }
+      });
+    }
+  }
+
+  // ── Hook into showPage to re-apply after nav rebuilds ────────────────────
+  // (No MutationObserver — that caused the infinite loop)
+  var _origShowPage = window.showPage;
+  window.showPage = function(pageId) {
+    if (typeof _origShowPage === 'function') _origShowPage.apply(this, arguments);
+    // Strip data-lm-renamed from nav items so they get re-processed after
+    // any nav rebuild that might have replaced the DOM nodes
+    setTimeout(function() {
+      document.querySelectorAll('[data-lm-renamed]').forEach(function(el) {
+        // Only reset if the text has reverted (e.g. nav was rebuilt)
+        if (el.textContent.indexOf('data-lm-renamed') !== -1) {
+          el.removeAttribute('data-lm-renamed');
+        }
+      });
+      applyAll();
+      syncHeroTitles();
+    }, 120);
+  };
+
+  // ── Boot ──────────────────────────────────────────────────────────────────
+  function boot() {
+    applyAll();
+    syncHeroTitles();
+    // One retry after JS frameworks may have re-rendered the nav
+    setTimeout(function() { applyAll(); syncHeroTitles(); }, 900);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
   }
 })();
 </script>
