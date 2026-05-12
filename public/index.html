@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LiteracyMap — Reading Intervention Tracker</title>
 
   <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
   <!-- Chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -768,21 +767,21 @@
       <div style="flex: 1; overflow-y: auto;">
         <div class="sidebar-section">
           <div class="sidebar-section-title">Analysis</div>
-          <div class="sidebar-item active" data-view="overview" onclick="go('overview', this)">🏠 Overview</div>
-          <div class="sidebar-item" data-view="roster" onclick="go('roster', this)" style="justify-content:space-between">👥 Student Roster <span id="roster-badge" style="display:none;background:var(--t3);color:#fff;font-size:9px;font-weight:700;border-radius:10px;padding:2px 6px;line-height:1.4;flex-shrink:0"></span></div>
-          <div class="sidebar-item" data-view="domains" onclick="go('domains', this)">🧠 Skill Domains</div>
-          <div class="sidebar-item" data-view="growth" onclick="go('growth', this)">📈 Growth Trends</div>
-          <div class="sidebar-item" data-view="qualdata" onclick="go('qualdata', this)">🔍 Qualitative Data</div>
+          <div class="sidebar-item active" data-view="overview" onclick="go(&#39;overview&#39;, this)">🏠 Overview</div>
+          <div class="sidebar-item" data-view="roster" onclick="go(&#39;roster&#39;, this)" style="justify-content:space-between">👥 Student Roster <span id="roster-badge" style="display:none;background:var(--t3);color:#fff;font-size:9px;font-weight:700;border-radius:10px;padding:2px 6px;line-height:1.4;flex-shrink:0"></span></div>
+          <div class="sidebar-item" data-view="domains" onclick="go(&#39;domains&#39;, this)">🧠 Skill Domains</div>
+          <div class="sidebar-item" data-view="growth" onclick="go(&#39;growth&#39;, this)">📈 Growth Trends</div>
+          <div class="sidebar-item" data-view="qualdata" onclick="go(&#39;qualdata&#39;, this)">🔍 Qualitative Data</div>
         </div>
         <div class="sidebar-section">
           <div class="sidebar-section-title">Planning</div>
-          <div class="sidebar-item" data-view="groups" onclick="go('groups', this)">🧩 Group Builder</div>
-          <div class="sidebar-item" data-view="interventions" onclick="go('interventions', this)">🎯 Interventions</div>
-          <div class="sidebar-item" data-view="assess" onclick="go('assess', this)">✏️ Record Assessment</div>
-          <div class="sidebar-item" data-view="reports" onclick="go('reports', this)">📑 Reports</div>
-          <div class="sidebar-item" data-view="import" onclick="go('import', this)">📥 Import Data</div>
-          <div class="sidebar-item" data-view="strategies" onclick="go('strategies', this)">💡 Strategies</div>
-          <div class="sidebar-item" data-view="settings" onclick="go('settings', this)">⚙ Settings</div>
+          <div class="sidebar-item" data-view="groups" onclick="go(&#39;groups&#39;, this)">🧩 Group Builder</div>
+          <div class="sidebar-item" data-view="interventions" onclick="go(&#39;interventions&#39;, this)">🎯 Interventions</div>
+          <div class="sidebar-item" data-view="assess" onclick="go(&#39;assess&#39;, this)">✏️ Record Assessment</div>
+          <div class="sidebar-item" data-view="reports" onclick="go(&#39;reports&#39;, this)">📑 Reports</div>
+          <div class="sidebar-item" data-view="import" onclick="go(&#39;import&#39;, this)">📥 Import Data</div>
+          <div class="sidebar-item" data-view="strategies" onclick="go(&#39;strategies&#39;, this)">💡 Strategies</div>
+          <div class="sidebar-item" data-view="settings" onclick="go(&#39;settings&#39;, this)">⚙ Settings</div>
         </div>
       </div>
       <div class="sidebar-footer">
@@ -804,12 +803,12 @@
       </div>
 
       <div class="content" id="contentArea">
-        <div class="view active" id="view-overview"><h2 style="margin-bottom: 24px;">Overview</h2><div id="demo-banner" style="display:none;margin-bottom:16px;padding:12px 16px;background:rgba(91,141,238,0.1);border:1px solid rgba(91,141,238,0.3);border-radius:8px;font-size:13px;color:var(--text)">📚 <strong>You're viewing demo data.</strong> Add your own students via the Roster or <a href="#" onclick="go('import',document.querySelector('[data-view=import]'));event.preventDefault()" style="color:var(--accent);text-decoration:underline">import a class list</a> to get started. <button onclick="this.parentElement.style.display='none'" style="float:right;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">✕</button></div><div id="overdue-alert" style="display:none;margin-bottom:16px;padding:12px 16px;background:var(--t3b);border:1px solid var(--t3d);border-radius:8px;font-size:13px;color:var(--t3)"></div><div class="g4" id="kpi-container"></div><div style="margin-bottom:16px;display:flex;justify-content:flex-end"><button class="btn secondary" onclick="aiCaseloadInsights()" style="padding:8px 16px">🤖 Analyze My Caseload (Claude)</button></div><div id="ai-caseload-result" style="display:none;margin-bottom:16px;padding:16px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:13px;line-height:1.8;border-left:3px solid var(--accent2)"></div><div class="g2"><div class="card"><h3>Reading Level Distribution</h3><div class="chart-container"><canvas id="c-dist"></canvas></div></div><div class="card"><h3>Skill Gaps by Domain</h3><div class="chart-container"><canvas id="c-gap"></canvas></div></div></div><div class="card"><h3>Tier Distribution</h3><div class="chart-container-wide"><canvas id="c-tier"></canvas></div></div></div>
+        <div class="view active" id="view-overview"><h2 style="margin-bottom: 24px;">Overview</h2><div id="demo-banner" style="display:none;margin-bottom:16px;padding:12px 16px;background:rgba(91,141,238,0.1);border:1px solid rgba(91,141,238,0.3);border-radius:8px;font-size:13px;color:var(--text)">📚 <strong>You're viewing demo data.</strong> Add your own students via the Roster or <a href="https://literacy-map-production.up.railway.app/#" onclick="go(&#39;import&#39;,document.querySelector(&#39;[data-view=import]&#39;));event.preventDefault()" style="color:var(--accent);text-decoration:underline">import a class list</a> to get started. <button onclick="this.parentElement.style.display=&#39;none&#39;" style="float:right;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">✕</button></div><div id="overdue-alert" style="display:none;margin-bottom:16px;padding:12px 16px;background:var(--t3b);border:1px solid var(--t3d);border-radius:8px;font-size:13px;color:var(--t3)"></div><div class="g4" id="kpi-container"></div><div style="margin-bottom:16px;display:flex;justify-content:flex-end"><button class="btn secondary" onclick="aiCaseloadInsights()" style="padding:8px 16px">🤖 Analyze My Caseload (Claude)</button></div><div id="ai-caseload-result" style="display:none;margin-bottom:16px;padding:16px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:13px;line-height:1.8;border-left:3px solid var(--accent2)"></div><div class="g2"><div class="card"><h3>Reading Level Distribution</h3><div class="chart-container"><canvas id="c-dist"></canvas></div></div><div class="card"><h3>Skill Gaps by Domain</h3><div class="chart-container"><canvas id="c-gap"></canvas></div></div></div><div class="card"><h3>Tier Distribution</h3><div class="chart-container-wide"><canvas id="c-tier"></canvas></div></div></div>
 
         <div class="view" id="view-roster"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
   <h2>Student Roster</h2>
   <button class="btn" onclick="generateHandoff()" style="display:flex;align-items:center;gap:6px">📋 Handoff Doc</button>
-</div><div class="filter-group grade-filter-row"><span style="font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap;align-self:center">GRADE:</span><button class="filter-btn grade-btn active" onclick="setGradeFilter(this,'')">All</button><button class="filter-btn grade-btn" onclick="setGradeFilter(this,1)">1st</button><button class="filter-btn grade-btn" onclick="setGradeFilter(this,2)">2nd</button><button class="filter-btn grade-btn" onclick="setGradeFilter(this,3)">3rd</button><button class="filter-btn grade-btn" onclick="setGradeFilter(this,4)">4th</button><button class="filter-btn grade-btn" onclick="setGradeFilter(this,5)">5th</button></div><div class="filter-group"><button class="filter-btn active" onclick="renderRoster('all')">All</button><button class="filter-btn" onclick="renderRoster('t3')">Tier 3 Intensive</button><button class="filter-btn" onclick="renderRoster('t2')">Tier 2 Strategic</button><button class="filter-btn" onclick="renderRoster('t1')">Tier 1 Core</button></div><button class="btn primary" onclick="openAddStudent()" style="margin-bottom: 16px;">+ Add Student</button><button class="btn export-btn" onclick="exportCSV()" style="margin-bottom:16px;margin-left:8px" title="Download roster as CSV">&#11015; Export CSV</button><button class="btn" onclick="printRoster()" style="margin-bottom:16px;margin-left:8px" title="Print roster">🖨 Print Roster</button><button class="btn" onclick="showCaseloadSummary()" style="margin-bottom:16px;margin-left:8px" title="Copy caseload summary">&#128203; Caseload Summary</button><div id="roster-stats"></div><div class="grade-filter-row" id="grade-filter-row"><span style="font-size:11px;color:var(--muted)">Grade:</span><button class="btn grade-btn" id="gf-all" onclick="setGradeFilter('')">All</button><button class="btn grade-btn" id="gf-K" onclick="setGradeFilter('K')">K</button><button class="btn grade-btn" id="gf-1" onclick="setGradeFilter('1')">1</button><button class="btn grade-btn" id="gf-2" onclick="setGradeFilter('2')">2</button><button class="btn grade-btn" id="gf-3" onclick="setGradeFilter('3')">3</button><button class="btn grade-btn" id="gf-4" onclick="setGradeFilter('4')">4</button><button class="btn grade-btn" id="gf-5" onclick="setGradeFilter('5')">5</button><button class="btn grade-btn" id="gf-6" onclick="setGradeFilter('6')">6+</button></div><div class="search-row"><input id="roster-search" class="search-input" placeholder="Search students..." oninput="S.searchQ=this.value;renderRoster()" autocomplete="off"></div><div class="g-aside"><div class="card"><table><thead><tr><th onclick="sortRoster('name')" style="cursor:pointer">Student <span id="sort-name"></span></th><th onclick="sortRoster('tier')" style="cursor:pointer">Tier <span id="sort-tier"></span></th><th>Reading Level</th><th onclick="sortRoster('fluencyWPM')" style="cursor:pointer">WPM <span id="sort-fluencyWPM"></span></th><th onclick="sortRoster('comprehension')" style="cursor:pointer">Comp % <span id="sort-comprehension"></span></th><th>Flags</th><th>Last Assessed</th><th style="width:90px">Trend</th><th style="width:44px"></th></tr></thead><tbody id="roster-tbody"></tbody></table></div><div id="detail-panel" class="detail-panel" style="display: none;"></div></div></div>
+</div><div class="filter-group grade-filter-row"><span style="font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap;align-self:center">GRADE:</span><button class="filter-btn grade-btn active" onclick="setGradeFilter(this,&#39;&#39;)">All</button><button class="filter-btn grade-btn" onclick="setGradeFilter(this,1)">1st</button><button class="filter-btn grade-btn" onclick="setGradeFilter(this,2)">2nd</button><button class="filter-btn grade-btn" onclick="setGradeFilter(this,3)">3rd</button><button class="filter-btn grade-btn" onclick="setGradeFilter(this,4)">4th</button><button class="filter-btn grade-btn" onclick="setGradeFilter(this,5)">5th</button></div><div class="filter-group"><button class="filter-btn active" onclick="renderRoster(&#39;all&#39;)">All</button><button class="filter-btn" onclick="renderRoster(&#39;t3&#39;)">Tier 3 Intensive</button><button class="filter-btn" onclick="renderRoster(&#39;t2&#39;)">Tier 2 Strategic</button><button class="filter-btn" onclick="renderRoster(&#39;t1&#39;)">Tier 1 Core</button></div><button class="btn primary" onclick="openAddStudent()" style="margin-bottom: 16px;">+ Add Student</button><button class="btn export-btn" onclick="exportCSV()" style="margin-bottom:16px;margin-left:8px" title="Download roster as CSV">⬇ Export CSV</button><button class="btn" onclick="printRoster()" style="margin-bottom:16px;margin-left:8px" title="Print roster">🖨 Print Roster</button><button class="btn" onclick="showCaseloadSummary()" style="margin-bottom:16px;margin-left:8px" title="Copy caseload summary">📋 Caseload Summary</button><div id="roster-stats"></div><div class="grade-filter-row" id="grade-filter-row"><span style="font-size:11px;color:var(--muted)">Grade:</span><button class="btn grade-btn" id="gf-all" onclick="setGradeFilter(&#39;&#39;)">All</button><button class="btn grade-btn" id="gf-K" onclick="setGradeFilter(&#39;K&#39;)">K</button><button class="btn grade-btn" id="gf-1" onclick="setGradeFilter(&#39;1&#39;)">1</button><button class="btn grade-btn" id="gf-2" onclick="setGradeFilter(&#39;2&#39;)">2</button><button class="btn grade-btn" id="gf-3" onclick="setGradeFilter(&#39;3&#39;)">3</button><button class="btn grade-btn" id="gf-4" onclick="setGradeFilter(&#39;4&#39;)">4</button><button class="btn grade-btn" id="gf-5" onclick="setGradeFilter(&#39;5&#39;)">5</button><button class="btn grade-btn" id="gf-6" onclick="setGradeFilter(&#39;6&#39;)">6+</button></div><div class="search-row"><input id="roster-search" class="search-input" placeholder="Search students..." oninput="S.searchQ=this.value;renderRoster()" autocomplete="off"></div><div class="g-aside"><div class="card"><table><thead><tr><th onclick="sortRoster(&#39;name&#39;)" style="cursor:pointer">Student <span id="sort-name"></span></th><th onclick="sortRoster(&#39;tier&#39;)" style="cursor:pointer">Tier <span id="sort-tier"></span></th><th>Reading Level</th><th onclick="sortRoster(&#39;fluencyWPM&#39;)" style="cursor:pointer">WPM <span id="sort-fluencyWPM"></span></th><th onclick="sortRoster(&#39;comprehension&#39;)" style="cursor:pointer">Comp % <span id="sort-comprehension"></span></th><th>Flags</th><th>Last Assessed</th><th style="width:90px">Trend</th><th style="width:44px"></th></tr></thead><tbody id="roster-tbody"></tbody></table></div><div id="detail-panel" class="detail-panel" style="display: none;"></div></div></div>
 
         <div class="view" id="view-domains">
   <h2 style="margin-bottom:16px">Skill Domains</h2>
@@ -834,7 +833,7 @@
 
         <div class="view" id="view-growth"><h2 style="margin-bottom: 24px;">Growth Trends</h2><div class="g4" id="growth-kpi-container"></div><div class="g2"><div class="card"><h3>Trajectory by Tier</h3><div class="chart-container"><canvas id="c-growth"></canvas></div></div><div class="card"><h3>Top Fluency Movers</h3><div class="chart-container"><canvas id="c-movers"></canvas></div></div></div><div class="card"><h3>Growth vs. Starting Level</h3><div class="chart-container-wide"><canvas id="c-scatter"></canvas></div></div></div>
 
-        <div class="view" id="view-qualdata"><h2 style="margin-bottom: 24px;">Qualitative Data</h2><div class="g2"><div><div class="card"><label>Select Student</label><input type="text" placeholder="Search students..." id="qualdata-search" oninput="filterStudentList()"><div style="max-height: 300px; overflow-y: auto; margin-top: 8px;" id="student-list"></div></div><div class="observation-entry"><label>Add Observation</label><textarea id="obs-text" class="obs-textarea" placeholder="Document classroom observation..."></textarea><label style="margin-top: 12px;">Context</label><div class="obs-tags"><button class="obs-tag-btn" data-context="Classroom obs" onclick="toggleObsTag(this)">Classroom obs</button><button class="obs-tag-btn" data-context="Student interview" onclick="toggleObsTag(this)">Student interview</button><button class="obs-tag-btn" data-context="Parent call" onclick="toggleObsTag(this)">Parent call</button><button class="obs-tag-btn" data-context="Small group" onclick="toggleObsTag(this)">Small group</button><button class="obs-tag-btn" data-context="Assessment review" onclick="toggleObsTag(this)">Assessment review</button><button class="obs-tag-btn" data-context="Counselor note" onclick="toggleObsTag(this)">Counselor note</button></div><button class="btn primary" onclick="analyzeWithAI()" style="width: 100%; margin-top: 12px;">✨ Analyze & Tag</button><button class="btn" onclick="submitObservation()" style="width: 100%; margin-top: 8px;">📝 Add Observation</button></div></div><div><div class="card"><h3>Observation Log</h3><div class="obs-log" id="obs-log" style="min-height: 300px;"></div></div><button class="btn" onclick="exportObsLog()" style="width: 100%; margin-top: 12px;">⬇ Export Log</button></div></div></div>
+        <div class="view" id="view-qualdata"><h2 style="margin-bottom: 24px;">Qualitative Data</h2><div class="g2"><div><div class="card"><label>Select Student</label><input type="text" placeholder="Search students..." id="qualdata-search" oninput="filterStudentList()"><div style="max-height: 300px; overflow-y: auto; margin-top: 8px;" id="student-list"></div></div><div class="observation-entry"><label>Add Observation</label><textarea id="obs-text" class="obs-textarea" placeholder="Document classroom observation..."></textarea><label style="margin-top: 12px;">Context</label><div class="obs-tags"><button class="obs-tag-btn" data-context="Classroom obs" onclick="toggleObsTag(this)">Classroom obs</button><button class="obs-tag-btn" data-context="Student interview" onclick="toggleObsTag(this)">Student interview</button><button class="obs-tag-btn" data-context="Parent call" onclick="toggleObsTag(this)">Parent call</button><button class="obs-tag-btn" data-context="Small group" onclick="toggleObsTag(this)">Small group</button><button class="obs-tag-btn" data-context="Assessment review" onclick="toggleObsTag(this)">Assessment review</button><button class="obs-tag-btn" data-context="Counselor note" onclick="toggleObsTag(this)">Counselor note</button></div><button class="btn primary" onclick="analyzeWithAI()" style="width: 100%; margin-top: 12px;">✨ Analyze &amp; Tag</button><button class="btn" onclick="submitObservation()" style="width: 100%; margin-top: 8px;">📝 Add Observation</button></div></div><div><div class="card"><h3>Observation Log</h3><div class="obs-log" id="obs-log" style="min-height: 300px;"></div></div><button class="btn" onclick="exportObsLog()" style="width: 100%; margin-top: 12px;">⬇ Export Log</button></div></div></div>
 
         <div class="view" id="view-groups"><h2 style="margin-bottom: 16px;">Group Builder</h2><div style="display: flex; gap: 12px; margin-bottom: 16px;"><button class="btn primary" onclick="autoGenerateGroups()">🤖 Auto-Generate</button><button class="btn" onclick="exportGroups()">⬇ Export Groups</button><button class="btn danger" onclick="resetGroups()">↻ Reset</button></div><div class="g3" id="groups-container"></div></div>
 
@@ -843,7 +842,7 @@
 
         <div class="view" id="view-reports"><h2 style="margin-bottom: 24px;">Reports</h2><div class="g2" id="reports-container"></div></div>
 
-        <div class="view" id="view-import"><h2 style="margin-bottom: 24px;">Import Data</h2><div class="g2"><div><div class="card"><h3>Import Students</h3><div class="import-zone" id="import-zone" onclick="document.getElementById('file-input').click()"><div class="import-zone-text">📁 Drop CSV or Excel file here</div><div class="import-zone-hint">or click to browse</div></div><input type="file" id="file-input" accept=".csv,.xlsx,.xls" onchange="handleImportFile(this.files[0])" style="display: none;"><div id="preview-container" style="display: none; margin-top: 16px;"><label>Preview (first 5 rows)</label><table style="font-size: 11px;"><thead id="preview-head"></thead><tbody id="preview-body"></tbody></table></div><button class="btn primary" id="import-btn" onclick="applyImport()" style="width: 100%; margin-top: 16px; display: none;">✓ Import Students</button></div></div><div><div class="card"><h3>Column Mapper</h3><table id="mapper-table" style="display: none;"><thead><tr><th>File Column</th><th>Maps To</th></tr></thead><tbody id="mapper-body"></tbody></table><p id="no-file" style="color: var(--muted); font-size: 12px;">Load a file to configure column mappings</p><h3 style="margin-top: 24px;">Session Management</h3><button class="btn" onclick="downloadTemplate()" style="width: 100%; margin-bottom: 8px;">📄 Download Template</button><button class="btn" onclick="exportSessionJSON()" style="width: 100%; margin-bottom: 8px;">💾 Export JSON</button><button class="btn" onclick="importSessionJSON()" style="width: 100%; margin-bottom: 8px;">📂 Load JSON</button><button class="btn danger" onclick="hardReset()" style="width: 100%;">🗑 Hard Reset</button></div></div></div></div>
+        <div class="view" id="view-import"><h2 style="margin-bottom: 24px;">Import Data</h2><div class="g2"><div><div class="card"><h3>Import Students</h3><div class="import-zone" id="import-zone" onclick="document.getElementById(&#39;file-input&#39;).click()"><div class="import-zone-text">📁 Drop CSV or Excel file here</div><div class="import-zone-hint">or click to browse</div></div><input type="file" id="file-input" accept=".csv,.xlsx,.xls" onchange="handleImportFile(this.files[0])" style="display: none;"><div id="preview-container" style="display: none; margin-top: 16px;"><label>Preview (first 5 rows)</label><table style="font-size: 11px;"><thead id="preview-head"></thead><tbody id="preview-body"></tbody></table></div><button class="btn primary" id="import-btn" onclick="applyImport()" style="width: 100%; margin-top: 16px; display: none;">✓ Import Students</button></div></div><div><div class="card"><h3>Column Mapper</h3><table id="mapper-table" style="display: none;"><thead><tr><th>File Column</th><th>Maps To</th></tr></thead><tbody id="mapper-body"></tbody></table><p id="no-file" style="color: var(--muted); font-size: 12px;">Load a file to configure column mappings</p><h3 style="margin-top: 24px;">Session Management</h3><button class="btn" onclick="downloadTemplate()" style="width: 100%; margin-bottom: 8px;">📄 Download Template</button><button class="btn" onclick="exportSessionJSON()" style="width: 100%; margin-bottom: 8px;">💾 Export JSON</button><button class="btn" onclick="importSessionJSON()" style="width: 100%; margin-bottom: 8px;">📂 Load JSON</button><button class="btn danger" onclick="hardReset()" style="width: 100%;">🗑 Hard Reset</button></div></div></div></div>
 
             <div class="view" id="view-assess">
       <h2 style="margin-bottom:24px;">Record Assessment</h2>
@@ -856,8 +855,8 @@
           </select>
           <label>Assessment Date</label>
           <input type="date" id="assessDate">
-          <label>Reading Level (DRA/F&P/Lexile)</label>
-          <input type="text" id="assessRL" list="rl-datalist" placeholder="e.g. DRA 16, F&P Level J, 650L">
+          <label>Reading Level (DRA/F&amp;P/Lexile)</label>
+          <input type="text" id="assessRL" list="rl-datalist" placeholder="e.g. DRA 16, F&amp;P Level J, 650L">
           <label>Fluency WPM</label>
           <input type="number" id="assessWPM" placeholder="Words per minute (e.g. 92)">
           <label>Comprehension %</label>
@@ -877,7 +876,7 @@
       </div>
     </div>
 
-<div class="view" id="view-strategies"><h2 style="margin-bottom: 16px;">Strategies & Lessons</h2><div class="filter-group"><button class="filter-btn active" onclick="filterStrategies('all')">All</button><button class="filter-btn" onclick="filterStrategies('phonics')">Phonics</button><button class="filter-btn" onclick="filterStrategies('fluency')">Fluency</button><button class="filter-btn" onclick="filterStrategies('comprehension')">Comprehension</button><button class="filter-btn" onclick="filterStrategies('vocabulary')">Vocabulary</button></div><div id="strategies-container" class="g2"></div></div>
+<div class="view" id="view-strategies"><h2 style="margin-bottom: 16px;">Strategies &amp; Lessons</h2><div class="filter-group"><button class="filter-btn active" onclick="filterStrategies(&#39;all&#39;)">All</button><button class="filter-btn" onclick="filterStrategies(&#39;phonics&#39;)">Phonics</button><button class="filter-btn" onclick="filterStrategies(&#39;fluency&#39;)">Fluency</button><button class="filter-btn" onclick="filterStrategies(&#39;comprehension&#39;)">Comprehension</button><button class="filter-btn" onclick="filterStrategies(&#39;vocabulary&#39;)">Vocabulary</button></div><div id="strategies-container" class="g2"></div></div>
 
 <div class="view" id="view-settings">
   <h2 style="margin-bottom:24px;">Settings</h2>
@@ -917,7 +916,7 @@
         <p style="font-size:13px;color:var(--muted);line-height:1.7">LiteracyMap is a reading intervention tracker designed for classroom teachers and reading specialists. It supports MTSS/RTI frameworks by providing:</p>
         <ul style="font-size:12px;color:var(--muted);line-height:1.9;padding-left:20px;margin-top:8px">
           <li>Tier-based student roster management</li>
-          <li>Multi-measure assessment tracking (DRA, F&P, WPM, comprehension, phonics)</li>
+          <li>Multi-measure assessment tracking (DRA, F&amp;P, WPM, comprehension, phonics)</li>
           <li>Qualitative observation logging</li>
           <li>Intervention program planning and progress monitoring</li>
           <li>Group builder for small-group instruction</li>
@@ -951,9 +950,9 @@
     </div>
   </div>
 
-  <div class="modal" id="planModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('planModal')">✕</button><h2>Student Plan</h2><div id="plan-content"></div></div></div>
-  <div class="modal" id="adaptModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('adaptModal')">✕</button><h2>Adapt Strategy</h2><div id="adapt-content"></div></div></div>
-  <div class="modal" id="reportModal"><div class="modal-content"><button class="modal-close" onclick="closeModal('reportModal')">✕</button><h2>Report</h2><div id="report-content" style="max-height: 600px; overflow-y: auto; white-space: pre-wrap; font-family: var(--mono); font-size: 12px;"></div><div style="display:flex;gap:8px;margin-top:16px"><button class="btn primary" onclick="copyReportText()" style="flex:1">📋 Copy</button><button class="btn" onclick="printReport()" style="flex:1">🖨 Print</button><button class="btn" onclick="downloadReport()" style="flex:1">⬇ Download</button></div></div></div>
+  <div class="modal" id="planModal"><div class="modal-content"><button class="modal-close" onclick="closeModal(&#39;planModal&#39;)">✕</button><h2>Student Plan</h2><div id="plan-content"></div></div></div>
+  <div class="modal" id="adaptModal"><div class="modal-content"><button class="modal-close" onclick="closeModal(&#39;adaptModal&#39;)">✕</button><h2>Adapt Strategy</h2><div id="adapt-content"></div></div></div>
+  <div class="modal" id="reportModal"><div class="modal-content"><button class="modal-close" onclick="closeModal(&#39;reportModal&#39;)">✕</button><h2>Report</h2><div id="report-content" style="max-height: 600px; overflow-y: auto; white-space: pre-wrap; font-family: var(--mono); font-size: 12px;"></div><div style="display:flex;gap:8px;margin-top:16px"><button class="btn primary" onclick="copyReportText()" style="flex:1">📋 Copy</button><button class="btn" onclick="printReport()" style="flex:1">🖨 Print</button><button class="btn" onclick="downloadReport()" style="flex:1">⬇ Download</button></div></div></div>
 
   <script>
 
@@ -3954,358 +3953,7 @@ function injectPrivacySettings() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 8. BOOT
-// ─────────────────────────────────────────────────────────────────────────────
-(function boot19() {
-  function init() {
-    checkFerpaConsent();
-    injectPrivacySettings();
-    if (typeof loadSettingsUI === 'function') loadSettingsUI();
-    if (typeof renderDashboardRibbon === 'function') renderDashboardRibbon();
-    // Wire search if present
-    var searchEl = document.getElementById('roster-search') || document.querySelector('input[placeholder*="earch"]');
-    if (searchEl && !searchEl._s19) {
-      searchEl._s19 = true;
-      searchEl.addEventListener('input', function() { filterBySearch(this.value); });
-    }
-  }
-  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); }
-  else { setTimeout(init, 300); }
-})();
-
-// ══════════════════════════════════════════════════════════════════════════════
-// Sprint 21: Universal Page Animation System  (id: sprint21-system)
-// ══════════════════════════════════════════════════════════════════════════════
-
-// ── Page config registry ──────────────────────────────────────────────────────
-// Maps page-id keywords → hero configuration
-var S21_PAGES = {
-  roster: {
-    heroClass:'s21-hero-roster', icon:'👥', title:'Student Roster',
-    sub:function(d){ return d.total+' students · '+d.t3+' Tier 3 · '+d.t2+' Tier 2 · '+d.t1+' Tier 1'; },
-    pills:function(d){
-      return [
-        {label:'🔴 '+d.t3+' Intensive', cls:'tier3'},
-        {label:'🟠 '+d.t2+' Strategic', cls:'tier2'},
-        {label:'🟢 '+d.t1+' Core',      cls:'tier1'},
-        d.needsAssess>0 ? {label:'⚠ '+d.needsAssess+' overdue', cls:'gold'} : null
-      ].filter(Boolean);
-    },
-    btns:function(){
-      return [
-        {label:'Export CSV',       fn:"typeof exportRosterCSV==='function'&&exportRosterCSV()"},
-        {label:'Coaching Insights',fn:"typeof showCoachingPanel==='function'&&showCoachingPanel(null,null)"},
-        {label:'Ask Claude',       fn:"typeof analyzeCaseloadAnonymized==='function'?analyzeCaseloadAnonymized(this):showToast('Add API key in Settings','warn')"}
-      ];
-    },
-    fab:true
-  },
-  bm: {
-    heroClass:'s21-hero-bm', icon:'📊', title:'Benchmark Data',
-    sub:function(d){ return 'DIBELS 8 fluency tracking · '+d.atBench+' of '+d.total+' students at EOY benchmark'; },
-    pills:function(d){
-      return [
-        {label:'📈 '+d.benchPct+'% at benchmark', cls:'tier1'},
-        {label:'📖 Avg '+d.avgWPM+' WPM', cls:'accent'},
-        {label:'Grade coverage: K–6', cls:'muted'}
-      ];
-    },
-    btns:function(){
-      return [
-        {label:'Generate Report', fn:"typeof generateMTSSReport==='function'&&generateMTSSReport('progress')"},
-        {label:'Export CSV',      fn:"typeof exportRosterCSV==='function'&&exportRosterCSV()"}
-      ];
-    }
-  },
-  benchmark: {
-    heroClass:'s21-hero-bm', icon:'📊', title:'Benchmark Data',
-    sub:function(d){ return 'DIBELS 8 fluency tracking · '+d.atBench+' of '+d.total+' at EOY target'; },
-    pills:function(d){ return [{label:'📈 '+d.benchPct+'% at benchmark',cls:'tier1'},{label:'📖 Avg '+d.avgWPM+' WPM',cls:'accent'}]; },
-    btns:function(){ return [{label:'Export CSV',fn:"typeof exportRosterCSV==='function'&&exportRosterCSV()"}]; }
-  },
-  reports: {
-    heroClass:'s21-hero-reports', icon:'📋', title:'MTSS / RTI Reports',
-    sub:function(d){ return 'Generate, print, and download intervention reports for your caseload of '+d.total+' students.'; },
-    pills:function(d){
-      return [
-        {label:'🔴 '+d.t3+' Tier 3', cls:'tier3'},
-        {label:'🟠 '+d.t2+' Tier 2', cls:'tier2'},
-        {label:'📅 '+new Date().toLocaleDateString('en-US',{month:'short',year:'numeric'}), cls:'muted'}
-      ];
-    },
-    btns:function(){
-      return [
-        {label:'Caseload Overview',fn:"typeof generateMTSSReport==='function'&&generateMTSSReport('caseload')"},
-        {label:'Tier 3 Report',   fn:"typeof generateMTSSReport==='function'&&generateMTSSReport('tier3')"},
-        {label:'Print',           fn:"typeof printCurrentReport==='function'&&printCurrentReport()"},
-        {label:'Download',        fn:"typeof downloadReportHTML==='function'&&downloadReportHTML()"}
-      ];
-    }
-  },
-  groups: {
-    heroClass:'s21-hero-groups', icon:'🧩', title:'Intervention Groups',
-    sub:function(d){ return 'Organize students into evidence-based small groups by tier and fluency level.'; },
-    pills:function(d){
-      return [
-        {label:d.total+' students', cls:'accent'},
-        {label:'Tier-based grouping', cls:'gold'},
-        {label:'WPM-leveled',        cls:'teal'}
-      ];
-    },
-    btns:function(){
-      return [
-        {label:'Auto-Generate Groups', fn:"typeof autoGenerateGroupsImpl==='function'?autoGenerateGroupsImpl():(typeof autoGenerateGroups==='function'?autoGenerateGroups():showToast('Group function not available','warn'))"},
-        {label:'Coaching Insights',    fn:"typeof showCoachingPanel==='function'&&showCoachingPanel(null,null)"}
-      ];
-    }
-  },
-  settings: {
-    heroClass:'s21-hero-settings', icon:'⚙️', title:'Settings & Privacy',
-    sub:function(d){
-      var consent = localStorage.getItem('lm_ferpa_consent') ? 'FERPA consent on file' : 'FERPA consent pending';
-      return consent+' · Data stored locally only · No PII transmitted externally';
-    },
-    pills:function(d){
-      return [
-        {label:'🔒 FERPA Protected', cls:'teal'},
-        {label:'💾 Local storage only', cls:'accent'},
-        localStorage.getItem('lm_apiKey') ? {label:'🤖 AI connected', cls:'tier1'} : {label:'🤖 AI not configured', cls:'muted'}
-      ];
-    },
-    btns:function(){
-      return [
-        {label:'View Audit Log', fn:"typeof showAuditLog==='function'&&showAuditLog()"},
-        {label:'Clear All Data', fn:"typeof clearAllData==='function'&&clearAllData()"}
-      ];
-    }
-  },
-  observations: {
-    heroClass:'s21-hero-obs', icon:'📓', title:'Observations',
-    sub:function(d){ return 'Teacher observations tagged with 30 literacy factors. '+d.obsTotal+' observations logged.'; },
-    pills:function(d){
-      return [
-        {label:d.obsTotal+' observations', cls:'pink'},
-        {label:'30 literacy factors', cls:'accent'},
-        {label:'Coaching engine active', cls:'tier1'}
-      ];
-    },
-    btns:function(){
-      return [
-        {label:'Caseload Coaching', fn:"typeof showCoachingPanel==='function'&&showCoachingPanel(null,null)"},
-        {label:'Export Observations', fn:"typeof exportObservationsCSV==='function'&&exportObservationsCSV()"}
-      ];
-    }
-  }
-};
-
-// Generic fallback config
-function s21GenericConfig(pageId) {
-  return {
-    heroClass:'s21-hero-generic', icon:'📄',
-    title: pageId.charAt(0).toUpperCase() + pageId.slice(1).replace(/-/g,' '),
-    sub:function(d){ return 'LiteracyMap · Science of Reading aligned'; },
-    pills:function(d){ return [{label:d.total+' students',cls:'accent'}]; },
-    btns:function(){ return []; }
-  };
-}
-
-// ── Compute shared data object ────────────────────────────────────────────────
-function s21Data() {
-  var all = (typeof getStudents==='function') ? getStudents() : [];
-  var t3 = all.filter(function(s){ return String(s.tier||s.Tier||'')=='3'; }).length;
-  var t2 = all.filter(function(s){ return String(s.tier||s.Tier||'')=='2'; }).length;
-  var t1 = all.filter(function(s){ return String(s.tier||s.Tier||'')=='1'; }).length;
-  var wpms = all.map(function(s){ return parseFloat(s.wpm||s.WPM||0); }).filter(Boolean);
-  var avgWPM = wpms.length ? Math.round(wpms.reduce(function(a,b){return a+b;},0)/wpms.length) : 0;
-  var atBench = 0;
-  if (typeof getDibelsTarget==='function') {
-    atBench = all.filter(function(s){
-      var t=getDibelsTarget(s.grade||s.Grade||'','eoy');
-      return t&&parseFloat(s.wpm||0)>=t;
-    }).length;
-  }
-  var needsAssess = all.filter(function(s){
-    var d=(typeof daysSinceAssessed==='function')?daysSinceAssessed(s.id||s.name||''):null;
-    return d===null||d>21;
-  }).length;
-  var obsTotal = all.reduce(function(a,s){
-    return a + ((typeof getObservations==='function')?getObservations(s.id||s.name||'').length:0);
-  },0);
-  return {
-    all:all, total:all.length, t3:t3, t2:t2, t1:t1,
-    avgWPM:avgWPM, atBench:atBench,
-    benchPct:all.length?Math.round(atBench/all.length*100):0,
-    needsAssess:needsAssess, obsTotal:obsTotal
-  };
-}
-
-// ── Build hero HTML for a page ────────────────────────────────────────────────
-function s21HeroHTML(pageId, cfg, d) {
-  var pills = cfg.pills(d).map(function(p) {
-    return '<span class="s21-pill '+p.cls+'">'+p.label+'</span>';
-  }).join('');
-  var btns = cfg.btns(d).map(function(b) {
-    return '<button class="btn btn-ghost" onclick="'+b.fn+'">'+b.label+'</button>';
-  }).join('');
-  return '<div class="s21-page-hero '+cfg.heroClass+'" id="s21-hero-'+pageId+'">'
-    + '<div class="s21-hero-row">'
-    + '<div class="s21-hero-icon">'+cfg.icon+'</div>'
-    + '<div class="s21-hero-body">'
-    + '<div class="s21-hero-title">'+cfg.title+'</div>'
-    + '<div class="s21-hero-sub">'+(typeof cfg.sub==='function'?cfg.sub(d):cfg.sub)+'</div>'
-    + (pills?'<div class="s21-hero-pills">'+pills+'</div>':'')
-    + (btns?'<div class="s21-hero-btns">'+btns+'</div>':'')
-    + '</div></div></div>';
-}
-
-// ── Inject hero into a page section ──────────────────────────────────────────
-function s21InjectHero(pageId) {
-  var pg = document.getElementById('page-'+pageId);
-  if (!pg) return;
-  // Remove old hero if re-rendering
-  var old = document.getElementById('s21-hero-'+pageId);
-  if (old) old.remove();
-  // Match config by page id (strip prefix variations)
-  var key = pageId.toLowerCase().replace(/^page-/,'');
-  var cfg = S21_PAGES[key] || s21GenericConfig(key);
-  var d = s21Data();
-  var heroEl = document.createElement('div');
-  heroEl.innerHTML = s21HeroHTML(pageId, cfg, d);
-  pg.insertBefore(heroEl.firstChild, pg.firstChild);
-}
-
-// ── Scroll-triggered animations via IntersectionObserver ──────────────────────
-var _s21Observer = null;
-function s21SetupObserver() {
-  if (_s21Observer) _s21Observer.disconnect();
-  _s21Observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('s21-visible');
-        _s21Observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.08 });
-}
-function s21ObservePage(pg) {
-  if (!_s21Observer) s21SetupObserver();
-  // Animate direct children (cards, rows, sections)
-  var children = pg.querySelectorAll(
-    '.card,.roster-row,[data-student-row],table tr,section,'+
-    '.group-card,.rpt-stat,.coaching-card,.obs-entry,'+
-    'h2,h3,.section-title,.panel,.report-output > *'
-  );
-  children.forEach(function(el, i) {
-    if (!el.classList.contains('s21-animate') && !el.closest('.s21-page-hero')) {
-      el.classList.add('s21-animate');
-      el.style.transitionDelay = (i * 0.04) + 's';
-      _s21Observer.observe(el);
-    }
-  });
-  // Table rows get horizontal slide
-  pg.querySelectorAll('table tbody tr').forEach(function(tr, i) {
-    if (!tr.classList.contains('s21-tr-anim')) {
-      tr.classList.add('s21-tr-anim');
-      tr.style.transitionDelay = (i * 0.03) + 's';
-      _s21Observer.observe(tr);
-    }
-  });
-}
-
-// ── Nav progress bar ──────────────────────────────────────────────────────────
-function s21ProgressBar(pct) {
-  var bar = document.getElementById('s21-progress-bar');
-  if (!bar) return;
-  bar.style.width = pct + '%';
-  if (pct >= 100) setTimeout(function() { bar.style.width='0%'; }, 350);
-}
-function s21InjectProgressBar() {
-  if (document.getElementById('s21-progress-bar')) return;
-  var bar = document.createElement('div'); bar.id='s21-progress-bar';
-  document.body.insertBefore(bar, document.body.firstChild);
-}
-
-// ── Nav ripple on click ───────────────────────────────────────────────────────
-document.addEventListener('click', function(e) {
-  var link = e.target.closest('.nav-link,.sidebar-link,[data-page]');
-  if (!link) return;
-  var ripple = document.createElement('div');
-  ripple.className = 'nav-ripple';
-  var rect = link.getBoundingClientRect();
-  ripple.style.top  = (e.clientY - rect.top) + 'px';
-  ripple.style.left = (e.clientX - rect.left) + 'px';
-  link.appendChild(ripple);
-  setTimeout(function() { ripple.remove(); }, 600);
-});
-
-// ── FAB (floating quick-log button) ──────────────────────────────────────────
-function s21InjectFAB() {
-  if (document.getElementById('s21-fab')) return;
-  var fab = document.createElement('button');
-  fab.id = 's21-fab';
-  fab.title = 'Quick Log Session';
-  fab.innerHTML = '⏱<span id="s21-fab-label">Quick Log</span>';
-  fab.setAttribute('data-action', 'open-fab');
-  document.body.appendChild(fab);
-}
-function s21ShowFAB(show) {
-  var fab = document.getElementById('s21-fab');
-  if (!fab) return;
-  fab.style.display = show ? 'flex' : 'none';
-}
-
-// Handle FAB click — open quick-log for first tier-3 student or generic
-document.addEventListener('click', function(e) {
-  var fab = e.target.closest('#s21-fab');
-  if (!fab) return;
-  var all = (typeof getStudents==='function') ? getStudents() : [];
-  var target = all.find(function(s){ return String(s.tier||s.Tier||'')=='3'; }) || all[0];
-  if (!target) { showToast('No students added yet', 'warn'); return; }
-  var sid = target.id||target.name||'';
-  var sname = target.name||'Student';
-  if (typeof openQuickLog==='function') openQuickLog(sid, sname);
-  else showToast('Quick log not available', 'warn');
-});
-
-// ── Main hook: intercept showPage() ──────────────────────────────────────────
-(function() {
-  var _orig21 = window.showPage;
-  window.showPage = function(pageId) {
-    // 1. Progress bar starts
-    s21ProgressBar(30);
-
-    // 2. Call original
-    if (typeof _orig21==='function') _orig21.apply(this, arguments);
-
-    // 3. Animate the newly active page
-    setTimeout(function() {
-      s21ProgressBar(80);
-      var pg = document.getElementById('page-'+pageId);
-      if (!pg) { s21ProgressBar(100); return; }
-
-      // Page enter animation
-      pg.classList.remove('s21-entering');
-      void pg.offsetWidth; // force reflow
-      pg.classList.add('s21-entering');
-      setTimeout(function(){ pg.classList.remove('s21-entering'); }, 220);
-
-      // Hero
-      if (pageId !== 'overview' && pageId !== 'home') {
-        s21InjectHero(pageId);
-      }
-
-      // Scroll animations on children
-      setTimeout(function() { s21ObservePage(pg); }, 60);
-
-      // FAB visibility
-      var cfg = S21_PAGES[pageId] || S21_PAGES[pageId.replace(/^page-/,'')];
-      s21ShowFAB(!!(cfg && cfg.fab));
-
-      s21ProgressBar(100);
-    }, 40);
-  };
-})();
-
-// ── Scan all existing page sections on load ───────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────// ── Scan all existing page sections on load ───────────────────────────────────
 function s21InitAllPages() {
   s21SetupObserver();
   s21InjectProgressBar();
@@ -4365,585 +4013,47 @@ function s21InitAllPages() {
 })();
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
-(function() {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() { setTimeout(s21InitAllPages, 500); });
-  } else {
-    setTimeout(s21InitAllPages, 500);
-  }
-})();
-            // Find or create a text node for the label
-            var labelNode = null;
-            el.childNodes.forEach(function(n) {
-              if (n.nodeType === 3 && n.textContent.indexOf(label) !== -1) labelNode = n;
-            });
-            if (labelNode) {
-              labelNode.textContent = ' ' + label;
-              el.insertBefore(document.createTextNode(newIcon), el.firstChild);
-            } else {
-              el.insertBefore(document.createTextNode(newIcon + ' '), el.firstChild);
-            }
-            seen.add(el);
-            return;
+// Sprint 23+24: Nav renames  (id: s23fix-navlabels)
+(function(){
+  var R={'Overview':'My Caseload','Student Roster':'Students','Skill Domains':'Reading Skills',
+    'Growth Trends':'Progress','Qualitative Data':'Observations','Group Builder':'Small Groups',
+    'Interventions':'Intervention Log','Record Assessment':'Assess','Reports':'MTSS Reports',
+    'Import Data':'Import','Strategies':'Strategy Bank'};
+  var I={'My Caseload':'🏠','Students':'👥','Reading Skills':'🧠','Progress':'📈',
+    'Observations':'🔍','Small Groups':'🧩','Intervention Log':'🎯','Assess':'✏️',
+    'MTSS Reports':'📑','Import':'📥','Strategy Bank':'💡'};
+  function run(){
+    try{
+      document.querySelectorAll('#sidebar [onclick],[data-view],[class*="sidebar-item"]').forEach(function(el){
+        if(el.getAttribute('data-r'))return;
+        var t=el.textContent||'';
+        var nl=null;
+        Object.keys(R).forEach(function(o){if(!nl&&t.indexOf(o)!==-1)nl=R[o];});
+        if(!nl)Object.keys(I).forEach(function(o){if(!nl&&t.indexOf(o)!==-1)nl=o;});
+        if(!nl)return;
+        var ic=I[nl]||'';
+        el.querySelectorAll('svg').forEach(function(s){s.remove();});
+        var done=false;
+        el.childNodes.forEach(function(n){
+          if(n.nodeType!==3||done)return;
+          var v=n.textContent;
+          if(Object.keys(R).some(function(o){return v.indexOf(o)!==-1;})||Object.keys(I).some(function(o){return v.indexOf(o)!==-1;})){
+            Object.keys(R).forEach(function(o){v=v.replace(new RegExp(o.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'),R[o]);});
+            v=v.replace(/^[^\w\s]+\s*/,'').replace(/^\s+/,'');
+            n.textContent=' '+v;
+            el.insertBefore(document.createTextNode(ic),el.firstChild);
+            done=true;
           }
-
-          // Case 2: element has icon characters before the label in text nodes
-          el.childNodes.forEach(function(node) {
-            if (node.nodeType !== 3) return;
-            var t = node.textContent;
-            // If this text node contains the label, strip any leading non-word chars
-            if (t.indexOf(label) !== -1) {
-              // Replace everything before the label (icons, symbols, spaces) with emoji + space
-              node.textContent = t.replace(/^[\s\S]*?(?=\w)/, newIcon + ' ');
-              seen.add(el);
-            }
-          });
-
-          // Case 3: icon is in a child span/i element
-          el.querySelectorAll('span,i').forEach(function(child) {
-            var ct = child.textContent.trim();
-            // If child has only symbol/icon chars (not the label itself)
-            if (ct && ct.indexOf(label) === -1 && ct.length <= 4) {
-              child.textContent = newIcon;
-              seen.add(el);
-            }
-          });
         });
+        if(!done&&ic){var b=el.querySelector('.badge,[class*="count"]');el.innerHTML=ic+' '+nl+(b?' '+b.outerHTML:'');}
+        el.setAttribute('data-r','1');
       });
-    });
+    }catch(e){}
   }
-
-  // Run on load and after a short delay (for apps that build nav dynamically)
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      applyNavIcons();
-      setTimeout(applyNavIcons, 600);
-    });
-  } else {
-    applyNavIcons();
-    setTimeout(applyNavIcons, 600);
+  function boot(){run();setTimeout(run,600);setTimeout(run,1800);
+    setTimeout(function(){try{var o=window.go;if(typeof o==='function'&&!o._r){window.go=function(){try{o.apply(this,arguments);}catch(e){}setTimeout(run,200);};window.go._r=true;}}catch(e){}},1000);
   }
-})();
-    // ── Step 2: Remove icon-only <span> or <i> children ──────────────────
-    el.querySelectorAll('span, i').forEach(function(child) {
-      var ct = child.textContent.trim();
-      // Only remove if it holds only icon/symbol chars and not the label
-      if (ct.length <= 4 && ct.indexOf(targetLabel) === -1 && GEO_RE.test(ct)) {
-        child.remove();
-      }
-    });
-
-    // ── Step 3: Find and update the text node containing the label ────────
-    var labelNode = null;
-    el.childNodes.forEach(function(n) {
-      if (n.nodeType === 3 && (n.textContent.indexOf(targetLabel) !== -1 ||
-          RENAMES.some(function(p){ return n.textContent.indexOf(p[0]) !== -1; }))) {
-        labelNode = n;
-      }
-    });
-
-    if (labelNode) {
-      var t = labelNode.textContent;
-      // Apply renames
-      RENAMES.forEach(function(pair) {
-        t = t.replace(new RegExp(pair[0].replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g'), pair[1]);
-      });
-      // Strip geometric prefix symbols
-      t = t.replace(GEO_RE, '');
-      // Strip any existing emoji at the very start (we'll re-add the right one)
-      t = t.replace(/^[\u{1F000}-\u{1FFFF}][️⃣]?\s*/u, '');
-      // Clean whitespace
-      t = t.trim();
-      labelNode.textContent = ' ' + t;
-      // Prepend the correct icon as a separate text node
-      el.insertBefore(document.createTextNode(targetIcon), el.firstChild);
-    } else {
-      // Fallback: rebuild the element's text content cleanly
-      // Preserve any non-text children (badges, counts)
-      var badge = el.querySelector('.badge, [class*="count"], [class*="badge"]');
-      var badgeHTML = badge ? badge.outerHTML : '';
-      el.innerHTML = targetIcon + ' ' + targetLabel + (badgeHTML ? ' ' + badgeHTML : '');
-    }
-
-    el.setAttribute('data-lm-renamed', '1');
-  }
-
-  // ── Process section headers ───────────────────────────────────────────────
-  function processSections() {
-    var selectors = [
-      '.nav-section', '.sidebar-section', '[class*="nav-group"]',
-      '[class*="section-title"]', '[class*="nav-heading"]',
-      '.nav-category', 'nav h3, nav h4, nav h5',
-      '.sidebar h3, .sidebar h4, .sidebar h5'
-    ];
-    selectors.forEach(function(sel) {
-      document.querySelectorAll(sel).forEach(function(el) {
-        if (el.getAttribute('data-lm-section-renamed')) return;
-        var t = el.textContent.trim();
-        if (SECTIONS[t]) {
-          el.textContent = SECTIONS[t];
-          el.setAttribute('data-lm-section-renamed', '1');
-        }
-      });
-    });
-
-    // Also scan all text nodes in nav for section labels as plain text
-    var navEls = document.querySelectorAll('nav, .sidebar, [class*="sidebar"], [class*="sidenav"]');
-    navEls.forEach(function(nav) {
-      var walker = document.createTreeWalker(nav, NodeFilter.SHOW_TEXT, null, false);
-      var node;
-      while ((node = walker.nextNode())) {
-        var parent = node.parentElement;
-        if (!parent || parent.getAttribute('data-lm-section-renamed')) continue;
-        var t = node.textContent.trim();
-        if (SECTIONS[t]) {
-          node.textContent = node.textContent.replace(t, SECTIONS[t]);
-          parent.setAttribute('data-lm-section-renamed', '1');
-        }
-      }
-    });
-  }
-
-  // ── Main: find and process all nav items ──────────────────────────────────
-  function applyAll() {
-    // Nav element selectors — broad but targeted to navigation areas
-    var navSelectors = [
-      'nav a', 'nav button', 'nav li',
-      '.sidebar a', '.sidebar button', '.sidebar li',
-      '[class*="sidebar"] a', '[class*="sidebar"] button',
-      '[class*="nav-link"]', '[class*="nav-item"]',
-      '[onclick*="showPage"]', '[data-page]'
-    ];
-
-    navSelectors.forEach(function(sel) {
-      document.querySelectorAll(sel).forEach(processNavEl);
-    });
-
-    processSections();
-  }
-
-  // Update S21 hero titles to use new names
-  function syncHeroTitles() {
-    var heroTitleMap = {
-      'Overview':          'My Caseload',
-      'Student Roster':    'Students',
-      'Skill Domains':     'Reading Skills',
-      'Growth Trends':     'Progress',
-      'Qualitative Data':  'Observations',
-      'Group Builder':     'Small Groups',
-      'Interventions':     'Intervention Log',
-      'Record Assessment': 'Assess',
-      'Reports':           'MTSS Reports',
-      'Import Data':       'Import',
-      'Strategies':        'Strategy Bank'
-    };
-    document.querySelectorAll('.s21-hero-title, .s20-hero-title').forEach(function(el) {
-      Object.keys(heroTitleMap).forEach(function(old) {
-        if (el.textContent.indexOf(old) !== -1) {
-          el.textContent = el.textContent.replace(
-            new RegExp(old.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g'),
-            heroTitleMap[old]
-          );
-        }
-      });
-    });
-
-    // Update S21 page registry
-    if (typeof S21_PAGES !== 'undefined') {
-      var pageUpdates = {
-        roster:       { title: 'Students',        icon: '👥' },
-        bm:           { title: 'Progress',         icon: '📈' },
-        benchmark:    { title: 'Progress',         icon: '📈' },
-        reports:      { title: 'MTSS Reports',     icon: '📑' },
-        groups:       { title: 'Small Groups',     icon: '🧩' },
-        interventions:{ title: 'Intervention Log', icon: '🎯' },
-        settings:     { title: 'Settings',         icon: '⚙️' },
-        observations: { title: 'Observations',     icon: '🔍' },
-        overview:     { title: 'My Caseload',      icon: '🏠' },
-        skills:       { title: 'Reading Skills',   icon: '🧠' },
-        progress:     { title: 'Progress',         icon: '📈' },
-        import:       { title: 'Import',           icon: '📥' },
-        strategies:   { title: 'Strategy Bank',    icon: '💡' }
-      };
-      Object.keys(pageUpdates).forEach(function(k) {
-        if (S21_PAGES[k]) {
-          S21_PAGES[k].title = pageUpdates[k].title;
-          S21_PAGES[k].icon  = pageUpdates[k].icon;
-        }
-      });
-    }
-  }
-
-  // ── Hook into showPage to re-apply after nav rebuilds ────────────────────
-  // (No MutationObserver — that caused the infinite loop)
-  var _origShowPage = window.showPage;
-  window.showPage = function(pageId) {
-    if (typeof _origShowPage === 'function') _origShowPage.apply(this, arguments);
-    // Strip data-lm-renamed from nav items so they get re-processed after
-    // any nav rebuild that might have replaced the DOM nodes
-    setTimeout(function() {
-      document.querySelectorAll('[data-lm-renamed]').forEach(function(el) {
-        // Only reset if the text has reverted (e.g. nav was rebuilt)
-        if (el.textContent.indexOf('data-lm-renamed') !== -1) {
-          el.removeAttribute('data-lm-renamed');
-        }
-      });
-      applyAll();
-      syncHeroTitles();
-    }, 120);
-  };
-
-  // ── Boot ──────────────────────────────────────────────────────────────────
-  function boot() {
-    applyAll();
-    syncHeroTitles();
-    // One retry after JS frameworks may have re-rendered the nav
-    setTimeout(function() { applyAll(); syncHeroTitles(); }, 900);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
-  } else {
-    boot();
-  }
-})();
-
-// ══════════════════════════════════════════════════════════════════════════════
-
-// ══════════════════════════════════════════════════════════════════════════════
-
-    // Find and update the text node
-    var done = false;
-    el.childNodes.forEach(function(n) {
-      if (n.nodeType !== 3 || done) return;
-      var t = n.textContent;
-      var match = Object.keys(REN).some(function(o) { return t.indexOf(o) !== -1; }) ||
-                  Object.keys(ICO).some(function(o) { return t.indexOf(o) !== -1; });
-      if (!match) return;
-      // Apply renames
-      Object.keys(REN).forEach(function(o) {
-        t = t.replace(new RegExp(o.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'), REN[o]);
-      });
-      // Strip leading symbols (ASCII-safe: remove non-alphanum leading chars)
-      t = t.replace(/^[^\w\s]+\s*/, '').replace(/^\s+/, '');
-      n.textContent = ' ' + t;
-      el.insertBefore(document.createTextNode(icon), el.firstChild);
-      done = true;
-    });
-    if (!done && icon) {
-      var badge = el.querySelector('.badge,[class*="count"],[class*="badge"]');
-      var bh = badge ? badge.outerHTML : '';
-      el.innerHTML = icon + ' ' + newLabel + (bh ? ' ' + bh : '');
-    }
-    el.setAttribute('data-lm-r', '1');
-  }
-
-  function fixSections() {
-    try {
-      var navRoots = document.querySelectorAll('nav,.sidebar,[class*="sidebar"]');
-      navRoots.forEach(function(nav) {
-        var walker = document.createTreeWalker(nav, NodeFilter.SHOW_TEXT, null, false);
-        var node;
-        while ((node = walker.nextNode())) {
-          var p = node.parentElement;
-          if (!p || p.getAttribute('data-lm-sec')) continue;
-          var t = node.textContent.trim();
-          if (SEC[t]) {
-            node.textContent = node.textContent.replace(t, SEC[t]);
-            p.setAttribute('data-lm-sec', '1');
-          }
-        }
-      });
-    } catch (e) {}
-  }
-
-  function run() {
-    try {
-      var sels = [
-        'nav a','nav button','nav li',
-        '.sidebar a','.sidebar button','.sidebar li',
-        '[class*="sidebar"] a','[class*="sidebar"] button',
-        '[class*="nav-link"]','[class*="nav-item"]',
-        '[onclick*="showPage"]','[data-page]'
-      ];
-      sels.forEach(function(sel) {
-        document.querySelectorAll(sel).forEach(fixEl);
-      });
-      fixSections();
-    } catch (e) {}
-  }
-
-  // Boot + retry
-  function boot() {
-    run();
-    setTimeout(run, 600);
-    setTimeout(run, 1600);
-    // Wrap showPage AFTER it's defined
-    setTimeout(function() {
-      try {
-        var orig = window.showPage;
-        if (typeof orig === 'function' && !orig._s23wrapped) {
-          window.showPage = function() {
-            try { orig.apply(this, arguments); } catch(e) {}
-            setTimeout(run, 250);
-          };
-          window.showPage._s23wrapped = true;
-        }
-      } catch(e) {}
-    }, 500);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
-  } else {
-    boot();
-  }
-})();
-
-      var done = false;
-      el.childNodes.forEach(function(n) {
-        if (n.nodeType !== 3 || done) return;
-        var t = n.textContent;
-        var match = Object.keys(REN).some(function(o) { return t.indexOf(o) !== -1; }) ||
-                    Object.keys(ICO).some(function(o) { return t.indexOf(o) !== -1; });
-        if (!match) return;
-        Object.keys(REN).forEach(function(o) { t = t.replace(new RegExp(o.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'), REN[o]); });
-        t = t.replace(/^[^\w\s]+\s*/, '').replace(/^\s+/, '');
-        n.textContent = ' ' + t;
-        el.insertBefore(document.createTextNode(icon), el.firstChild);
-        done = true;
-      });
-      if (!done && icon) {
-        var badge = el.querySelector('.badge,[class*="count"],[class*="badge"]');
-        el.innerHTML = icon + ' ' + newLabel + (badge ? ' ' + badge.outerHTML : '');
-      }
-      el.setAttribute('data-lm-r', '1');
-    } catch(e) {}
-  }
-
-  function fixSections() {
-    try {
-      var navEls = document.querySelectorAll('nav,.sidebar,[class*="sidebar"],.topbar-left,#sidebar');
-      navEls.forEach(function(nav) {
-        var walker = document.createTreeWalker(nav, NodeFilter.SHOW_TEXT, null, false);
-        var node;
-        while ((node = walker.nextNode())) {
-          var p = node.parentElement;
-          if (!p || p.getAttribute('data-lm-sec')) continue;
-          var t = node.textContent.trim();
-          if (SEC[t]) { node.textContent = node.textContent.replace(t, SEC[t]); p.setAttribute('data-lm-sec','1'); }
-        }
-      });
-    } catch(e) {}
-  }
-
-  function run() {
-    try {
-      ['nav a','nav button','nav li','nav [onclick]',
-       '.sidebar a','.sidebar button','.sidebar li','.sidebar [onclick]',
-       '#sidebar a','#sidebar button','#sidebar li','#sidebar [onclick]',
-       '[data-view]','[class*="nav-item"]','[class*="sidebar-item"]'
-      ].forEach(function(sel) { document.querySelectorAll(sel).forEach(fixEl); });
-      fixSections();
-    } catch(e) {}
-  }
-
-  function boot() {
-    run();
-    setTimeout(run, 500);
-    setTimeout(run, 1500);
-    // Hook the app's go() navigation function (not showPage — this app uses go())
-    setTimeout(function() {
-      try {
-        var orig = window.go;
-        if (typeof orig === 'function' && !orig._s23) {
-          window.go = function() {
-            try { orig.apply(this, arguments); } catch(e) {}
-            setTimeout(run, 200);
-          };
-          window.go._s23 = true;
-        }
-      } catch(e) {}
-    }, 800);
-  }
-
-  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', boot); }
-  else { boot(); }
-})();
-
-      var done = false;
-      el.childNodes.forEach(function(n) {
-        if (n.nodeType !== 3 || done) return;
-        var t = n.textContent;
-        var match = Object.keys(REN).some(function(o) { return t.indexOf(o) !== -1; }) ||
-                    Object.keys(ICO).some(function(o) { return t.indexOf(o) !== -1; });
-        if (!match) return;
-        Object.keys(REN).forEach(function(o) { t = t.replace(new RegExp(o.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'), REN[o]); });
-        t = t.replace(/^[^\w\s]+\s*/, '').replace(/^\s+/, '');
-        n.textContent = ' ' + t;
-        el.insertBefore(document.createTextNode(icon), el.firstChild);
-        done = true;
-      });
-      if (!done && icon) {
-        var badge = el.querySelector('.badge,[class*="count"],[class*="badge"]');
-        el.innerHTML = icon + ' ' + newLabel + (badge ? ' ' + badge.outerHTML : '');
-      }
-      el.setAttribute('data-lm-r', '1');
-    } catch(e) {}
-  }
-
-  function fixSections() {
-    try {
-      var navEls = document.querySelectorAll('nav,.sidebar,[class*="sidebar"],.topbar-left,#sidebar');
-      navEls.forEach(function(nav) {
-        var walker = document.createTreeWalker(nav, NodeFilter.SHOW_TEXT, null, false);
-        var node;
-        while ((node = walker.nextNode())) {
-          var p = node.parentElement;
-          if (!p || p.getAttribute('data-lm-sec')) continue;
-          var t = node.textContent.trim();
-          if (SEC[t]) { node.textContent = node.textContent.replace(t, SEC[t]); p.setAttribute('data-lm-sec','1'); }
-        }
-      });
-    } catch(e) {}
-  }
-
-  function run() {
-    try {
-      ['nav a','nav button','nav li','nav [onclick]',
-       '.sidebar a','.sidebar button','.sidebar li','.sidebar [onclick]',
-       '#sidebar a','#sidebar button','#sidebar li','#sidebar [onclick]',
-       '[data-view]','[class*="nav-item"]','[class*="sidebar-item"]'
-      ].forEach(function(sel) { document.querySelectorAll(sel).forEach(fixEl); });
-      fixSections();
-    } catch(e) {}
-  }
-
-  function boot() {
-    run();
-    setTimeout(run, 500);
-    setTimeout(run, 1500);
-    // Hook the app's go() navigation function (not showPage — this app uses go())
-    setTimeout(function() {
-      try {
-        var orig = window.go;
-        if (typeof orig === 'function' && !orig._s23) {
-          window.go = function() {
-            try { orig.apply(this, arguments); } catch(e) {}
-            setTimeout(run, 200);
-          };
-          window.go._s23 = true;
-        }
-      } catch(e) {}
-    }, 800);
-  }
-
-  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', boot); }
-  else { boot(); }
-})();
-
-// Sprint 23 Fix: Nav renames + icons  (id: s23fix-navlabels)
-(function() {
-  'use strict';
-  var REN = {
-    'Overview':'My Caseload','Student Roster':'Students',
-    'Skill Domains':'Reading Skills','Growth Trends':'Progress',
-    'Qualitative Data':'Observations','Group Builder':'Small Groups',
-    'Interventions':'Intervention Log','Record Assessment':'Assess',
-    'Reports':'MTSS Reports','Import Data':'Import','Strategies':'Strategy Bank'
-  };
-  var ICO = {
-    'My Caseload':'🏠','Students':'👥','Reading Skills':'🧠','Progress':'📈',
-    'Observations':'🔍','Small Groups':'🧩','Intervention Log':'🎯',
-    'Assess':'✏️','MTSS Reports':'📑','Import':'📥','Strategy Bank':'💡'
-  };
-  var SEC = {'ANALYSIS':'MY STUDENTS','PLANNING':'TAKE ACTION'};
-
-  function fixEl(el) {
-    try {
-      if (el.getAttribute('data-lm-r')) return;
-      var txt = el.textContent || '';
-      if (txt.indexOf('MTSS MTSS') !== -1) {
-        el.childNodes.forEach(function(n) {
-          if (n.nodeType === 3) n.textContent = n.textContent.replace(/(MTSS )+Reports/g,'MTSS Reports').replace(/MTSS MTSS/g,'MTSS');
-        });
-        txt = el.textContent;
-      }
-      var newLabel = null;
-      Object.keys(REN).forEach(function(old) { if (!newLabel && txt.indexOf(old) !== -1) newLabel = REN[old]; });
-      if (!newLabel) Object.keys(ICO).forEach(function(l) { if (!newLabel && txt.indexOf(l) !== -1) newLabel = l; });
-      if (!newLabel) return;
-      var icon = ICO[newLabel] || '';
-      el.querySelectorAll('svg').forEach(function(s) { s.remove(); });
-      var done = false;
-      el.childNodes.forEach(function(n) {
-        if (n.nodeType !== 3 || done) return;
-        var t = n.textContent;
-        var match = Object.keys(REN).some(function(o) { return t.indexOf(o) !== -1; }) ||
-                    Object.keys(ICO).some(function(o) { return t.indexOf(o) !== -1; });
-        if (!match) return;
-        Object.keys(REN).forEach(function(o) { t = t.replace(new RegExp(o.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'), REN[o]); });
-        t = t.replace(/^[^\w\s]+\s*/, '').replace(/^\s+/, '');
-        n.textContent = ' ' + t;
-        el.insertBefore(document.createTextNode(icon), el.firstChild);
-        done = true;
-      });
-      if (!done && icon) {
-        var badge = el.querySelector('.badge,[class*="count"],[class*="badge"]');
-        el.innerHTML = icon + ' ' + newLabel + (badge ? ' ' + badge.outerHTML : '');
-      }
-      el.setAttribute('data-lm-r', '1');
-    } catch(e) {}
-  }
-
-  function fixSections() {
-    try {
-      var navEls = document.querySelectorAll('nav,.sidebar,[class*="sidebar"],.topbar-left,#sidebar');
-      navEls.forEach(function(nav) {
-        var walker = document.createTreeWalker(nav, NodeFilter.SHOW_TEXT, null, false);
-        var node;
-        while ((node = walker.nextNode())) {
-          var p = node.parentElement;
-          if (!p || p.getAttribute('data-lm-sec')) continue;
-          var t = node.textContent.trim();
-          if (SEC[t]) { node.textContent = node.textContent.replace(t, SEC[t]); p.setAttribute('data-lm-sec','1'); }
-        }
-      });
-    } catch(e) {}
-  }
-
-  function run() {
-    try {
-      ['nav a','nav button','nav li','nav [onclick]',
-       '.sidebar a','.sidebar button','.sidebar li','.sidebar [onclick]',
-       '#sidebar a','#sidebar button','#sidebar li','#sidebar [onclick]',
-       '[data-view]','[class*="nav-item"]','[class*="sidebar-item"]'
-      ].forEach(function(sel) { document.querySelectorAll(sel).forEach(fixEl); });
-      fixSections();
-    } catch(e) {}
-  }
-
-  function boot() {
-    run();
-    setTimeout(run, 500);
-    setTimeout(run, 1500);
-    // Hook the app's go() navigation function (not showPage — this app uses go())
-    setTimeout(function() {
-      try {
-        var orig = window.go;
-        if (typeof orig === 'function' && !orig._s23) {
-          window.go = function() {
-            try { orig.apply(this, arguments); } catch(e) {}
-            setTimeout(run, 200);
-          };
-          window.go._s23 = true;
-        }
-      } catch(e) {}
-    }, 800);
-  }
-
-  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', boot); }
-  else { boot(); }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',boot);}else{boot();}
 })();
 </script>
 
@@ -4953,7 +4063,7 @@ function s21InitAllPages() {
     <div class="qa-card">
       <div class="qa-header">
         <h3 id="qa-title">Quick Assessment</h3>
-        <button class="qa-close" onclick="closeQuickAssess()">&#10005;</button>
+        <button class="qa-close" onclick="closeQuickAssess()">✕</button>
       </div>
       <div class="qa-fields">
         <div><label class="qa-label">Fluency WPM</label><input id="qa-wpm" class="qa-input" type="number" min="0" max="300" placeholder="e.g. 85"></div>
@@ -4968,5 +4078,6 @@ function s21InitAllPages() {
       </div>
     </div>
   </div>
-<datalist id="rl-datalist"><option value="DRA 1"><option value="DRA 2"><option value="DRA 3"><option value="DRA 4"><option value="DRA 6"><option value="DRA 8"><option value="DRA 10"><option value="DRA 12"><option value="DRA 14"><option value="DRA 16"><option value="DRA 18"><option value="DRA 20"><option value="DRA 24"><option value="DRA 28"><option value="DRA 30"><option value="DRA 34"><option value="DRA 38"><option value="DRA 40"><option value="DRA 44"><option value="DRA 50"><option value="DRA 60"><option value="DRA 70"><option value="DRA 80"><option value="F&P Level A"><option value="F&P Level B"><option value="F&P Level C"><option value="F&P Level D"><option value="F&P Level E"><option value="F&P Level F"><option value="F&P Level G"><option value="F&P Level H"><option value="F&P Level I"><option value="F&P Level J"><option value="F&P Level K"><option value="F&P Level L"><option value="F&P Level M"><option value="F&P Level N"><option value="F&P Level O"><option value="F&P Level P"><option value="F&P Level Q"><option value="F&P Level R"><option value="F&P Level S"><option value="F&P Level T"><option value="F&P Level U"><option value="F&P Level V"><option value="F&P Level W"><option value="F&P Level X"><option value="F&P Level Y"><option value="F&P Level Z"></datalist></body>
-</html>
+<datalist id="rl-datalist"><option value="DRA 1"></option><option value="DRA 2"></option><option value="DRA 3"></option><option value="DRA 4"></option><option value="DRA 6"></option><option value="DRA 8"></option><option value="DRA 10"></option><option value="DRA 12"></option><option value="DRA 14"></option><option value="DRA 16"></option><option value="DRA 18"></option><option value="DRA 20"></option><option value="DRA 24"></option><option value="DRA 28"></option><option value="DRA 30"></option><option value="DRA 34"></option><option value="DRA 38"></option><option value="DRA 40"></option><option value="DRA 44"></option><option value="DRA 50"></option><option value="DRA 60"></option><option value="DRA 70"></option><option value="DRA 80"></option><option value="F&amp;P Level A"></option><option value="F&amp;P Level B"></option><option value="F&amp;P Level C"></option><option value="F&amp;P Level D"></option><option value="F&amp;P Level E"></option><option value="F&amp;P Level F"></option><option value="F&amp;P Level G"></option><option value="F&amp;P Level H"></option><option value="F&amp;P Level I"></option><option value="F&amp;P Level J"></option><option value="F&amp;P Level K"></option><option value="F&amp;P Level L"></option><option value="F&amp;P Level M"></option><option value="F&amp;P Level N"></option><option value="F&amp;P Level O"></option><option value="F&amp;P Level P"></option><option value="F&amp;P Level Q"></option><option value="F&amp;P Level R"></option><option value="F&amp;P Level S"></option><option value="F&amp;P Level T"></option><option value="F&amp;P Level U"></option><option value="F&amp;P Level V"></option><option value="F&amp;P Level W"></option><option value="F&amp;P Level X"></option><option value="F&amp;P Level Y"></option><option value="F&amp;P Level Z"></option></datalist>
+
+</body></html>
