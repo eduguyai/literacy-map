@@ -4771,6 +4771,77 @@ function s21InitAllPages() {
   else { boot(); }
 })();
 
+      var done = false;
+      el.childNodes.forEach(function(n) {
+        if (n.nodeType !== 3 || done) return;
+        var t = n.textContent;
+        var match = Object.keys(REN).some(function(o) { return t.indexOf(o) !== -1; }) ||
+                    Object.keys(ICO).some(function(o) { return t.indexOf(o) !== -1; });
+        if (!match) return;
+        Object.keys(REN).forEach(function(o) { t = t.replace(new RegExp(o.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'), REN[o]); });
+        t = t.replace(/^[^\w\s]+\s*/, '').replace(/^\s+/, '');
+        n.textContent = ' ' + t;
+        el.insertBefore(document.createTextNode(icon), el.firstChild);
+        done = true;
+      });
+      if (!done && icon) {
+        var badge = el.querySelector('.badge,[class*="count"],[class*="badge"]');
+        el.innerHTML = icon + ' ' + newLabel + (badge ? ' ' + badge.outerHTML : '');
+      }
+      el.setAttribute('data-lm-r', '1');
+    } catch(e) {}
+  }
+
+  function fixSections() {
+    try {
+      var navEls = document.querySelectorAll('nav,.sidebar,[class*="sidebar"],.topbar-left,#sidebar');
+      navEls.forEach(function(nav) {
+        var walker = document.createTreeWalker(nav, NodeFilter.SHOW_TEXT, null, false);
+        var node;
+        while ((node = walker.nextNode())) {
+          var p = node.parentElement;
+          if (!p || p.getAttribute('data-lm-sec')) continue;
+          var t = node.textContent.trim();
+          if (SEC[t]) { node.textContent = node.textContent.replace(t, SEC[t]); p.setAttribute('data-lm-sec','1'); }
+        }
+      });
+    } catch(e) {}
+  }
+
+  function run() {
+    try {
+      ['nav a','nav button','nav li','nav [onclick]',
+       '.sidebar a','.sidebar button','.sidebar li','.sidebar [onclick]',
+       '#sidebar a','#sidebar button','#sidebar li','#sidebar [onclick]',
+       '[data-view]','[class*="nav-item"]','[class*="sidebar-item"]'
+      ].forEach(function(sel) { document.querySelectorAll(sel).forEach(fixEl); });
+      fixSections();
+    } catch(e) {}
+  }
+
+  function boot() {
+    run();
+    setTimeout(run, 500);
+    setTimeout(run, 1500);
+    // Hook the app's go() navigation function (not showPage — this app uses go())
+    setTimeout(function() {
+      try {
+        var orig = window.go;
+        if (typeof orig === 'function' && !orig._s23) {
+          window.go = function() {
+            try { orig.apply(this, arguments); } catch(e) {}
+            setTimeout(run, 200);
+          };
+          window.go._s23 = true;
+        }
+      } catch(e) {}
+    }, 800);
+  }
+
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', boot); }
+  else { boot(); }
+})();
+
 // Sprint 23 Fix: Nav renames + icons  (id: s23fix-navlabels)
 (function() {
   'use strict';
